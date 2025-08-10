@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Comarca Gastro Park - Sistema Administrativo</title>
+    <style>
+        :root {
+            --primary: #181818; /* negro profundo */
+            --secondary: #ff9900; /* naranja del logo */
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --light: #f7f7f7; /* fondo más claro */
+            --dark: #181818;
+            --gray: #b0b0b0;
+        }
+
+        /* General styles, slightly adjusted for consistency */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Your original font */
+        }
+        
+        /* Body background for the *entire page*, including if not on login */
+        body {
+            background-color: #f5f5f5; /* Your original light grey */
+            color: #333;
+        }
+
+        /* --- Your existing dashboard/general app styles (unchanged) --- */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header h1 {
+            color: var(--primary);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .card-footer {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 10px;
+        }
+        
+        /* Tables */
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Forms (general) */
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px; /* Adjusted to allow space for login form's specific margins */
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        /* General form-control, specific login form-control will override */
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+        
+        /* General buttons, specific login buttons will override */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        /* Your base btn-primary for other parts of the app */
+        .btn-primary {
+            background-color: var(--secondary);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e67c00;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--secondary);
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        /* Responsive (general) */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+        
+        /* Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* --- Login-specific styles (from previous response, integrated and adjusted) --- */
+        /* Overrides for the login container */
+        .login-flex-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100vw;
+            background-color: #f0f0f0; /* Light background from previous response */
+            /* Subtle diagonal pattern from previous response */
+            background-image: linear-gradient(135deg, rgba(0,0,0,0.05) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.05) 75%, transparent 75%, transparent);
+            background-size: 20px 20px; /* Adjust size for the pattern */
+        }
+        
+        .login-image-side {
+            flex: 1;
+            background: var(--primary); /* Your primary color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        .login-logo-img-full {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover; /* Ensures the image covers the area */
+            object-position: center;
+            background: var(--primary); /* Your primary color */
+        }
+        
+        .login-form-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff; /* White background for the form side */
+            min-height: 100vh;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Added subtle shadow for form side */
+        }
+        
+        .login-form-box-full {
+            width: 100%;
+            max-width: 420px; /* Kept your max-width */
+            background: #fff; /* Explicitly white for the form itself */
+            border-radius: 10px; /* Rounded corners for the form box */
+            box-shadow: none; /* Remove previous box-shadow if it was inherited */
+            padding: 64px 48px 48px 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .login-title-full {
+            font-family: 'Oswald', sans-serif; /* Recommended font for the "COMARCA" look */
+            font-size: 3rem; /* Kept your larger font size */
+            color: var(--primary); /* Changed to your primary black for main title */
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        
+        .login-subtitle-full {
+            color: var(--gray); /* Your grey color */
+            margin-bottom: 32px;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .login-form-box-full .form-group label {
+            font-weight: 600;
+            color: var(--primary); /* Your primary color for labels */
+        }
+        
+        .login-form-box-full .form-control {
+            font-size: 1.2rem;
+            padding: 16px 14px;
+            margin-bottom: 22px;
+            border-radius: 10px;
+            border: 1.5px solid #e0e0e0;
+            background: #f7f7f7;
+            transition: border 0.2s;
+        }
+        
+        .login-form-box-full .form-control:focus {
+            border: 1.5px solid var(--secondary); /* Your orange accent on focus */
+            background: #fff;
+        }
+        
+        .login-form-box-full .btn {
+            font-size: 1.1rem;
+            padding: 14px 36px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        /* Specific button styles for the login form */
+        .login-form-box-full .btn-primary {
+            background: linear-gradient(90deg, var(--secondary) 0%, #ffb347 100%); /* Using your variable */
+            color: #fff;
+            border: none;
+        }
+        
+        .login-form-box-full .btn-primary:hover {
+            background: linear-gradient(90deg, #e67c00 0%, var(--secondary) 100%); /* Darker on hover */
+        }
+        
+        .login-form-box-full .btn-danger {
+            background: var(--danger);
+            color: #fff;
+            border: none;
+        }
+        
+        .login-form-box-full .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        /* Link for forgot password */
+        .forgot-password-link {
+            display: block; /* Make it a block element to give it its own line */
+            margin-top: -10px; /* Pull it up a bit if needed */
+            margin-bottom: 20px; /* Space below it */
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center; /* Align to the right */
+            width: 100%;
+        }
+
+        .forgot-password-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive for login screen */
+        @media (max-width: 900px) {
+            .login-flex-container {
+                flex-direction: column;
+            }
+            .login-image-side, .login-form-side {
+                min-height: 220px;
+                height: auto;
+            }
+            .login-logo-img-full {
+                height: 220px;
+                object-fit: contain; /* Changed to contain to ensure full logo visibility on smaller screens */
+            }
+            .login-form-box-full {
+                padding: 32px 16px;
+            }
+        }
+
+        /* --- Modal Styles for Forgot Password --- */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto; /* Center the modal vertically and horizontally */
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease-out; /* Use your existing fadeIn animation */
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .close-button {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--danger);
+            text-decoration: none;
+        }
+
+        .modal-body p {
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Reusing form-group and form-control for modal inputs */
+        .modal-content .form-group {
+            margin-bottom: 20px; /* Slightly more space than login form */
+        }
+
+        .modal-content .form-control {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        /* Reusing btn styles for modal buttons */
+        .modal-footer .btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="login-screen" class="login-flex-container">
+        <div class="login-image-side">
+            <img src="logo-comarca.jpg" alt="Logo Comarca" class="login-logo-img-full">
+        </div>
+        <div class="login-form-side">
+            <form id="login-form" class="login-form-box-full fade-in">
+                <h1 class="login-title-full">Bienvenido</h1>
+                <p class="login-subtitle-full">Sistema Administrativo <b>La Comarca Gastro Park</b></p>
+                <div class="form-group">
+                    <label for="cedula">Cédula</label>
+                    <input type="text" id="cedula" class="form-control" placeholder="Ingresa tu cédula" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
+                </div>
+                <a href="#" class="forgot-password-link" onclick="openForgotPasswordModal(event)">¿Olvidaste tu contraseña?</a>
+                <div class="form-group" style="display: flex; justify-content: space-between; gap: 16px;">
+                    <button type="button" class="btn btn-danger" onclick="resetForm()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Recuperar Contraseña</h3>
+                <span class="close-button" onclick="closeForgotPasswordModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Ingresa tu cédula o correo electrónico para enviarte las instrucciones de recuperación.</p>
+                <div class="form-group">
+                    <label for="recoveryInput">Cédula o Email</label>
+                    <input type="text" id="recoveryInput" class="form-control" placeholder="Tu cédula o correo electrónico" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="closeForgotPasswordModal()">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="sendRecoveryInstructions()">Enviar Instrucciones</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Global Dashboard -->
+    <div id="admin-global" class="container" style="display: none;">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Global</h3>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li><a href="#" class="active" onclick="showSection('dashboard-global')"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" onclick="showSection('gestion-administradores')"><i class="fas fa-user-tie"></i> Administradores</a></li>
+                    <li><a href="#" onclick="showSection('gestion-locales')"><i class="fas fa-store"></i> Locales</a></li>
+                    <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <h1 id="section-title">Dashboard Global</h1>
+                <div class="user-info">
+                    <img src="https://via.placeholder.com/40" alt="User">
+                    <span>Admin Global</span>
+                </div>
+            </div>
+            
+            <!-- Dashboard Global -->
+            <div id="dashboard-global" class="section-content">
+                <div class="card-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Ventas Totales</span>
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-value">$120,000</div>
+                        <div class="card-footer">Utilizar la plaza</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Ventas Netas</span>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-value">$45,200</div>
+                        <div class="card-footer">Utilizar la plaza</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Crecimiento</span>
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="card-value">8.1%</div>
+                        <div class="card-footer">Orientación manual</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <h2>Estadísticas por Local</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Local</th>
+                                <th>Ventas</th>
+                                <th>Pedidos</th>
+                                <th>Crecimiento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Local Centro</td>
+                                <td>$12,000</td>
+                                <td>10,000</td>
+                                <td>10.2%</td>
+                                <td><span class="badge badge-success">Autoría</span></td>
+                            </tr>
+                            <tr>
+                                <td>Local Home</td>
+                                <td>$15,500</td>
+                                <td>3,600</td>
+                                <td>2.5%</td>
+                                <td><span class="badge badge-success">Autoría</span></td>
+                            </tr>
+                            <tr>
+                                <td>Local Sur</td>
+                                <td>$9,300</td>
+                                <td>3,400</td>
+                                <td>2.5%</td>
+                                <td><span class="badge badge-warning">Instituto</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Gestión de Administradores -->
+            <div id="gestion-administradores" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Gestión de Administradores</h1>
+                    <button class="btn btn-primary" onclick="showAddAdminForm()"><i class="fas fa-plus"></i> Agregar Administrador</button>
+                </div>
+                
+                <div class="table-container">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <input type="text" class="form-control" placeholder="Buscar administrador..." style="width: 300px;">
+                        <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cédula</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ana Torrez</td>
+                                <td>705610896</td>
+                                <td>88871296</td>
+                                <td><span class="badge badge-success">Activo</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Juan Pérez</td>
+                                <td>109680125</td>
+                                <td>85261245</td>
+                                <td><span class="badge badge-success">Activo</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mariana Castillo</td>
+                                <td>6523896</td>
+                                <td>---</td>
+                                <td><span class="badge badge-danger">Inactivo</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Formulario para agregar administrador -->
+                <div id="add-admin-form" class="form-container" style="display: none;">
+                    <h2>Agregar Nuevo Administrador</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="admin-nombre">Nombre</label>
+                            <input type="text" id="admin-nombre" class="form-control" placeholder="Ingrese el nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-apellido">Apellido</label>
+                            <input type="text" id="admin-apellido" class="form-control" placeholder="Ingrese el apellido">
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-cedula">Cédula</label>
+                            <input type="text" id="admin-cedula" class="form-control" placeholder="Ingrese la cédula">
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-telefono">Teléfono</label>
+                            <input type="text" id="admin-telefono" class="form-control" placeholder="Ingrese el teléfono">
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-estado">Estado</label>
+                            <select id="admin-estado" class="form-control">
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-danger" onclick="hideAddAdminForm()">Cancelar</button>
+                            <button type="button" class="btn btn-success">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Gestión de Locales -->
+            <div id="gestion-locales" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Gestión de Locales</h1>
+                    <button class="btn btn-primary" onclick="showAddLocalForm()"><i class="fas fa-plus"></i> Agregar Local</button>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre del Local</th>
+                                <th>Administrador</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Local Sur</td>
+                                <td>Ana Torrez</td>
+                                <td><span class="badge badge-danger">Inactivo</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-success btn-sm"><i class="fas fa-user-tie"></i> Asignar Admin</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Local Centro</td>
+                                <td>Juan Pérez</td>
+                                <td><span class="badge badge-danger">Inactivo</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-success btn-sm"><i class="fas fa-user-tie"></i> Asignar Admin</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Local Norte</td>
+                                <td>Marina Castillo</td>
+                                <td><span class="badge badge-danger">Inactivo</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-success btn-sm"><i class="fas fa-user-tie"></i> Asignar Admin</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Formulario para agregar local -->
+                <div id="add-local-form" class="form-container" style="display: none;">
+                    <h2>Agregar Nuevo Local</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="local-nombre">Nombre del Local</label>
+                            <input type="text" id="local-nombre" class="form-control" placeholder="Ej. Local Centro">
+                        </div>
+                        <div class="form-group">
+                            <label for="local-direccion">Dirección</label>
+                            <input type="text" id="local-direccion" class="form-control" placeholder="Ej. Calle Principal #123">
+                        </div>
+                        <div class="form-group">
+                            <label for="local-telefono">Teléfono</label>
+                            <input type="text" id="local-telefono" class="form-control" placeholder="Ej. 555-1234">
+                        </div>
+                        <div class="form-group">
+                            <label for="local-tipo">Tipo de Local</label>
+                            <select id="local-tipo" class="form-control">
+                                <option value="comida">Comida</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="mixto">Mixto</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-danger" onclick="hideAddLocalForm()">Cancelar</button>
+                            <button type="button" class="btn btn-success">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Local Dashboard -->
+    <div id="admin-local" class="container" style="display: none;">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Local Centro</h3>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li><a href="#" class="active" onclick="showLocalSection('dashboard-local')"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" onclick="showLocalSection('gestion-productos')"><i class="fas fa-utensils"></i> Productos</a></li>
+                    <li><a href="#" onclick="showLocalSection('gestion-insumos')"><i class="fas fa-boxes"></i> Insumos</a></li>
+                    <li><a href="#" onclick="showLocalSection('gestion-proveedores')"><i class="fas fa-truck"></i> Proveedores</a></li>
+                    <li><a href="#" onclick="showLocalSection('reportes')"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                    <li><a href="#" onclick="showLocalSection('gestion-empleados')"><i class="fas fa-users"></i> Empleados</a></li>
+                    <li><a href="#" onclick="showLocalSection('pedidos')"><i class="fas fa-clipboard-list"></i> Pedidos</a></li>
+                    <li><a href="#" onclick="showLocalSection('editar-informacion')"><i class="fas fa-edit"></i> Editar Información</a></li>
+                    <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <h1 id="local-section-title">Dashboard Local</h1>
+                <div class="user-info">
+                    <img src="https://via.placeholder.com/40" alt="User">
+                    <span>Admin Local</span>
+                </div>
+            </div>
+            
+            <!-- Dashboard Local -->
+            <div id="dashboard-local" class="section-content">
+                <div class="card-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Ventas Hoy</span>
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-value">$2,350</div>
+                        <div class="card-footer">Total de ventas realizadas hoy</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Platillos Activos</span>
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="card-value">28</div>
+                        <div class="card-footer">Platillos disponibles en el menú</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Insumos Bajos</span>
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-value">5</div>
+                        <div class="card-footer">Insumos con stock bajo</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Empleados</span>
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-value">12</div>
+                        <div class="card-footer">Personal registrado</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <h2>Actividad Reciente</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Acción</th>
+                                <th>Detalle</th>
+                                <th>Fecha/Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Nuevo platillo agregado</td>
+                                <td>Tacos al Pastor</td>
+                                <td>Hoy, 10:15 AM</td>
+                            </tr>
+                            <tr>
+                                <td>Insumo bajo</td>
+                                <td>Cebolla</td>
+                                <td>Hoy, 09:50 AM</td>
+                            </tr>
+                            <tr>
+                                <td>Proveedor actualizado</td>
+                                <td>Distribuidora Central</td>
+                                <td>Ayer, 17:30 PM</td>
+                            </tr>
+                            <tr>
+                                <td>Nuevo empleado</td>
+                                <td>María López</td>
+                                <td>Ayer, 16:10 PM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Gestión de Productos -->
+            <div id="gestion-productos" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Gestión de Platillos</h1>
+                    <button class="btn btn-primary" onclick="showAddProductForm()"><i class="fas fa-plus"></i> Agregar Platillo</button>
+                </div>
+                
+                <div class="table-container">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <input type="text" class="form-control" placeholder="Buscar producto..." style="width: 300px;">
+                        <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Taco al Pastor</td>
+                                <td>$50.00</td>
+                                <td>Platillo</td>
+                                <td>Deliciosos tacos con piña</td>
+                                <td><span class="badge badge-success">Activo</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Agua de Horchata</td>
+                                <td>$20.00</td>
+                                <td>Bebida</td>
+                                <td>Refrescante agua de horchata</td>
+                                <td><span class="badge badge-success">Activo</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Enchiladas Verdes</td>
+                                <td>$80.00</td>
+                                <td>Platillo</td>
+                                <td>Enchiladas con salsa verde</td>
+                                <td><span class="badge badge-warning">Sin stock</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Formulario para agregar producto -->
+                <div id="add-product-form" class="form-container" style="display: none;">
+                    <h2>Agregar Nuevo Platillo</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="product-nombre">Nombre</label>
+                            <input type="text" id="product-nombre" class="form-control" placeholder="Ej. Tacos al Pastor">
+                        </div>
+                        <div class="form-group">
+                            <label for="product-precio">Precio</label>
+                            <input type="number" id="product-precio" class="form-control" placeholder="Ej. 50.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="product-tipo">Tipo</label>
+                            <select id="product-tipo" class="form-control">
+                                <option value="platillo">Platillo</option>
+                                <option value="bebida">Bebida</option>
+                                <option value="postre">Postre</option>
+                                <option value="entrada">Entrada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-descripcion">Descripción</label>
+                            <textarea id="product-descripcion" class="form-control" rows="3" placeholder="Descripción del platillo"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-imagen">Imagen</label>
+                            <input type="file" id="product-imagen" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="product-estado">Estado</label>
+                            <select id="product-estado" class="form-control">
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-danger" onclick="hideAddProductForm()">Cancelar</button>
+                            <button type="button" class="btn btn-success">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Gestión de Insumos -->
+            <div id="gestion-insumos" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Gestión de Insumos</h1>
+                    <button class="btn btn-primary" onclick="showAddInsumoForm()"><i class="fas fa-plus"></i> Agregar Insumo</button>
+                </div>
+                
+                <div class="table-container">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <input type="text" class="form-control" placeholder="Buscar insumo..." style="width: 300px;">
+                        <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Stock Actual</th>
+                                <th>Mínimo</th>
+                                <th>Máximo</th>
+                                <th>Proveedor</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Carne de Res</td>
+                                <td>45 kg</td>
+                                <td>25 kg</td>
+                                <td>100 kg</td>
+                                <td>Distribuidora Central</td>
+                                <td><span class="badge badge-success">Disponible</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Cebolla</td>
+                                <td>3 kg</td>
+                                <td>2 kg</td>
+                                <td>15 kg</td>
+                                <td>Alimentos del Norte</td>
+                                <td><span class="badge badge-warning">Bajo stock</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tortillas</td>
+                                <td>3 lb</td>
+                                <td>2 lb</td>
+                                <td>10 lb</td>
+                                <td>Suministros Express</td>
+                                <td><span class="badge badge-danger">Agotado</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Formulario para agregar insumo -->
+                <div id="add-insumo-form" class="form-container" style="display: none;">
+                    <h2>Agregar Nuevo Insumo</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="insumo-nombre">Nombre</label>
+                            <input type="text" id="insumo-nombre" class="form-control" placeholder="Ej. Carne de Res">
+                        </div>
+                        <div class="form-group">
+                            <label for="insumo-cantidad">Cantidad Actual</label>
+                            <input type="number" id="insumo-cantidad" class="form-control" placeholder="Ej. 45">
+                        </div>
+                        <div class="form-group">
+                            <label for="insumo-unidad">Unidad de Medida</label>
+                            <select id="insumo-unidad" class="form-control">
+                                <option value="kg">Kilogramos (kg)</option>
+                                <option value="g">Gramos (g)</option>
+                                <option value="lb">Libras (lb)</option>
+                                <option value="l">Litros (l)</option>
+                                <option value="ml">Mililitros (ml)</option>
+                                <option value="unidad">Unidades</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="insumo-minimo">Stock Mínimo</label>
+                            <input type="number" id="insumo-minimo" class="form-control" placeholder="Ej. 25">
+                        </div>
+                        <div class="form-group">
+                            <label for="insumo-maximo">Stock Máximo</label>
+                            <input type="number" id="insumo-maximo" class="form-control" placeholder="Ej. 100">
+                        </div>
+                        <div class="form-group">
+                            <label for="insumo-proveedor">Proveedor Principal</label>
+                            <select id="insumo-proveedor" class="form-control">
+                                <option value="1">Distribuidora Central</option>
+                                <option value="2">Alimentos del Norte</option>
+                                <option value="3">Suministros Express</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-danger" onclick="hideAddInsumoForm()">Cancelar</button>
+                            <button type="button" class="btn btn-success">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Gestión de Proveedores -->
+            <div id="gestion-proveedores" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Gestión de Proveedores</h1>
+                    <button class="btn btn-primary" onclick="showAddProveedorForm()"><i class="fas fa-plus"></i> Agregar Proveedor</button>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Contacto</th>
+                                <th>Ventas</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Distribuidora Central</td>
+                                <td>contacto@central.com - 555-1234</td>
+                                <td>$12,500 MXN</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Alimentos del Norte</td>
+                                <td>ventas@norte.com - 555-5678</td>
+                                <td>$8,200 MXN</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Suministros Express</td>
+                                <td>info@express.com - 555-9012</td>
+                                <td>$5,900 MXN</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Formulario para agregar proveedor -->
+                <div id="add-proveedor-form" class="form-container" style="display: none;">
+                    <h2>Agregar Nuevo Proveedor</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="proveedor-nombre">Nombre del proveedor</label>
+                            <input type="text" id="proveedor-nombre" class="form-control" placeholder="Ej. Carnes del Norte">
+                        </div>
+                        <div class="form-group">
+                            <label for="proveedor-categoria">Categoría</label>
+                            <input type="text" id="proveedor-categoria" class="form-control" placeholder="Ej. Carnes, Bebidas">
+                        </div>
+                        <div class="form-group">
+                            <label for="proveedor-telefono">Teléfono</label>
+                            <input type="text" id="proveedor-telefono" class="form-control" placeholder="Ej. 555-1234">
+                        </div>
+                        <div class="form-group">
+                            <label for="proveedor-email">Correo electrónico</label>
+                            <input type="email" id="proveedor-email" class="form-control" placeholder="Ej. contacto@proveedor.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="proveedor-direccion">Dirección</label>
+                            <input type="text" id="proveedor-direccion" class="form-control" placeholder="Ej. Calle 123, Ciudad">
+                        </div>
+                        <div class="form-group">
+                            <label for="proveedor-productos">Productos ofrecidos y precios</label>
+                            <textarea id="proveedor-productos" class="form-control" rows="3" placeholder="Ej. Res $120/kg, Pollo $80/kg"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="proveedor-entrega">Tiempos de entrega</label>
+                            <input type="text" id="proveedor-entrega" class="form-control" placeholder="Ej. 24-48 horas">
+                        </div>
+                        <div class="form-group">
+                            <label for="proveedor-pago">Condiciones de pago</label>
+                            <select id="proveedor-pago" class="form-control">
+                                <option value="credito">Crédito</option>
+                                <option value="contado">Contado</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-danger" onclick="hideAddProveedorForm()">Cancelar</button>
+                            <button type="button" class="btn btn-success">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Reportes -->
+            <div id="reportes" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Reportes</h1>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary"><i class="fas fa-calendar-day"></i> Día</button>
+                        <button class="btn btn-primary"><i class="fas fa-calendar-week"></i> Semana</button>
+                        <button class="btn btn-primary"><i class="fas fa-calendar-month"></i> Mes</button>
+                        <button class="btn btn-primary"><i class="fas fa-calendar-alt"></i> Año</button>
+                        <button class="btn btn-primary"><i class="fas fa-calendar-range"></i> Rango</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <input type="date" class="form-control" style="width: 200px;">
+                        <div>
+                            <button class="btn btn-success"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                            <button class="btn btn-success"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                        </div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Productos</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Fecha/Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#12345</td>
+                                <td>Juan Pérez</td>
+                                <td>Tacos al Pastor, Agua de Horchata</td>
+                                <td>$90.50</td>
+                                <td><span class="badge badge-success">Pagado</span></td>
+                                <td>2024-06-12 13:45</td>
+                            </tr>
+                            <tr>
+                                <td>#12347</td>
+                                <td>Carlos Ruiz</td>
+                                <td>Enchiladas Verdes, Refresco</td>
+                                <td>$78.00</td>
+                                <td><span class="badge badge-success">Pagado</span></td>
+                                <td>2024-06-12 11:10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card-container" style="grid-template-columns: 1fr 1fr; margin-top: 20px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Artículos más vendidos</span>
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div style="padding: 15px;">
+                            <table style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Tipo</th>
+                                        <th>Cantidad</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Tacos al pastor</td>
+                                        <td>Platillo</td>
+                                        <td>15</td>
+                                        <td>$750.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Agua de horchata</td>
+                                        <td>Bebida</td>
+                                        <td>8</td>
+                                        <td>$160.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Enchiladas verdes</td>
+                                        <td>Platillo</td>
+                                        <td>5</td>
+                                        <td>$320.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Resumen de Ventas</span>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div style="padding: 15px;">
+                            <div style="margin-bottom: 15px;">
+                                <h3>Total Ventas: <strong>$1,250.00</strong></h3>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <p>Variación: <span style="color: var(--success);">+15%</span></p>
+                                <small>vs. semana anterior</small>
+                            </div>
+                            <div>
+                                <p>Total Pedidos: <strong>320</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gestión de Empleados -->
+            <div id="gestion-empleados" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Gestión de Empleados</h1>
+                    <button class="btn btn-primary" onclick="showAddEmpleadoForm()"><i class="fas fa-plus"></i> Agregar Empleado</button>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="changeTab('lista-empleados')">Lista</div>
+                    <div class="tab" onclick="changeTab('nomina-empleados')">Nómina</div>
+                    <div class="tab" onclick="changeTab('turnos-empleados')">Turnos</div>
+                </div>
+                
+                <div id="lista-empleados" class="tab-content">
+                    <div class="table-container">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <input type="text" class="form-control" placeholder="Buscar empleado..." style="width: 300px;">
+                            <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Cédula</th>
+                                    <th>Teléfono</th>
+                                    <th>Correo</th>
+                                    <th>Puesto</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Ana Torrez</td>
+                                    <td>705610896</td>
+                                    <td>88871296</td>
+                                    <td>ctorrez@gmail.com</td>
+                                    <td>Mesera</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Juan Pérez</td>
+                                    <td>109680125</td>
+                                    <td>85261245</td>
+                                    <td>juanP13@gmail.com</td>
+                                    <td>Cocinero</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mariana Castillo</td>
+                                    <td>6523896</td>
+                                    <td>---</td>
+                                    <td>mcastillo@hotmail.com</td>
+                                    <td>Cajera</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="nomina-empleados" class="tab-content" style="display: none;">
+                    <div class="table-container">
+                        <h2>Nómina de Empleados</h2>
+                        <p>Contenido de nómina aquí...</p>
+                    </div>
+                </div>
+                
+                <div id="turnos-empleados" class="tab-content" style="display: none;">
+                    <div class="table-container">
+                        <h2>Turnos de Empleados</h2>
+                        <p>Contenido de turnos aquí...</p>
+                    </div>
+                </div>
+                
+                <!-- Formulario para agregar empleado -->
+                <div id="add-empleado-form" class="form-container" style="display: none;">
+                    <h2>Agregar Nuevo Empleado</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="empleado-nombre">Nombre</label>
+                            <input type="text" id="empleado-nombre" class="form-control" placeholder="Ingrese el nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="empleado-apellido">Apellido</label>
+                            <input type="text" id="empleado-apellido" class="form-control" placeholder="Ingrese el apellido">
+                        </div>
+                        <div class="form-group">
+                            <label for="empleado-cedula">Cédula</label>
+                            <input type="text" id="empleado-cedula" class="form-control" placeholder="Ingrese la cédula">
+                        </div>
+                        <div class="form-group">
+                            <label for="empleado-telefono">Teléfono</label>
+                            <input type="text" id="empleado-telefono" class="form-control" placeholder="Ingrese el teléfono">
+                        </div>
+                        <div class="form-group">
+                            <label for="empleado-email">Correo electrónico</label>
+                            <input type="email" id="empleado-email" class="form-control" placeholder="Ingrese el correo">
+                        </div>
+                        <div class="form-group">
+                            <label for="empleado-puesto">Puesto</label>
+                            <select id="empleado-puesto" class="form-control">
+                                <option value="mesero">Mesero/a</option>
+                                <option value="cocinero">Cocinero/a</option>
+                                <option value="cajero">Cajero/a</option>
+                                <option value="limpieza">Limpieza</option>
+                                <option value="admin">Administrativo</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-danger" onclick="hideAddEmpleadoForm()">Cancelar</button>
+                            <button type="button" class="btn btn-success">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Pedidos -->
+            <div id="pedidos" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Pedidos</h1>
+                    <button class="btn btn-primary" onclick="showNuevoPedidoForm()"><i class="fas fa-plus"></i> Nuevo Pedido</button>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="changePedidoTab('pedidos-activos')">Activos</div>
+                    <div class="tab" onclick="changePedidoTab('pedidos-proceso')">En Proceso</div>
+                    <div class="tab" onclick="changePedidoTab('pedidos-completados')">Completados</div>
+                </div>
+                
+                <div id="pedidos-activos" class="tab-content">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Productos</th>
+                                    <th>Estado</th>
+                                    <th>Hora</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#1023</td>
+                                    <td>Carlos Pérez</td>
+                                    <td>3x Tacos, 2x Enchiladas</td>
+                                    <td><span class="badge badge-warning">Recibido</span></td>
+                                    <td>12:34</td>
+                                    <td>$350.00</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1024</td>
+                                    <td>Axel López</td>
+                                    <td>1x Hamburguesa (3x Queso)</td>
+                                    <td><span class="badge badge-info">En preparación</span></td>
+                                    <td>12:36</td>
+                                    <td>$150.00</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1025</td>
+                                    <td>Carlos Alcántara</td>
+                                    <td>3x Tostadas</td>
+                                    <td><span class="badge badge-info">En preparación</span></td>
+                                    <td>12:40</td>
+                                    <td>$95.00</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="pedidos-proceso" class="tab-content" style="display: none;">
+                    <div class="table-container">
+                        <h2>Pedidos en Proceso</h2>
+                        <p>Contenido de pedidos en proceso aquí...</p>
+                    </div>
+                </div>
+                
+                <div id="pedidos-completados" class="tab-content" style="display: none;">
+                    <div class="table-container">
+                        <h2>Pedidos Completados</h2>
+                        <p>Contenido de pedidos completados aquí...</p>
+                    </div>
+                </div>
+                
+                <!-- Formulario para nuevo pedido -->
+                <div id="nuevo-pedido-form" class="form-container" style="display: none;">
+                    <h2>Crear Nuevo Pedido</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="pedido-cliente">Nombre del Cliente</label>
+                            <input type="text" id="pedido-cliente" class="form-control" placeholder="Nombre del cliente">
+                        </div>
+                        <div class="form-group">
+                            <label for="pedido-telefono">Teléfono de Contacto</label>
+                            <input type="text" id="pedido-telefono" class="form-control" placeholder="Teléfono de contacto">
+                        </div>
+                        <div class="form-group">
+                            <label for="pedido-mesa">Número de Mesa</label>
+                            <input type="text" id="pedido-mesa" class="form-control" placeholder="Ejemplo: 13">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Buscar Producto</label>
+                            <div style="display: flex;">
+                                <input type="text" class="form-control" placeholder="Buscar por nombre o categoría">
+                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Productos Seleccionados</label>
+                            <div style="border: 1px solid #ddd; border-radius: 4px; padding: 10px; min-height: 100px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span>Tacos al Pastor - $50.00</span>
+                                    <div>
+                                        <button class="btn btn-sm btn-danger"><i class="fas fa-minus"></i></button>
+                                        <span style="margin: 0 10px;">1</span>
+                                        <button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Agua de Horchata - $25.00</span>
+                                    <div>
+                                        <button class="btn btn-sm btn-danger"><i class="fas fa-minus"></i></button>
+                                        <span style="margin: 0 10px;">1</span>
+                                        <button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pedido-notas">Notas Especiales</label>
+                            <textarea id="pedido-notas" class="form-control" rows="3" placeholder="Ej. Sin cebolla, extra picante"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <h3>Resumen del Pedido</h3>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Tacos al Pastor:</span>
+                                <span>$50.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Agua de Horchata:</span>
+                                <span>$25.00</span>
+                            </div>
+                            <hr>
+                            <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                                <span>Total:</span>
+                                <span>$75.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-danger" onclick="hideNuevoPedidoForm()">Cancelar</button>
+                            <button type="button" class="btn btn-success">Guardar Pedido</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Editar Información del Local -->
+            <div id="editar-informacion" class="section-content" style="display: none;">
+                <div class="header">
+                    <h1>Editar Información del Local</h1>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="changeEditTab('descripcion-local')">Descripción</div>
+                    <div class="tab" onclick="changeEditTab('menu-local')">Menú</div>
+                    <div class="tab" onclick="changeEditTab('horarios-local')">Horarios</div>
+                    <div class="tab" onclick="changeEditTab('contacto-local')">Contacto</div>
+                    <div class="tab" onclick="changeEditTab('vista-previa-local')">Vista Previa</div>
+                </div>
+                
+                <div id="descripcion-local" class="tab-content">
+                    <div class="form-container">
+                        <h2>Descripción del Local</h2>
+                        <form>
+                            <div class="form-group">
+                                <label>Descripción del local</label>
+                                <textarea class="form-control" rows="5" placeholder="Describe tu establecimiento...">Restaurante especializado en comida mexicana tradicional con un toque moderno. Ofrecemos los mejores tacos al pastor de la ciudad y una amplia variedad de platillos típicos.</textarea>
+                            </div>
+                            <div class="form-group" style="display: flex; justify-content: flex-end;">
+                                <button type="button" class="btn btn-success">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div id="menu-local" class="tab-content" style="display: none;">
+                    <div class="form-container">
+                        <h2>Menú del Local</h2>
+                        <div style="margin-bottom: 20px;">
+                            <button class="btn btn-primary"><i class="fas fa-plus"></i> Agregar Producto</button>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Categoría</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Hamburguesa Clásica</td>
+                                    <td>$45.00</td>
+                                    <td>Comida Rápida</td>
+                                    <td>Carne, pan, lechuga</td>
+                                    <td><span class="badge badge-success">Disponible</span></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                                                                                                             <tr>
+                                    <td>Pizza Margarita</td>
+                                    <td>$85.00</td>
+                                    <td>Italiana</td>
+                                    <td>Queso, tomate, albahaca</td>
+                                    <td><span class="badge badge-success">Disponible</span></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                                                                                                                                                         </div>
+                </div>
+                
+                <div id="horarios-local" class="tab-content" style="display: none;">
+                    <div class="form-container">
+                        <h2>Horarios del Local</h2>
+                        <form>
+                            <div class="form-group">
+                                <label>Lunes a Viernes</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="time" class="form-control" value="09:00">
+                                    <span>a</span>
+                                    <input type="time" class="form-control" value="22:00">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Sábado y Domingo</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="time" class="form-control" value="10:00">
+                                    <span>a</span>
+                                    <input type="time" class="form-control" value="23:00">
+                                </div>
+                            </div>
+                            <div class="form-group" style="display: flex; justify-content: flex-end;">
+                                <button type="button" class="btn btn-success">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div id="contacto-local" class="tab-content" style="display: none;">
+                    <div class="form-container">
+                        <h2>Información de Contacto</h2>
+                        <form>
+                            <div class="form-group">
+                                <label>Teléfono</label>
+                                <input type="text" class="form-control" value="555-123-4567">
+                            </div>
+                            <div class="form-group">
+                                <label>Redes Sociales</label>
+                                <input type="text" class="form-control" value="@lacomargagastropark">
+                            </div>
+                            <div class="form-group">
+                                <label>Dirección</label>
+                                <input type="text" class="form-control" value="Calle Principal #123, Ciudad">
+                            </div>
+                            <div class="form-group" style="display: flex; justify-content: flex-end;">
+                                <button type="button" class="btn btn-success">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div id="vista-previa-local" class="tab-content" style="display: none;">
+                    <div class="form-container">
+                        <h2>Vista Previa del Local</h2>
+                        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h3>La Comarca Gastro Park</h3>
+                            <p>Restaurante especializado en comida mexicana tradicional con un toque moderno. Ofrecemos los mejores tacos al pastor de la ciudad y una amplia variedad de platillos típicos.</p>
+                            
+                            <h4 style="margin-top: 20px;">Menú</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                                <div style="background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    <h5>Hamburguesa Clásica - $45.00</h5>
+                                    <p>Carne, pan, lechuga</p>
+                                                               </div>
+                                <div style="background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    <h5>Pizza Margarita - $85.00</h5>
+                                    <p>Queso, tomate, albahaca</p>
+                                </div>
+                            </div>
+                            
+                            <h4 style="margin-top: 20px;">Horarios</h4>
+                            <p>Lunes a Viernes: 09:00 - 22:00</p>
+                            <p>Sábado y Domingo: 10:00 - 23:00</p>
+                            
+                            <h4 style="margin-top: 20px;">Contacto</h4>
+                            <p>Teléfono: 555-123-4567</p>
+                            <p>Redes: @lacomargagastropark</p>
+                            <p>Dirección: Calle Principal #123, Ciudad</p>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                            <button type="button" class="btn btn-success">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar secciones
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Actualizar el título
+            document.getElementById('section-title').textContent = document.querySelector(`a[onclick="showSection('${sectionId}')"]`).textContent.trim();
+        }
+        
+        // Función para mostrar/ocultar secciones en admin local
+        function showLocalSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Actualizar el título
+            document.getElementById('local-section-title').textContent = document.querySelector(`a[onclick="showLocalSection('${sectionId}')"]`).textContent.trim();
+        }
+        
+        // Funciones para mostrar/ocultar formularios
+        function showAddAdminForm() {
+            document.getElementById('add-admin-form').style.display = 'block';
+        }
+        
+        function hideAddAdminForm() {
+            document.getElementById('add-admin-form').style.display = 'none';
+        }
+        
+        function showAddLocalForm() {
+            document.getElementById('add-local-form').style.display = 'block';
+        }
+        
+        function hideAddLocalForm() {
+            document.getElementById('add-local-form').style.display = 'none';
+        }
+        
+        function showAddProductForm() {
+            document.getElementById('add-product-form').style.display = 'block';
+        }
+        
+        function hideAddProductForm() {
+            document.getElementById('add-product-form').style.display = 'none';
+        }
+        
+        function showAddInsumoForm() {
+            document.getElementById('add-insumo-form').style.display = 'block';
+        }
+        
+        function hideAddInsumoForm() {
+            document.getElementById('add-insumo-form').style.display = 'none';
+        }
+        
+        function showAddProveedorForm() {
+            document.getElementById('add-proveedor-form').style.display = 'block';
+        }
+        
+        function hideAddProveedorForm() {
+            document.getElementById('add-proveedor-form').style.display = 'none';
+        }
+        
+        function showAddEmpleadoForm() {
+            document.getElementById('add-empleado-form').style.display = 'block';
+        }
+        
+        function hideAddEmpleadoForm() {
+            document.getElementById('add-empleado-form').style.display = 'none';
+        }
+        
+        function showNuevoPedidoForm() {
+            document.getElementById('nuevo-pedido-form').style.display = 'block';
+        }
+        
+        function hideNuevoPedidoForm() {
+            document.getElementById('nuevo-pedido-form').style.display = 'none';
+        }
+        
+        // Función para cambiar pestañas
+        function changeTab(tabId) {
+            // Ocultar todos los contenidos de pestañas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Desactivar todas las pestañas
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar el contenido de la pestaña seleccionada
+            document.getElementById(tabId).style.display = 'block';
+            
+            // Activar la pestaña seleccionada
+            event.target.classList.add('active');
+        }
+        
+        function changePedidoTab(tabId) {
+            changeTab(tabId);
+        }
+        
+        function changeEditTab(tabId) {
+            changeTab(tabId);
+        }
+        
+        // Función para el login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulación de login
+            const cedula = document.getElementById('cedula').value;
+            const password = document.getElementById('password').value;
+            
+            // Validación simple (en un sistema real esto sería una llamada a un servidor)
+            if (cedula === 'admin' && password === 'admin') {
+                // Mostrar admin global
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('admin-global').style.display = 'flex';
+            } else if (cedula === 'local' && password === 'local') {
+                // Mostrar admin local
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('admin-local').style.display = 'flex';
+            } else {
+                alert('Cédula o contraseña incorrectos');
+            }
+        });
+        
+        // Función para resetear el formulario de login
+        function resetForm() {
+            document.getElementById('login-form').reset();
+        }
+        
+        // Función para cerrar sesión
+        function logout() {
+            // Ocultar todos los dashboards
+            document.getElementById('admin-global').style.display = 'none';
+            document.getElementById('admin-local').style.display = 'none';
+            
+            // Mostrar pantalla de login
+            document.getElementById('login-screen').style.display = 'flex';
+            
+            // Resetear formulario
+            resetForm();
+        }
+    </script>
+</body>
+</html>
