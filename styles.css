@@ -30,8 +30,11 @@
         
         /* Sidebar */
         .sidebar {
-            width: 250px;
-            background-color: var(--primary);
+            width: 266px;
+            /* background-color: #020024; */
+            /* background: linear-gradient(90deg, #000000,#230b10,#331016,#230b10,#000000); */
+            background: linear-gradient(90deg, #000000,#0d1521,#070e18);
+            /* background: linear-gradient(90deg, #131111,#43225e); */
             color: white;
             padding: 20px 0;
             transition: all 0.3s;
