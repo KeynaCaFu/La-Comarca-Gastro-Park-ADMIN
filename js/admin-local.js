@@ -56,6 +56,14 @@ function hideAddProductForm() {
             document.getElementById('nuevo-pedido-form').style.display = 'none';
         }
 
+function changePedidoTab(tabId) {
+            changeTab(tabId);
+}
+        
+ function changeEditTab(tabId) {
+  changeTab(tabId);
+}
+
 
 // Función para cambiar pestañas
 function changeTab(tabId) {
