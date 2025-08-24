@@ -87,6 +87,12 @@
             background-color: #c4d0cc;
         }
         
+        .header img{
+            height: 270px;
+            margin-bottom: -192px;
+            margin-top: -187px;
+        }
+        
         .header {
             display: flex;
             justify-content: space-between;
