@@ -715,7 +715,7 @@
                                     <td>#1024</td>
                                     <td>Axel López</td>
                                     <td>1x Hamburguesa (3x Queso)</td>
-                                    <td><span class="badge badge-info">En preparación</span></td>
+                                    <td><span class="badge badge-success ">En preparación</span></td>
                                     <td>12:36</td>
                                     <td>$150.00</td>
                                     <td>
@@ -727,7 +727,7 @@
                                     <td>#1025</td>
                                     <td>Carlos Alcántara</td>
                                     <td>3x Tostadas</td>
-                                    <td><span class="badge badge-info">En preparación</span></td>
+                                    <td><span class="badge badge-success">En preparación</span></td>
                                     <td>12:40</td>
                                     <td>$95.00</td>
                                     <td>
@@ -781,22 +781,24 @@
                         
                         <div class="form-group">
                             <label>Productos Seleccionados</label>
-                            <div style="border: 1px solid #ddd; border-radius: 4px; padding: 10px; min-height: 100px;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <div id="productos-seleccionados" 
+                                style="border: 1px solid #ddd; border-radius: 4px; padding: 10px; min-height: 100px;">
+                                
+                                <div class="producto" data-precio="50" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span>Tacos al Pastor - $50.00</span>
                                     <div>
-                                        <button class="btn btn-sm btn-danger"><i class="fas fa-minus"></i></button>
-                                        <span style="margin: 0 10px;">1</span>
-                                        <button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
+                                        <button type="button" class="btn btn-sm btn-danger btn-restar"><i class="fas fa-minus"></i></button>
+                                        <span class="cantidad" style="margin: 0 10px;">1</span>
+                                        <button type="button" class="btn btn-sm btn-success btn-sumar"><i class="fas fa-plus"></i></button>
                                     </div>
                                 </div>
-                                <div style="display: flex; justify-content: space-between;">
+                                <div class="producto" data-precio="25" style="display: flex; justify-content: space-between;">
                                     <span>Agua de Horchata - $25.00</span>
                                     <div>
-                                        <button class="btn btn-sm btn-danger"><i class="fas fa-minus"></i></button>
-                                        <span style="margin: 0 10px;">1</span>
-                                        <button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
-                                    </div>
+                                    <button type="button" class="btn btn-sm btn-danger btn-restar"><i class="fas fa-minus"></i></button>
+                                    <span class="cantidad" style="margin: 0 10px;">1</span>
+                                    <button type="button" class="btn btn-sm btn-success btn-sumar"><i class="fas fa-plus"></i></button>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -807,21 +809,14 @@
                         </div>
                         
                         <div class="form-group">
-                            <h3>Resumen del Pedido</h3>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span>Tacos al Pastor:</span>
-                                <span>$50.00</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span>Agua de Horchata:</span>
-                                <span>$25.00</span>
-                            </div>
-                            <hr>
-                            <div style="display: flex; justify-content: space-between; font-weight: bold;">
-                                <span>Total:</span>
-                                <span>$75.00</span>
-                            </div>
+                        <h3>Resumen del Pedido</h3>
+                        <div id="resumen"></div>
+                        <hr>
+                        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                            <span>Total:</span>
+                            <span id="total">$0.00</span>
                         </div>
+                    </div>
                         
                         <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
                             <button type="button" class="btn btn-danger" onclick="hideNuevoPedidoForm()">Cancelar</button>
@@ -998,5 +993,56 @@
 
     <script src="js/auth.js"></script>
     <script src="js/admin-local.js"></script>
+
+    <script>
+    function actualizarResumen() {
+        let productos = document.querySelectorAll(".producto");
+        let resumen = document.getElementById("resumen");
+        let total = 0;
+        resumen.innerHTML = "";
+
+        productos.forEach(p => {
+            let precio = parseFloat(p.getAttribute("data-precio"));
+            let cantidad = parseInt(p.querySelector(".cantidad").textContent);
+            if (cantidad > 0) {
+                let subtotal = precio * cantidad;
+                total += subtotal;
+
+                let item = document.createElement("div");
+                item.style.display = "flex";
+                item.style.justifyContent = "space-between";
+                item.style.marginBottom = "5px";
+                item.innerHTML = `<span>${p.querySelector("span").textContent.split(" - ")[0]} x${cantidad}</span>
+                                  <span>$${subtotal.toFixed(2)}</span>`;
+                resumen.appendChild(item);
+            }
+        });
+
+        document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+    }
+
+    // Manejo de botones
+    document.querySelectorAll(".btn-sumar").forEach(boton => {
+        boton.addEventListener("click", function () {
+            let cantidadEl = this.parentElement.querySelector(".cantidad");
+            cantidadEl.textContent = parseInt(cantidadEl.textContent) + 1;
+            actualizarResumen();
+        });
+    });
+
+    document.querySelectorAll(".btn-restar").forEach(boton => {
+        boton.addEventListener("click", function () {
+            let cantidadEl = this.parentElement.querySelector(".cantidad");
+            let cantidad = parseInt(cantidadEl.textContent);
+            if (cantidad > 0) {
+                cantidadEl.textContent = cantidad - 1;
+            }
+            actualizarResumen();
+        });
+    });
+
+    // Inicializar resumen al cargar
+    actualizarResumen();
+</script>
 </body>
 </html>
