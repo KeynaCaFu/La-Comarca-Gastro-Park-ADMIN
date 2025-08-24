@@ -639,13 +639,14 @@
 }
 
 .login-logo {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     object-fit: contain;
-    margin-bottom: 16px;
-    border-radius: 50%;
+    margin-bottom: 1px;
+    border-radius: 100%;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
+
 
 .login-title {
     font-family: 'Oswald', sans-serif;
@@ -741,4 +742,3 @@
 .btn-cancelar:hover {
     background: #ac5c1b;
 }
-
