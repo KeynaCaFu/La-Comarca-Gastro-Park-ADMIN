@@ -7,7 +7,7 @@
     <title>Admin Global - La Comarca Gastro Park</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
+<div>
     <!-- Admin Global Dashboard -->
     <div id="admin-global" class="container">
 
@@ -21,6 +21,7 @@
                     <li><a href="#" class="active" onclick="showSection('dashboard-global')"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li><a href="#" onclick="showSection('gestion-administradores')"><i class="fas fa-user-tie"></i> Administradores</a></li>
                     <li><a href="#" onclick="showSection('gestion-locales')"><i class="fas fa-store"></i> Locales</a></li>
+                    <li><a href="#" onclick="showSection('gestion-reseñas')"><i class="fas fa-star"></i> Reseñas</a></li>
                     <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
                 </ul>
             </div>
@@ -279,8 +280,131 @@
                     </form>
                 </div>
             </div>
+
+
+
+ <!-- Gestionar Reseñas con pestañas -->
+        <div id="gestion-reseñas" class="section-content" style="display: none;">
+
+                <div class="header">
+                    <h1>Gestionar Reseñas</h1>
+                    <button class="btn btn-primary" onclick="showAddResenaForm()"><i class="fas fa-plus"></i> Agregar Reseña</button>
+                </div>
+                <div class="tabs">
+                    <div class="tab active" onclick="changeTab('reseñas-local-global')">Local</div>
+                    <div class="tab" onclick="changeTab('reseñas-pedido-global')">Pedido</div>
+                </div>
+                <div id="reseñas-local-global" class="tab-content">
+                    <div class="table-container">
+                        <h2>Reseñas de Local</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Referencia</th>
+                                    <th>Cliente</th>
+                                    <th>Calificación</th>
+                                    <th>Comentario</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Local Sur</td>
+                                    <td>Carlos Ruiz</td>
+                                    <td>5</td>
+                                    <td>Ambiente agradable.</td>
+                                    <td>2025-08-22</td>
+                                    <td>
+                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <!-- Más reseñas de local aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="reseñas-pedido-global" class="tab-content" style="display: none;">
+                    <div class="table-container">
+                        <h2>Reseñas de Pedido</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Referencia</th>
+                                    <th>Cliente</th>
+                                    <th>Calificación</th>
+                                    <th>Comentario</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#12345</td>
+                                    <td>María López</td>
+                                    <td>4</td>
+                                    <td>Buen sabor y atención.</td>
+                                    <td>2025-08-21</td>
+                                    <td>
+                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <!-- Más reseñas de pedido aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Formulario para agregar reseña -->
+                <div id="add-resena-form" class="form-container" style="display: none;">
+                    <h2>Agregar Reseña</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="resena-tipo">Tipo</label>
+                            <select id="resena-tipo" class="form-control">
+                                <option value="local">Local</option>
+                                <option value="pedido">Pedido</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resena-referencia">Referencia (Local o Pedido)</label>
+                            <input type="text" id="resena-referencia" class="form-control" placeholder="Ej. Local Sur o #12345">
+                        </div>
+                        <div class="form-group">
+                            <label for="resena-cliente">Cliente</label>
+                            <input type="text" id="resena-cliente" class="form-control" placeholder="Nombre del cliente">
+                        </div>
+                        <div class="form-group">
+                            <label for="resena-calificacion">Calificación</label>
+                            <select id="resena-calificacion" class="form-control">
+                                <option value="5">5 - Excelente</option>
+                                <option value="4">4 - Muy bueno</option>
+                                <option value="3">3 - Bueno</option>
+                                <option value="2">2 - Regular</option>
+                                <option value="1">1 - Malo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resena-comentario">Comentario</label>
+                            <textarea id="resena-comentario" class="form-control" rows="3" placeholder="Comentario"></textarea>
+                        </div>
+                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-danger" onclick="hideAddResenaForm()">Cancelar</button>
+                            <button type="button" class="btn btn-success">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+
+
+        
+
     </div>
+
+</div>
+    
     <!-- </div> -->
 
     <script src="js/auth.js"></script>

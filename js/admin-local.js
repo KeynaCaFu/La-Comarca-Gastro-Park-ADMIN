@@ -56,6 +56,16 @@ function hideAddProductForm() {
             document.getElementById('nuevo-pedido-form').style.display = 'none';
         }
 
+
+function showAddResenaForm() {
+    document.getElementById('add-resena-form').style.display = 'block';
+}
+
+function hideAddResenaForm() {
+    document.getElementById('add-resena-form').style.display = 'none';
+}
+
+
 function changePedidoTab(tabId) {
             changeTab(tabId);
 }
@@ -65,23 +75,31 @@ function changePedidoTab(tabId) {
 }
 
 
+
 // Función para cambiar pestañas
+
 function changeTab(tabId) {
     // Ocultar todos los contenidos de pestañas
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.style.display = 'none';
     });
-    
+
     // Desactivar todas las pestañas
-    document.querySelectorAll('.tab').forEach(tab => {
+    document.querySelectorAll('.tabs .tab').forEach(tab => {
         tab.classList.remove('active');
     });
-    
+
     // Mostrar el contenido de la pestaña seleccionada
     document.getElementById(tabId).style.display = 'block';
-    
+
     // Activar la pestaña seleccionada
-    event.target.classList.add('active');
+    // event.target puede fallar si el evento viene de otro lado, mejor buscar el tab por id
+    let tabs = document.querySelectorAll('.tabs .tab');
+    tabs.forEach(tab => {
+        if (tab.getAttribute('onclick') && tab.getAttribute('onclick').includes(tabId)) {
+            tab.classList.add('active');
+        }
+    });
 }
 
 // Inicialización cuando el DOM esté cargado
