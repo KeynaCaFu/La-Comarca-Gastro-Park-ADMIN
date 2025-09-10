@@ -76,8 +76,20 @@
                         <div class="card-footer">Personal registrado</div>
                     </div>
                 </div>
-                
-                <div class="table-container">
+
+                <!-- Gráfica de pastel de productos más vendidos -->
+                <div class="table-container" style="margin-bottom: 30px; max-width: 400px; margin-right: auto; margin-top: 70px;">
+                        <h2 style="margin-bottom: 20px; font-size: 1.1rem;">Productos más vendidos</h2>
+                        <canvas id="productosMasVendidosChart" width="240" height="180" style="display: block; margin: 0 auto;"></canvas>
+                    </div>
+
+                    <!-- Gráfica de barras de ventas por día, semana y mes -->
+                    <div class="table-container" style="margin-bottom: 30px; max-width: 440px; margin-left: 420px; margin-right: auto; margin-top: -351px;">
+                        <h2 style="margin-bottom: 20px; font-size: 1.1rem;">Ventas por Día, Semana y Mes</h2>
+                        <canvas id="ventasPeriodoChart" width="350" height="236" style="display: block; margin: 0 auto;"></canvas>
+                    </div>
+
+                <!-- <div class="table-container">
                     <h2>Actividad Reciente</h2>
                     <table>
                         <thead>
@@ -110,7 +122,85 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div> -->
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Gráfica de pastel de productos más vendidos (datos de ejemplo)
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('productosMasVendidosChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Tacos al Pastor', 'Hamburguesa', 'Pizza', 'Ensalada', 'Burrito'],
+                    datasets: [{
+                        data: [120, 90, 70, 40, 30],
+                        backgroundColor: [
+                            '#ff9900',
+                            '#27ae60',
+                            '#e74c3c',
+                            '#3498db',
+                            '#9b59b6'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica de barras de ventas por día, semana y mes (datos de ejemplo)
+        const ventasPeriodoCtx = document.getElementById('ventasPeriodoChart');
+        if (ventasPeriodoCtx) {
+            new Chart(ventasPeriodoCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Día', 'Semana', 'Mes'],
+                    datasets: [{
+                        label: 'Ventas',
+                        data: [25, 180, 720],
+                        backgroundColor: [
+                            '#3498db',
+                            '#27ae60',
+                            '#ff9900'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    });
+    </script>
             </div>
             
             <!-- Gestión de Productos -->
@@ -232,8 +322,7 @@
                         <input type="text" class="form-control" placeholder="Buscar insumo..." style="width: 300px;">
                         <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
                     </div>
-                    
-                    <table>
+                    <table id="tabla-insumos">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
@@ -256,6 +345,8 @@
                                 <td>
                                     <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
                                     <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn-entra btn-entrada btn-sm" onclick="mostrarMovimientoInsumo(this, 'entrada')"><i class="fas fa-arrow-down"></i> Entrada</button>
+                                    <button class="btn-sali btn-salida btn-sm" onclick="mostrarMovimientoInsumo(this, 'salida')"><i class="fas fa-arrow-up"></i> Salida</button>
                                 </td>
                             </tr>
                             <tr>
@@ -268,6 +359,8 @@
                                 <td>
                                     <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
                                     <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-success btn-sm" onclick="mostrarMovimientoInsumo(this, 'entrada')"><i class="fas fa-arrow-down"></i> Entrada</button>
+                                    <button class="btn btn-danger btn-sm" onclick="mostrarMovimientoInsumo(this, 'salida')"><i class="fas fa-arrow-up"></i> Salida</button>
                                 </td>
                             </tr>
                             <tr>
@@ -280,10 +373,26 @@
                                 <td>
                                     <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
                                     <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-success btn-sm" onclick="mostrarMovimientoInsumo(this, 'entrada')"><i class="fas fa-arrow-down"></i> Entrada</button>
+                                    <button class="btn btn-danger btn-sm" onclick="mostrarMovimientoInsumo(this, 'salida')"><i class="fas fa-arrow-up"></i> Salida</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    <!-- Formulario para entrada/salida de insumo -->
+                    <div id="movimiento-insumo-form" class="form-container" style="display: none; margin-top: 20px;">
+                        <h2 id="movimiento-insumo-titulo">Movimiento de Insumo</h2>
+                        <form onsubmit="return false;">
+                            <div class="form-group">
+                                <label id="movimiento-insumo-label"></label>
+                                <input type="number" id="movimiento-insumo-cantidad" class="form-control" min="1" required>
+                            </div>
+                            <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                                <button type="button" class="btn btn-danger" onclick="ocultarMovimientoInsumo()">Cancelar</button>
+                                <button type="button" class="btn btn-success" id="btn-confirmar-movimiento">Confirmar</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
                 
                 <!-- Formulario para agregar insumo -->
@@ -1109,6 +1218,84 @@
 
     <script src="js/auth.js"></script>
     <script src="js/admin-local.js"></script>
+
+        <!-- Gráficas dashboard -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+        // Gráfica de pastel de productos más vendidos (datos de ejemplo)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pie chart productos más vendidos
+            const ctxPie = document.getElementById('productosMasVendidosChart');
+            if (ctxPie) {
+                new Chart(ctxPie, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Tacos al Pastor', 'Hamburguesa', 'Pizza', 'Ensalada', 'Burrito'],
+                        datasets: [{
+                            data: [120, 90, 70, 40, 30],
+                            backgroundColor: [
+                                '#ff9900',
+                                '#27ae60',
+                                '#e74c3c',
+                                '#3498db',
+                                '#9b59b6'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                            title: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+            // Bar chart ventas por periodo (vertical)
+            const ctxBar = document.getElementById('ventasPeriodoChart');
+            if (ctxBar) {
+                new Chart(ctxBar, {
+                    type: 'bar', // vertical por defecto
+                    data: {
+                        labels: ['Día', 'Semana', 'Mes'],
+                        datasets: [{
+                            label: 'Ventas ($)',
+                            data: [2350, 15800, 67200],
+                            backgroundColor: [
+                                '#27ae60',
+                                '#ff9900',
+                                '#3498db'
+                            ],
+                            borderRadius: 8,
+                            maxBarThickness: 50
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        indexAxis: 'x', // asegura barras verticales
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { color: '#181818', font: { size: 13 } }
+                            },
+                            x: {
+                                ticks: { color: '#181818', font: { size: 13 } }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        </script>
 
     <script>
     function actualizarResumen() {
