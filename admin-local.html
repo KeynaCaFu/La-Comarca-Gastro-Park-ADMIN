@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/styles.css">
     <title>Admin Local - La Comarca Gastro Park</title>
+     <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <!-- Admin Local Dashboard -->
-    <div id="admin-local" class="container">
+    <div id="admin-local" class="d-flex" style="min-height: 100vh;">
          <div class="sidebar">
             <div class="sidebar-header">
                 <h3>Local Centro</h3>
@@ -88,132 +90,21 @@
                         <h2 style="margin-bottom: 20px; font-size: 1.1rem;">Ventas por Día, Semana y Mes</h2>
                         <canvas id="ventasPeriodoChart" width="350" height="236" style="display: block; margin: 0 auto;"></canvas>
                     </div>
-
-                <!-- <div class="table-container">
-                    <h2>Actividad Reciente</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Acción</th>
-                                <th>Detalle</th>
-                                <th>Fecha/Hora</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Nuevo platillo agregado</td>
-                                <td>Tacos al Pastor</td>
-                                <td>Hoy, 10:15 AM</td>
-                            </tr>
-                            <tr>
-                                <td>Insumo bajo</td>
-                                <td>Cebolla</td>
-                                <td>Hoy, 09:50 AM</td>
-                            </tr>
-                            <tr>
-                                <td>Proveedor actualizado</td>
-                                <td>Distribuidora Central</td>
-                                <td>Ayer, 17:30 PM</td>
-                            </tr>
-                            <tr>
-                                <td>Nuevo empleado</td>
-                                <td>María López</td>
-                                <td>Ayer, 16:10 PM</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> -->
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    // Gráfica de pastel de productos más vendidos (datos de ejemplo)
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('productosMasVendidosChart');
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Tacos al Pastor', 'Hamburguesa', 'Pizza', 'Ensalada', 'Burrito'],
-                    datasets: [{
-                        data: [120, 90, 70, 40, 30],
-                        backgroundColor: [
-                            '#ff9900',
-                            '#27ae60',
-                            '#e74c3c',
-                            '#3498db',
-                            '#9b59b6'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        },
-                        title: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        }
-
-        // Gráfica de barras de ventas por día, semana y mes (datos de ejemplo)
-        const ventasPeriodoCtx = document.getElementById('ventasPeriodoChart');
-        if (ventasPeriodoCtx) {
-            new Chart(ventasPeriodoCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Día', 'Semana', 'Mes'],
-                    datasets: [{
-                        label: 'Ventas',
-                        data: [25, 180, 720],
-                        backgroundColor: [
-                            '#3498db',
-                            '#27ae60',
-                            '#ff9900'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true
-                        },
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-    });
-    </script>
             </div>
             
             <!-- Gestión de Productos -->
             <div id="gestion-productos" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestión de Platillos</h1>
-                    <button class="btn btn-primary" onclick="showAddProductForm()"><i class="fas fa-plus"></i> Agregar Platillo</button>
+                    <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#productModal">
+                        <i class="fas fa-plus"></i> Agregar Platillo
+                    </button>
                 </div>
                 
                 <div class="table-container">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <input type="text" class="form-control" placeholder="Buscar producto..." style="width: 300px;">
-                        <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
+                        <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filtrar</button>
                     </div>
                     
                     <table>
@@ -235,9 +126,12 @@
                                 <td>Deliciosos tacos con piña</td>
                                 <td><span class="badge badge-success">Activo</span></td>
                                 <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                </td>
+                               <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#productModal" 
+                                    onclick="cargarProductoParaEditar(1, 'Taco al Pastor', 50.00, 'platillo', 'Deliciosos tacos con piña', 'activo')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                                <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                            </td>
                             </tr>
                             <tr>
                                 <td>Agua de Horchata</td>
@@ -246,7 +140,10 @@
                                 <td>Refrescante agua de horchata</td>
                                 <td><span class="badge badge-success">Activo</span></td>
                                 <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                   <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#productModal" 
+                                        onclick="cargarProductoParaEditar(2, 'Agua de Horchata', 20.00, 'bebida', 'Refrescante agua de horchata', 'activo')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                                     <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
@@ -257,70 +154,109 @@
                                 <td>Enchiladas con salsa verde</td>
                                 <td><span class="badge badge-warning">Sin stock</span></td>
                                 <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                   <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#productModal" 
+                                        onclick="cargarProductoParaEditar(3, 'Enchiladas Verdes', 80.00, 'platillo', 'Enchiladas con salsa verde', 'inactivo')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                                     <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
-                <!-- Formulario para agregar producto -->
-                <div id="add-product-form" class="form-container" style="display: none;">
-                    <h2>Agregar Nuevo Platillo</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="product-nombre">Nombre</label>
-                            <input type="text" id="product-nombre" class="form-control" placeholder="Ej. Tacos al Pastor">
+
+            <!-- Modal para agregar/editar producto -->
+                <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header p-2">
+                                <h5 class="modal-title" id="productModalLabel">Agregar Nuevo Platillo</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="productForm">
+                                    <input type="hidden" id="product-id" value="">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="product-nombre" class="form-label">Nombre</label>
+                                                <input type="text" class="form-control" id="product-nombre" placeholder="Ej. Tacos al Pastor" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="product-precio" class="form-label">Precio</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">$</span>
+                                                    <input type="number" class="form-control" id="product-precio" placeholder="50.00" min="0" step="0.01" required>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="product-tipo" class="form-label">Tipo</label>
+                                                <select class="form-select" id="product-tipo" required>
+                                                    <option value="" selected disabled>Seleccione un tipo</option>
+                                                    <option value="platillo">Platillo</option>
+                                                    <option value="bebida">Bebida</option>
+                                                    <option value="postre">Postre</option>
+                                                    <option value="entrada">Entrada</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="product-estado" class="form-label">Estado</label>
+                                                <select class="form-select" id="product-estado" required>
+                                                    <option value="activo">Activo</option>
+                                                    <option value="inactivo">Inactivo</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="product-descripcion" class="form-label">Descripción</label>
+                                                <textarea class="form-control" id="product-descripcion" rows="4" placeholder="Descripción del platillo"></textarea>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="product-imagen" class="form-label">Imagen</label>
+                                                <input type="file" class="form-control" id="product-imagen" accept="image/*">
+                                                <div class="form-text">Formatos aceptados: JPG, PNG, GIF. Tamaño máximo: 2MB</div>
+                                            </div>
+                                            
+                                            <div class="mt-2 text-center" id="image-preview-container" style="display: none;">
+                                                <img id="image-preview" class="img-thumbnail" style="max-height: 150px;">
+                                                <div class="mt-2">
+                                                    <button type="button" class="btn btn-sm btn-danger" id="remove-image" style="display: none;">
+                                                        <i class="fas fa-trash"></i> Eliminar imagen
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn-addNew" id="saveProduct">Guardar</button>
+                                <button type="button" class="btn btn-success" id="updateProduct" style="display: none;">Actualizar</button>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="product-precio">Precio</label>
-                            <input type="number" id="product-precio" class="form-control" placeholder="Ej. 50.00">
-                        </div>
-                        <div class="form-group">
-                            <label for="product-tipo">Tipo</label>
-                            <select id="product-tipo" class="form-control">
-                                <option value="platillo">Platillo</option>
-                                <option value="bebida">Bebida</option>
-                                <option value="postre">Postre</option>
-                                <option value="entrada">Entrada</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="product-descripcion">Descripción</label>
-                            <textarea id="product-descripcion" class="form-control" rows="3" placeholder="Descripción del platillo"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="product-imagen">Imagen</label>
-                            <input type="file" id="product-imagen" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="product-estado">Estado</label>
-                            <select id="product-estado" class="form-control">
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button type="button" class="btn btn-danger" onclick="hideAddProductForm()">Cancelar</button>
-                            <button type="button" class="btn btn-success">Guardar</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-            
-
             <!-- Gestión de Insumos -->
             <div id="gestion-insumos" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestión de Insumos</h1>
-                    <button class="btn btn-primary" onclick="showAddInsumoForm()"><i class="fas fa-plus"></i> Agregar Insumo</button>
+                    <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#insumoModal">
+                    <i class="fas fa-plus"></i> Agregar Insumo
+                </button>
                 </div>
                 
                 <div class="table-container">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <input type="text" class="form-control" placeholder="Buscar insumo..." style="width: 300px;">
-                        <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
+                        <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filtrar</button>
                     </div>
                     <table id="tabla-insumos">
                         <thead>
@@ -379,74 +315,119 @@
                             </tr>
                         </tbody>
                     </table>
-                    <!-- Formulario para entrada/salida de insumo -->
-                    <div id="movimiento-insumo-form" class="form-container" style="display: none; margin-top: 20px;">
-                        <h2 id="movimiento-insumo-titulo">Movimiento de Insumo</h2>
-                        <form onsubmit="return false;">
-                            <div class="form-group">
-                                <label id="movimiento-insumo-label"></label>
-                                <input type="number" id="movimiento-insumo-cantidad" class="form-control" min="1" required>
+                   <!-- Modal para agregar/editar insumo -->
+                <div class="modal fade" id="insumoModal" tabindex="-1" aria-labelledby="insumoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header p-2">
+                                <h5 class="modal-title" id="insumoModalLabel">Agregar Nuevo Insumo</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                                <button type="button" class="btn btn-danger" onclick="ocultarMovimientoInsumo()">Cancelar</button>
-                                <button type="button" class="btn btn-success" id="btn-confirmar-movimiento">Confirmar</button>
+                            <div class="modal-body">
+                                <form id="insumoForm">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="insumo-nombre" class="form-label">Nombre del Insumo</label>
+                                                <input type="text" class="form-control" id="insumo-nombre" placeholder="Ej. Carne de Res" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="insumo-cantidad" class="form-label">Cantidad Actual</label>
+                                                <input type="number" class="form-control" id="insumo-cantidad" placeholder="45" min="0" step="0.01" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="insumo-unidad" class="form-label">Unidad de Medida</label>
+                                                <select class="form-select" id="insumo-unidad" required>
+                                                    <option value="" selected disabled>Seleccione una unidad</option>
+                                                    <option value="kg">Kilogramos (kg)</option>
+                                                    <option value="g">Gramos (g)</option>
+                                                    <option value="lb">Libras (lb)</option>
+                                                    <option value="l">Litros (l)</option>
+                                                    <option value="ml">Mililitros (ml)</option>
+                                                    <option value="unidad">Unidades</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="insumo-minimo" class="form-label">Stock Mínimo</label>
+                                                <input type="number" class="form-control" id="insumo-minimo" placeholder="25" min="0" step="0.01" required>
+                                                <div class="stock-alert" id="minimo-alert"></div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="insumo-maximo" class="form-label">Stock Máximo</label>
+                                                <input type="number" class="form-control" id="insumo-maximo" placeholder="100" min="0" step="0.01" required>
+                                                <div class="stock-alert" id="maximo-alert"></div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="insumo-proveedor" class="form-label">Proveedor Principal</label>
+                                                <select class="form-select" id="insumo-proveedor" required>
+                                                    <option value="" selected disabled>Seleccione un proveedor</option>
+                                                    <option value="1">Distribuidora Central</option>
+                                                    <option value="2">Alimentos del Norte</option>
+                                                    <option value="3">Suministros Express</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <div class="alert alert-info py-2">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                <span id="stock-status">Complete los campos de stock para ver el estado del inventario</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn-addNew" id="saveInsumo">Guardar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Formulario para agregar insumo -->
-                <div id="add-insumo-form" class="form-container" style="display: none;">
-                    <h2>Agregar Nuevo Insumo</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="insumo-nombre">Nombre</label>
-                            <input type="text" id="insumo-nombre" class="form-control" placeholder="Ej. Carne de Res">
-                        </div>
-                        <div class="form-group">
-                            <label for="insumo-cantidad">Cantidad Actual</label>
-                            <input type="number" id="insumo-cantidad" class="form-control" placeholder="Ej. 45">
-                        </div>
-                        <div class="form-group">
-                            <label for="insumo-unidad">Unidad de Medida</label>
-                            <select id="insumo-unidad" class="form-control">
-                                <option value="kg">Kilogramos (kg)</option>
-                                <option value="g">Gramos (g)</option>
-                                <option value="lb">Libras (lb)</option>
-                                <option value="l">Litros (l)</option>
-                                <option value="ml">Mililitros (ml)</option>
-                                <option value="unidad">Unidades</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="insumo-minimo">Stock Mínimo</label>
-                            <input type="number" id="insumo-minimo" class="form-control" placeholder="Ej. 25">
-                        </div>
-                        <div class="form-group">
-                            <label for="insumo-maximo">Stock Máximo</label>
-                            <input type="number" id="insumo-maximo" class="form-control" placeholder="Ej. 100">
-                        </div>
-                        <div class="form-group">
-                            <label for="insumo-proveedor">Proveedor Principal</label>
-                            <select id="insumo-proveedor" class="form-control">
-                                <option value="1">Distribuidora Central</option>
-                                <option value="2">Alimentos del Norte</option>
-                                <option value="3">Suministros Express</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button type="button" class="btn btn-danger" onclick="hideAddInsumoForm()">Cancelar</button>
-                            <button type="button" class="btn btn-success">Guardar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Gestión de Proveedores -->
+
+ <!-- Modal para movimiento de insumo (entrada/salida) -->
+                   <div class="modal fade" id="movimientoInsumoModal" tabindex="-1" aria-labelledby="movimientoInsumoModalLabel" aria-hidden="true">
+                       <div class="modal-dialog">
+                           <div class="modal-content">
+                               <div class="modal-header p-2">
+                                   <h5 class="modal-title" id="movimientoInsumoModalLabel">Movimiento de Insumo</h5>
+                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                               </div>
+                               <div class="modal-body">
+                                   <form id="movimientoInsumoForm">
+                                       <div class="mb-3">
+                                           <label id="movimiento-insumo-label" class="form-label"></label>
+                                           <input type="number" class="form-control" id="movimiento-insumo-cantidad" min="0" step="any" required>
+                                       </div>
+                                       <div id="movimiento-alert" class="movimiento-alert"></div>
+                                   </form>
+                               </div>
+                               <div class="modal-footer">
+                                   <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                   <button type="button" class="btn btn-primary" id="btn-confirmar-movimiento">Confirmar</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+
+                </div> 
+            </div>          
+<!-- Gestión de Proveedores -->
             <div id="gestion-proveedores" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestión de Proveedores</h1>
-                    <button class="btn btn-primary" onclick="showAddProveedorForm()"><i class="fas fa-plus"></i> Agregar Proveedor</button>
+                    <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#proveedorModal">
+                    <i class="fas fa-plus"></i> Agregar Proveedor
+                </button>
                 </div>
                 
                 <div class="table-container">
@@ -494,63 +475,85 @@
                     </table>
                 </div>
                 
-                <!-- Formulario para agregar proveedor -->
-                <div id="add-proveedor-form" class="form-container" style="display: none;">
-                    <h2>Agregar Nuevo Proveedor</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="proveedor-nombre">Nombre del proveedor</label>
-                            <input type="text" id="proveedor-nombre" class="form-control" placeholder="Ej. Carnes del Norte">
-                        </div>
-                        <div class="form-group">
-                            <label for="proveedor-categoria">Categoría</label>
-                            <input type="text" id="proveedor-categoria" class="form-control" placeholder="Ej. Carnes, Bebidas">
-                        </div>
-                        <div class="form-group">
-                            <label for="proveedor-telefono">Teléfono</label>
-                            <input type="text" id="proveedor-telefono" class="form-control" placeholder="Ej. 555-1234">
-                        </div>
-                        <div class="form-group">
-                            <label for="proveedor-email">Correo electrónico</label>
-                            <input type="email" id="proveedor-email" class="form-control" placeholder="Ej. contacto@proveedor.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="proveedor-direccion">Dirección</label>
-                            <input type="text" id="proveedor-direccion" class="form-control" placeholder="Ej. Calle 123, Ciudad">
-                        </div>
-                        <div class="form-group">
-                            <label for="proveedor-productos">Productos ofrecidos y precios</label>
-                            <textarea id="proveedor-productos" class="form-control" rows="3" placeholder="Ej. Res $120/kg, Pollo $80/kg"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="proveedor-entrega">Tiempos de entrega</label>
-                            <input type="text" id="proveedor-entrega" class="form-control" placeholder="Ej. 24-48 horas">
-                        </div>
-                        <div class="form-group">
-                            <label for="proveedor-pago">Condiciones de pago</label>
-                            <select id="proveedor-pago" class="form-control">
-                                <option value="credito">Crédito</option>
-                                <option value="contado">Contado</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button type="button" class="btn btn-danger" onclick="hideAddProveedorForm()">Cancelar</button>
-                            <button type="button" class="btn btn-success">Guardar</button>
+       <!-- Modal para agregar/editar proveedor -->
+    <div class="modal fade" id="proveedorModal" tabindex="-1" aria-labelledby="proveedorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header p-2">
+                    <h5 class="modal-title" id="proveedorModalLabel">Agregar Nuevo Proveedor</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="proveedorForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="proveedor-nombre" class="form-label">Nombre del Proveedor</label>
+                                    <input type="text" class="form-control" id="proveedor-nombre" placeholder="Ej. Carnes del Norte" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="proveedor-categoria" class="form-label">Categoría</label>
+                                    <input type="text" class="form-control" id="proveedor-categoria" placeholder="Ej. Carnes, Bebidas" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="proveedor-telefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="proveedor-telefono" placeholder="Ej. 555-1234" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="proveedor-email" class="form-label">Correo electrónico</label>
+                                    <input type="email" class="form-control" id="proveedor-email" placeholder="Ej. contacto@proveedor.com" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="proveedor-direccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="proveedor-direccion" placeholder="Ej. Calle 123, Ciudad" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="proveedor-productos" class="form-label">Productos ofrecidos</label>
+                                    <textarea class="form-control" id="proveedor-productos" rows="2" placeholder="Ej. Res $120/kg, Pollo $80/kg"></textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="proveedor-entrega" class="form-label">Tiempos de entrega</label>
+                                    <input type="text" class="form-control" id="proveedor-entrega" placeholder="Ej. 24-48 horas">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="proveedor-pago" class="form-label">Condiciones de pago</label>
+                                    <select class="form-select" id="proveedor-pago" required>
+                                        <option value="" selected disabled>Seleccione una opción</option>
+                                        <option value="credito">Crédito</option>
+                                        <option value="contado">Contado</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn-addNew" id="saveProveedor">Guardar</button>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
             
-            <!-- Reportes -->
+ <!-- Reportes -->
             <div id="reportes" class="section-content" style="display: none;">
                 <div class="header">
                     <!-- <h1>Gestión de Reportes</h1> -->
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-primary"><i class="fas fa-calendar-day"></i> Día</button>
-                        <button class="btn btn-primary"><i class="fas fa-calendar-week"></i> Semana</button>
-                        <button class="btn btn-primary"><i class="fas fa-calendar-month"></i> Mes</button>
-                        <button class="btn btn-primary"><i class="fas fa-calendar-alt"></i> Año</button>
-                        <button class="btn btn-primary"><i class="fas fa-calendar-range"></i> Rango</button>
+                        <button class="btn-addNew"><i class="fas fa-calendar-day"></i> Día</button>
+                        <button class="btn-addNew"><i class="fas fa-calendar-week"></i> Semana</button>
+                        <button class="btn-addNew"><i class="fas fa-calendar-alt"></i> Mes</button>
+                        <button class="btn-addNew"><i class="fas fa-calendar-range"></i> Rango</button>
                     </div>
                 </div>
                 
@@ -558,8 +561,8 @@
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <input type="date" class="form-control" style="width: 200px;">
                         <div>
-                            <button class="btn btn-success"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-                            <button class="btn btn-success"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                            <button class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                            <button class="btn btn-secondary"><i class="fas fa-file-excel"></i> Exportar Excel</button>
                         </div>
                     </div>
                     
@@ -659,7 +662,9 @@
             <div id="gestion-empleados" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestión de Empleados</h1>
-                    <button class="btn btn-primary" onclick="showAddEmpleadoForm()"><i class="fas fa-plus"></i> Agregar Empleado</button>
+                    <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#empleadoModal">
+                    <i class="fas fa-plus"></i> Agregar Empleado
+                </button>
                 </div>
                 
                 <div class="tabs">
@@ -672,7 +677,7 @@
                     <div class="table-container">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                             <input type="text" class="form-control" placeholder="Buscar empleado..." style="width: 300px;">
-                            <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
+                            <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filtrar</button>
                         </div>
                         
                         <table>
@@ -739,54 +744,90 @@
                     </div>
                 </div>
                 
-                <!-- Formulario para agregar empleado -->
-                <div id="add-empleado-form" class="form-container" style="display: none;">
-                    <h2>Agregar Nuevo Empleado</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="empleado-nombre">Nombre</label>
-                            <input type="text" id="empleado-nombre" class="form-control" placeholder="Ingrese el nombre">
+                        <!-- Modal para agregar/editar empleado -->
+            <div class="modal fade" id="empleadoModal" tabindex="-1" aria-labelledby="empleadoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header p-2">
+                            <h5 class="modal-title" id="empleadoModalLabel">Agregar Nuevo Empleado</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="form-group">
-                            <label for="empleado-apellido">Apellido</label>
-                            <input type="text" id="empleado-apellido" class="form-control" placeholder="Ingrese el apellido">
+                        <div class="modal-body">
+                            <form id="empleadoForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="empleado-nombre" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="empleado-nombre" placeholder="Ingrese el nombre" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="empleado-apellido" class="form-label">Apellido</label>
+                                            <input type="text" class="form-control" id="empleado-apellido" placeholder="Ingrese el apellido" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="empleado-cedula" class="form-label">Cédula</label>
+                                            <input type="text" class="form-control" id="empleado-cedula" placeholder="Ingrese la cédula" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="empleado-telefono" class="form-label">Teléfono</label>
+                                            <input type="text" class="form-control" id="empleado-telefono" placeholder="Ingrese el teléfono" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="empleado-email" class="form-label">Correo electrónico</label>
+                                            <input type="email" class="form-control" id="empleado-email" placeholder="Ingrese el correo" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="empleado-puesto" class="form-label">Puesto</label>
+                                            <select id="empleado-puesto" class="form-select" required>
+                                                <option value="" selected disabled>Seleccione un puesto</option>
+                                                <option value="mesero">Mesero/a</option>
+                                                <option value="cocinero">Cocinero/a</option>
+                                                <option value="cajero">Cajero/a</option>
+                                                <option value="limpieza">Limpieza</option>
+                                                <option value="admin">Administrativo</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="empleado-salario" class="form-label">Salario</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" class="form-control" id="empleado-salario" placeholder="0.00" min="0" step="0.01" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="empleado-fecha" class="form-label">Fecha de Contratación</label>
+                                            <input type="date" class="form-control" id="empleado-fecha" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label for="empleado-cedula">Cédula</label>
-                            <input type="text" id="empleado-cedula" class="form-control" placeholder="Ingrese la cédula">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn-addNew" id="saveEmpleado">Guardar</button>
                         </div>
-                        <div class="form-group">
-                            <label for="empleado-telefono">Teléfono</label>
-                            <input type="text" id="empleado-telefono" class="form-control" placeholder="Ingrese el teléfono">
-                        </div>
-                        <div class="form-group">
-                            <label for="empleado-email">Correo electrónico</label>
-                            <input type="email" id="empleado-email" class="form-control" placeholder="Ingrese el correo">
-                        </div>
-                        <div class="form-group">
-                            <label for="empleado-puesto">Puesto</label>
-                            <select id="empleado-puesto" class="form-control">
-                                <option value="mesero">Mesero/a</option>
-                                <option value="cocinero">Cocinero/a</option>
-                                <option value="cajero">Cajero/a</option>
-                                <option value="limpieza">Limpieza</option>
-                                <option value="admin">Administrativo</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button type="button" class="btn btn-danger" onclick="hideAddEmpleadoForm()">Cancelar</button>
-                            <button type="button" class="btn btn-success">Guardar</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-            
+    </div>
+
             <!-- Pedidos -->
             <div id="pedidos" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Pedidos</h1>
-                    <button class="btn btn-primary" onclick="showNuevoPedidoForm()"><i class="fas fa-plus"></i> Nuevo Pedido</button>
-                </div>
+                    <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#pedidoModal">
+                    <i class="fas fa-plus"></i> Nuevo Pedido
+                </button>
+         </div>
                 
                 <div class="tabs">
                     <div class="tab active" onclick="changePedidoTab('pedidos-activos')">Activos</div>
@@ -864,83 +905,108 @@
                     </div>
                 </div>
                 
-                <!-- Formulario para nuevo pedido -->
-                <div id="nuevo-pedido-form" class="form-container" style="display: none;">
-                    <h2>Crear Nuevo Pedido</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="pedido-cliente">Nombre del Cliente</label>
-                            <input type="text" id="pedido-cliente" class="form-control" placeholder="Nombre del cliente">
-                        </div>
-                        <div class="form-group">
-                            <label for="pedido-telefono">Teléfono de Contacto</label>
-                            <input type="text" id="pedido-telefono" class="form-control" placeholder="Teléfono de contacto">
-                        </div>
-                        <div class="form-group">
-                            <label for="pedido-mesa">Número de Mesa</label>
-                            <input type="text" id="pedido-mesa" class="form-control" placeholder="Ejemplo: 13">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Buscar Producto</label>
-                            <div style="display: flex;">
-                                <input type="text" class="form-control" placeholder="Buscar por nombre o categoría">
-                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+              <!-- Modal para nuevo pedido -->
+                <div class="modal fade" id="pedidoModal" tabindex="-1" aria-labelledby="pedidoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header p-2">
+                                <h5 class="modal-title" id="pedidoModalLabel">Crear Nuevo Pedido</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Productos Seleccionados</label>
-                            <div id="productos-seleccionados" 
-                                style="border: 1px solid #ddd; border-radius: 4px; padding: 10px; min-height: 100px;">
-                                
-                                <div class="producto" data-precio="50" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <span>Tacos al Pastor - $50.00</span>
-                                    <div>
-                                        <button type="button" class="btn btn-sm btn-danger btn-restar"><i class="fas fa-minus"></i></button>
-                                        <span class="cantidad" style="margin: 0 10px;">1</span>
-                                        <button type="button" class="btn btn-sm btn-success btn-sumar"><i class="fas fa-plus"></i></button>
+                            <div class="modal-body">
+                                <form id="pedidoForm">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="pedido-cliente" class="form-label">Nombre del Cliente</label>
+                                                <input type="text" id="pedido-cliente" class="form-control" placeholder="Nombre del cliente" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="pedido-telefono" class="form-label">Teléfono de Contacto</label>
+                                                <input type="text" id="pedido-telefono" class="form-control" placeholder="Teléfono de contacto" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="pedido-mesa" class="form-label">Número de Mesa</label>
+                                                <input type="text" id="pedido-mesa" class="form-control" placeholder="Ejemplo: 13">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Buscar Producto</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="Buscar por nombre o categoría">
+                                                    <button class="btn-search" type="button"><i class="fas fa-search"></i></button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="pedido-estado" class="form-label">Estado del Pedido</label>
+                                                <select class="form-select" id="pedido-estado" required>
+                                                    <option value="recibido">Recibido</option>
+                                                    <option value="preparacion">En preparación</option>
+                                                    <option value="completado">Completado</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="producto" data-precio="25" style="display: flex; justify-content: space-between;">
-                                    <span>Agua de Horchata - $25.00</span>
-                                    <div>
-                                    <button type="button" class="btn btn-sm btn-danger btn-restar"><i class="fas fa-minus"></i></button>
-                                    <span class="cantidad" style="margin: 0 10px;">1</span>
-                                    <button type="button" class="btn btn-sm btn-success btn-sumar"><i class="fas fa-plus"></i></button>
-                                </div>
-                                </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Productos Seleccionados</label>
+                                        <div id="productos-seleccionados" class="border rounded p-3" style="min-height: 100px;">
+                                            <div class="producto" data-precio="50" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                                <span>Tacos al Pastor - $50.00</span>
+                                                <div>
+                                                    <button type="button" class="btn btn-sm btn-danger btn-restar"><i class="fas fa-minus"></i></button>
+                                                    <span class="cantidad" style="margin: 0 10px;">1</span>
+                                                    <button type="button" class="btn btn-sm btn-success btn-sumar"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="producto" data-precio="25" style="display: flex; justify-content: space-between;">
+                                                <span>Agua de Horchata - $25.00</span>
+                                                <div>
+                                                    <button type="button" class="btn btn-sm btn-danger btn-restar"><i class="fas fa-minus"></i></button>
+                                                    <span class="cantidad" style="margin: 0 10px;">1</span>
+                                                    <button type="button" class="btn btn-sm btn-success btn-sumar"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="pedido-notas" class="form-label">Notas Especiales</label>
+                                        <textarea id="pedido-notas" class="form-control" rows="3" placeholder="Ej. Sin cebolla, extra picante"></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3 p-3 bg-light rounded">
+                                        <h5>Resumen del Pedido</h5>
+                                        <div id="resumen"></div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between fw-bold">
+                                            <span>Total:</span>
+                                            <span id="total">$0.00</span>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="pedido-notas">Notas Especiales</label>
-                            <textarea id="pedido-notas" class="form-control" rows="3" placeholder="Ej. Sin cebolla, extra picante"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                        <h3>Resumen del Pedido</h3>
-                        <div id="resumen"></div>
-                        <hr>
-                        <div style="display: flex; justify-content: space-between; font-weight: bold;">
-                            <span>Total:</span>
-                            <span id="total">$0.00</span>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn-addNew" id="savePedido">Guardar Pedido</button>
+                            </div>
                         </div>
                     </div>
-                        
-                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button type="button" class="btn btn-danger" onclick="hideNuevoPedidoForm()">Cancelar</button>
-                            <button type="button" class="btn btn-success">Guardar Pedido</button>
-                        </div>
-                    </form>
                 </div>
-            </div>
+     </div>
 
 <!-- Gestionar Reseñas con pestañas -->
  <div id="gestion-reseñas" class="section-content" style="display: none;">
         <div class="header">
         <h1>Gestionar Reseñas</h1>
-        <button class="btn btn-primary" onclick="showAddResenaForm()"><i class="fas fa-plus"></i> Agregar Reseña</button>
+       <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#resenaModal">
+        <i class="fas fa-plus"></i> Agregar Reseña
+    </button>
     </div>
     <div class="tabs">
         <div class="tab active" onclick="changeTab('reseñas-local')">Local</div>
@@ -1008,49 +1074,74 @@
             </table>
         </div>
     </div>
-    <!-- Formulario para agregar reseña -->
-    <div id="add-resena-form" class="form-container" style="display: none;">
-        <h2>Agregar Reseña</h2>
-        <form>
-            <div class="form-group">
-                <label for="resena-tipo">Tipo</label>
-                <select id="resena-tipo" class="form-control">
-                    <option value="local">Local</option>
-                    <option value="pedido">Pedido</option>
-                </select>
+        <!-- Modal para agregar reseña -->
+        <div class="modal fade" id="resenaModal" tabindex="-1" aria-labelledby="resenaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header p-2">
+                        <h5 class="modal-title" id="resenaModalLabel">Agregar Reseña</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="resenaForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="resena-tipo" class="form-label">Tipo</label>
+                                        <select id="resena-tipo" class="form-select" required>
+                                            <option value="" selected disabled>Seleccione un tipo</option>
+                                            <option value="local">Local</option>
+                                            <option value="pedido">Pedido</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="resena-referencia" class="form-label">Referencia</label>
+                                        <input type="text" id="resena-referencia" class="form-control" placeholder="Ej. Local Centro o #1023" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="resena-cliente" class="form-label">Cliente</label>
+                                        <input type="text" id="resena-cliente" class="form-control" placeholder="Nombre del cliente" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="resena-calificacion" class="form-label">Calificación</label>
+                                        <select id="resena-calificacion" class="form-select" required>
+                                            <option value="" selected disabled>Seleccione una calificación</option>
+                                            <option value="5">5 - Excelente</option>
+                                            <option value="4">4 - Muy bueno</option>
+                                            <option value="3">3 - Bueno</option>
+                                            <option value="2">2 - Regular</option>
+                                            <option value="1">1 - Malo</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="resena-fecha" class="form-label">Fecha</label>
+                                        <input type="date" id="resena-fecha" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="resena-comentario" class="form-label">Comentario</label>
+                                <textarea id="resena-comentario" class="form-control" rows="4" placeholder="Comentario" required></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn-addNew" id="saveResena">Guardar Reseña</button>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="resena-referencia">Referencia (Local o Pedido)</label>
-                <input type="text" id="resena-referencia" class="form-control" placeholder="Ej. Local Centro o #1023">
-            </div>
-            <div class="form-group">
-                <label for="resena-cliente">Cliente</label>
-                <input type="text" id="resena-cliente" class="form-control" placeholder="Nombre del cliente">
-            </div>
-            <div class="form-group">
-                <label for="resena-calificacion">Calificación</label>
-                <select id="resena-calificacion" class="form-control">
-                    <option value="5">5 - Excelente</option>
-                    <option value="4">4 - Muy bueno</option>
-                    <option value="3">3 - Bueno</option>
-                    <option value="2">2 - Regular</option>
-                    <option value="1">1 - Malo</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="resena-comentario">Comentario</label>
-                <textarea id="resena-comentario" class="form-control" rows="3" placeholder="Comentario"></textarea>
-            </div>
-            <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="btn btn-danger" onclick="hideAddResenaForm()">Cancelar</button>
-                <button type="button" class="btn btn-success">Guardar</button>
-            </div>
-        </form>
-    </div>
+        </div>
 
  </div>
 
-            
             <!-- Editar Información del Local -->
             <div id="editar-informacion" class="section-content" style="display: none;">
                 <div class="header">
@@ -1074,7 +1165,7 @@
                                 <textarea class="form-control" rows="5" placeholder="Describe tu establecimiento...">Restaurante especializado en comida mexicana tradicional con un toque moderno. Ofrecemos los mejores tacos al pastor de la ciudad y una amplia variedad de platillos típicos.</textarea>
                             </div>
                             <div class="form-group" style="display: flex; justify-content: flex-end;">
-                                <button type="button" class="btn btn-success">Guardar Cambios</button>
+                                <button type="button" class="btn-addNew">Guardar Cambios</button>
                             </div>
                         </form>
                     </div>
@@ -1083,8 +1174,8 @@
                 <div id="menu-local" class="tab-content" style="display: none;">
                     <div class="form-container">
                         <h2>Menú del Local</h2>
-                        <div style="margin-bottom: 20px;">
-                            <button class="btn btn-primary"><i class="fas fa-plus"></i> Agregar Producto</button>
+                        <div style="margin-bottom: 25px;">
+                            <button class="btn-addNew" style="margin-left:850px"><i class="fas fa-plus"></i> Agregar Producto</button>
                         </div>
                         
                         <table>
@@ -1106,8 +1197,8 @@
                                     <td>Carne, pan, lechuga</td>
                                     <td><span class="badge badge-success">Disponible</span></td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                                                                                                                              <tr>
@@ -1117,8 +1208,8 @@
                                     <td>Queso, tomate, albahaca</td>
                                     <td><span class="badge badge-success">Disponible</span></td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -1147,7 +1238,7 @@
                                 </div>
                             </div>
                             <div class="form-group" style="display: flex; justify-content: flex-end;">
-                                <button type="button" class="btn btn-success">Guardar Cambios</button>
+                                <button type="button" class="btn-addNew">Guardar Cambios</button>
                             </div>
                         </form>
                     </div>
@@ -1170,7 +1261,7 @@
                                 <input type="text" class="form-control" value="Calle Principal #123, Ciudad">
                             </div>
                             <div class="form-group" style="display: flex; justify-content: flex-end;">
-                                <button type="button" class="btn btn-success">Guardar Cambios</button>
+                                <button type="button" class="btn-addNew">Guardar Cambios</button>
                             </div>
                         </form>
                     </div>
@@ -1206,7 +1297,7 @@
                         </div>
                         
                         <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-                            <button type="button" class="btn btn-success">Guardar Cambios</button>
+                            <button type="button" class="btn-addNew">Guardar Cambios</button>
                         </div>
                     </div>
                 </div>
@@ -1215,137 +1306,21 @@
     </div>
 
     <!-- </div> -->
+     <!-- Bootstrap JS y dependencias -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 
     <script src="js/auth.js"></script>
     <script src="js/admin-local.js"></script>
 
         <!-- Gráficas dashboard -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-        // Gráfica de pastel de productos más vendidos (datos de ejemplo)
-        document.addEventListener('DOMContentLoaded', function() {
-            // Pie chart productos más vendidos
-            const ctxPie = document.getElementById('productosMasVendidosChart');
-            if (ctxPie) {
-                new Chart(ctxPie, {
-                    type: 'pie',
-                    data: {
-                        labels: ['Tacos al Pastor', 'Hamburguesa', 'Pizza', 'Ensalada', 'Burrito'],
-                        datasets: [{
-                            data: [120, 90, 70, 40, 30],
-                            backgroundColor: [
-                                '#ff9900',
-                                '#27ae60',
-                                '#e74c3c',
-                                '#3498db',
-                                '#9b59b6'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                            },
-                            title: {
-                                display: false
-                            }
-                        }
-                    }
-                });
-            }
-            // Bar chart ventas por periodo (vertical)
-            const ctxBar = document.getElementById('ventasPeriodoChart');
-            if (ctxBar) {
-                new Chart(ctxBar, {
-                    type: 'bar', // vertical por defecto
-                    data: {
-                        labels: ['Día', 'Semana', 'Mes'],
-                        datasets: [{
-                            label: 'Ventas ($)',
-                            data: [2350, 15800, 67200],
-                            backgroundColor: [
-                                '#27ae60',
-                                '#ff9900',
-                                '#3498db'
-                            ],
-                            borderRadius: 8,
-                            maxBarThickness: 50
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        indexAxis: 'x', // asegura barras verticales
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: false }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: { color: '#181818', font: { size: 13 } }
-                            },
-                            x: {
-                                ticks: { color: '#181818', font: { size: 13 } }
-                            }
-                        }
-                    }
-                });
-            }
-        });
-        </script>
 
-    <script>
-    function actualizarResumen() {
-        let productos = document.querySelectorAll(".producto");
-        let resumen = document.getElementById("resumen");
-        let total = 0;
-        resumen.innerHTML = "";
 
-        productos.forEach(p => {
-            let precio = parseFloat(p.getAttribute("data-precio"));
-            let cantidad = parseInt(p.querySelector(".cantidad").textContent);
-            if (cantidad > 0) {
-                let subtotal = precio * cantidad;
-                total += subtotal;
-
-                let item = document.createElement("div");
-                item.style.display = "flex";
-                item.style.justifyContent = "space-between";
-                item.style.marginBottom = "5px";
-                item.innerHTML = `<span>${p.querySelector("span").textContent.split(" - ")[0]} x${cantidad}</span>
-                                  <span>$${subtotal.toFixed(2)}</span>`;
-                resumen.appendChild(item);
-            }
-        });
-
-        document.getElementById("total").textContent = `$${total.toFixed(2)}`;
-    }
-
-    // Manejo de botones
-    document.querySelectorAll(".btn-sumar").forEach(boton => {
-        boton.addEventListener("click", function () {
-            let cantidadEl = this.parentElement.querySelector(".cantidad");
-            cantidadEl.textContent = parseInt(cantidadEl.textContent) + 1;
-            actualizarResumen();
-        });
-    });
-
-    document.querySelectorAll(".btn-restar").forEach(boton => {
-        boton.addEventListener("click", function () {
-            let cantidadEl = this.parentElement.querySelector(".cantidad");
-            let cantidad = parseInt(cantidadEl.textContent);
-            if (cantidad > 0) {
-                cantidadEl.textContent = cantidad - 1;
-            }
-            actualizarResumen();
-        });
-    });
-
-    // Inicializar resumen al cargar
-    actualizarResumen();
-</script>
+ <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="js/dashboard-charts.js"></script>
 </body>
 </html>

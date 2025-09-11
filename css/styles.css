@@ -24,6 +24,8 @@
         .container {
             display: flex;
             min-height: 100vh;
+            flex-direction: column;
+
         }
         
         /* Sidebar */
@@ -105,6 +107,7 @@
         
         .header h1 {
             color: var(--primary);
+            font-size: 1.6rem;
         }
         
         .user-info {
@@ -229,17 +232,17 @@
         }
         
         .badge-success {
-            background-color: #d4edda;
+            background-color: #128845;
             color: #155724;
         }
         
         .badge-warning {
-            background-color: #fff3cd;
+            background-color: #e4b61f;
             color: #856404;
         }
         
         .badge-danger {
-            background-color: #f8d7da;
+            background-color: #dd414e;
             color: #721c24;
         }
         
@@ -330,6 +333,38 @@
             background: #6c806c;
         }
 
+        .btn-addNew {
+            background: #485a1a;
+            width:  193px;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-addNew:hover {
+            background: #6c806c;
+        }
+
+         .btn-save {
+            background: #eaede4;
+            width:  193px;
+            color: #0e0d0d;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #6c806c;
+        }
+
         .btn-danger {
             background: #d87307;
             color: #fff;
@@ -359,7 +394,7 @@
         }
 
         .btn-entrada {
-            background-color: #1ca34a;
+            background-color: #0d5926;
             color: #fff;
             min-width: 79px;
             font-weight: bold;
@@ -500,6 +535,95 @@
             transform: translateX(26px);
         }
 
+         .modal-content {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            background-color: #485a1a;
+            color: white;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            padding: 7px 9px;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #eee;
+            padding: 1rem;
+        }
+        .modal-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* .btn-primary {
+            background-color: #485a1a;
+            border-color: #485a1a;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a4915;
+            border-color: #3a4915;
+        } */
+        
+        .btn-outline-secondary {
+            border-color: #ddd;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .form-control:focus , .form-select:focus{
+            border-color: #485a1a;
+            box-shadow: 0 0 0 0.25rem rgba(72, 90, 26, 0.25);
+        }
+        .stock-alert {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .stock-low {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+        
+        .stock-ok {
+            color: #27ae60;
+        }
+         .entrada-header {
+            background-color: #28a745 !important;
+        }
+        
+        .salida-header {
+            background-color: #dc3545 !important;
+        }
+        
+        .movimiento-alert {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+        }
+        .btn-search {
+            background-color: #485a1a;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
        
 
       
