@@ -244,7 +244,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Gestión de Insumos -->
+<!-- Gestión de Insumos -->
             <div id="gestion-insumos" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestión de Insumos</h1>
@@ -279,11 +279,15 @@
                                 <td>Distribuidora Central</td>
                                 <td><span class="badge badge-success">Disponible</span></td>
                                 <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn-entra btn-entrada btn-sm" onclick="mostrarMovimientoInsumo(this, 'entrada')"><i class="fas fa-arrow-down"></i> Entrada</button>
-                                    <button class="btn-sali btn-salida btn-sm" onclick="mostrarMovimientoInsumo(this, 'salida')"><i class="fas fa-arrow-up"></i> Salida</button>
-                                </td>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(0)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(0)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-entrada" onclick='mostrarMovimientoInsumo(0, "entrada")'><i class='fas fa-arrow-down'></i> Entrada</button>
+                                <button class='btn-salida' onclick='mostrarMovimientoInsumo(0, "salida")'><i class='fas fa-arrow-up'></i> Salida</button>
+                            </td>
                             </tr>
                             <tr>
                                 <td>Cebolla</td>
@@ -293,11 +297,15 @@
                                 <td>Alimentos del Norte</td>
                                 <td><span class="badge badge-warning">Bajo stock</span></td>
                                 <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn btn-success btn-sm" onclick="mostrarMovimientoInsumo(this, 'entrada')"><i class="fas fa-arrow-down"></i> Entrada</button>
-                                    <button class="btn btn-danger btn-sm" onclick="mostrarMovimientoInsumo(this, 'salida')"><i class="fas fa-arrow-up"></i> Salida</button>
-                                </td>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(0)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                               <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(1)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                                <button class="btn-entrada" onclick='mostrarMovimientoInsumo(0, "entrada")'><i class='fas fa-arrow-down'></i> Entrada</button>
+                                <button class='btn-salida' onclick='mostrarMovimientoInsumo(0, "salida")'><i class='fas fa-arrow-up'></i> Salida</button>
+                            </td>
                             </tr>
                             <tr>
                                 <td>Tortillas</td>
@@ -307,91 +315,98 @@
                                 <td>Suministros Express</td>
                                 <td><span class="badge badge-danger">Agotado</span></td>
                                 <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn btn-success btn-sm" onclick="mostrarMovimientoInsumo(this, 'entrada')"><i class="fas fa-arrow-down"></i> Entrada</button>
-                                    <button class="btn btn-danger btn-sm" onclick="mostrarMovimientoInsumo(this, 'salida')"><i class="fas fa-arrow-up"></i> Salida</button>
-                                </td>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(0)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                               <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(2)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-entrada" onclick='mostrarMovimientoInsumo(0, "entrada")'><i class='fas fa-arrow-down'></i> Entrada</button>
+                                <button class='btn-salida' onclick='mostrarMovimientoInsumo(0, "salida")'><i class='fas fa-arrow-up'></i> Salida</button>
+                            </td>
                             </tr>
                         </tbody>
                     </table>
-                   <!-- Modal para agregar/editar insumo -->
-                <div class="modal fade" id="insumoModal" tabindex="-1" aria-labelledby="insumoModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header p-2">
-                                <h5 class="modal-title" id="insumoModalLabel">Agregar Nuevo Insumo</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="insumoForm">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="insumo-nombre" class="form-label">Nombre del Insumo</label>
-                                                <input type="text" class="form-control" id="insumo-nombre" placeholder="Ej. Carne de Res" required>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label for="insumo-cantidad" class="form-label">Cantidad Actual</label>
-                                                <input type="number" class="form-control" id="insumo-cantidad" placeholder="45" min="0" step="0.01" required>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label for="insumo-unidad" class="form-label">Unidad de Medida</label>
-                                                <select class="form-select" id="insumo-unidad" required>
-                                                    <option value="" selected disabled>Seleccione una unidad</option>
-                                                    <option value="kg">Kilogramos (kg)</option>
-                                                    <option value="g">Gramos (g)</option>
-                                                    <option value="lb">Libras (lb)</option>
-                                                    <option value="l">Litros (l)</option>
-                                                    <option value="ml">Mililitros (ml)</option>
-                                                    <option value="unidad">Unidades</option>
-                                                </select>
-                                            </div>
+<!-- Modal para agregar/editar insumo -->
+            <div class="modal fade" id="insumoModal" tabindex="-1" aria-labelledby="insumoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header p-2">
+                            <h5 class="modal-title" id="insumoModalLabel">Agregar Nuevo Insumo</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="insumoForm">
+                                <input type="hidden" id="insumo-id" value="">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="insumo-nombre" class="form-label">Nombre del Insumo</label>
+                                            <input type="text" class="form-control" id="insumo-nombre" placeholder="Ej. Carne de Res" required>
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="insumo-minimo" class="form-label">Stock Mínimo</label>
-                                                <input type="number" class="form-control" id="insumo-minimo" placeholder="25" min="0" step="0.01" required>
-                                                <div class="stock-alert" id="minimo-alert"></div>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label for="insumo-maximo" class="form-label">Stock Máximo</label>
-                                                <input type="number" class="form-control" id="insumo-maximo" placeholder="100" min="0" step="0.01" required>
-                                                <div class="stock-alert" id="maximo-alert"></div>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label for="insumo-proveedor" class="form-label">Proveedor Principal</label>
-                                                <select class="form-select" id="insumo-proveedor" required>
-                                                    <option value="" selected disabled>Seleccione un proveedor</option>
-                                                    <option value="1">Distribuidora Central</option>
-                                                    <option value="2">Alimentos del Norte</option>
-                                                    <option value="3">Suministros Express</option>
-                                                </select>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label for="insumo-cantidad" class="form-label">Cantidad Actual</label>
+                                            <input type="number" class="form-control" id="insumo-cantidad" placeholder="45" min="0" step="0.01" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="insumo-unidad" class="form-label">Unidad de Medida</label>
+                                            <select class="form-select" id="insumo-unidad" required>
+                                                <option value="" selected disabled>Seleccione una unidad</option>
+                                                <option value="kg">Kilogramos (kg)</option>
+                                                <option value="g">Gramos (g)</option>
+                                                <option value="lb">Libras (lb)</option>
+                                                <option value="l">Litros (l)</option>
+                                                <option value="ml">Mililitros (ml)</option>
+                                                <option value="unidad">Unidades</option>
+                                            </select>
                                         </div>
                                     </div>
                                     
-                                    <div class="row mt-3">
-                                        <div class="col-12">
-                                            <div class="alert alert-info py-2">
-                                                <i class="fas fa-info-circle me-2"></i>
-                                                <span id="stock-status">Complete los campos de stock para ver el estado del inventario</span>
-                                            </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="insumo-minimo" class="form-label">Stock Mínimo</label>
+                                            <input type="number" class="form-control" id="insumo-minimo" placeholder="25" min="0" step="0.01" required>
+                                            <div class="stock-alert" id="minimo-alert"></div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="insumo-maximo" class="form-label">Stock Máximo</label>
+                                            <input type="number" class="form-control" id="insumo-maximo" placeholder="100" min="0" step="0.01" required>
+                                            <div class="stock-alert" id="maximo-alert"></div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="insumo-proveedor" class="form-label">Proveedor Principal</label>
+                                            <select class="form-select" id="insumo-proveedor" required>
+                                                <option value="" selected disabled>Seleccione un proveedor</option>
+                                                <option value="1">Distribuidora Central</option>
+                                                <option value="2">Alimentos del Norte</option>
+                                                <option value="3">Suministros Express</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn-addNew" id="saveInsumo">Guardar</button>
-                            </div>
+                                </div>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="alert alert-info py-2">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <span id="stock-status">Complete los campos de stock para ver el estado del inventario</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn-addNew" id="saveInsumo">Guardar</button>
+                            <button type="button" class="btn btn-success" id="updateInsumo" style="display: none;">Actualizar</button>
                         </div>
                     </div>
+                </div>
+            </div>
                 </div>
 
  <!-- Modal para movimiento de insumo (entrada/salida) -->
@@ -419,8 +434,7 @@
                        </div>
                    </div>
 
-                </div> 
-            </div>          
+                </div>         
 <!-- Gestión de Proveedores -->
             <div id="gestion-proveedores" class="section-content" style="display: none;">
                 <div class="header">
@@ -446,104 +460,118 @@
                                 <td>contacto@central.com - 555-1234</td>
                                 <td>$12,500 MXN</td>
                                 <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn-detalle btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
-                                </td>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proveedorModal" onclick="cargarProveedorParaEditar(0)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proveedorModal" onclick="cargarProveedorParaEditar(0)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-detalle btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
+                            </td>
                             </tr>
                             <tr>
                                 <td>Alimentos del Norte</td>
                                 <td>ventas@norte.com - 555-5678</td>
                                 <td>$8,200 MXN</td>
                                 <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn-detalle btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
-                                </td>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proveedorModal" onclick="cargarProveedorParaEditar(0)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                               <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proveedorModal" onclick="cargarProveedorParaEditar(1)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-detalle btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
+                            </td>
                             </tr>
                             <tr>
                                 <td>Suministros Express</td>
                                 <td>info@express.com - 555-9012</td>
                                 <td>$5,900 MXN</td>
-                                <td>
-                                    <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn-detalle btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
-                                </td>
+                               <td>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proveedorModal" onclick="cargarProveedorParaEditar(0)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proveedorModal" onclick="cargarProveedorParaEditar(2)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-detalle btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
+                            </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 
-       <!-- Modal para agregar/editar proveedor -->
-    <div class="modal fade" id="proveedorModal" tabindex="-1" aria-labelledby="proveedorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header p-2">
-                    <h5 class="modal-title" id="proveedorModalLabel">Agregar Nuevo Proveedor</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="proveedorForm">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="proveedor-nombre" class="form-label">Nombre del Proveedor</label>
-                                    <input type="text" class="form-control" id="proveedor-nombre" placeholder="Ej. Carnes del Norte" required>
+        <!-- Modal para agregar/editar proveedor -->
+        <div class="modal fade" id="proveedorModal" tabindex="-1" aria-labelledby="proveedorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header p-2">
+                        <h5 class="modal-title" id="proveedorModalLabel">Agregar Nuevo Proveedor</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="proveedorForm">
+                            <input type="hidden" id="proveedor-id" value="">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="proveedor-nombre" class="form-label">Nombre del Proveedor</label>
+                                        <input type="text" class="form-control" id="proveedor-nombre" placeholder="Ej. Carnes del Norte" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="proveedor-categoria" class="form-label">Categoría</label>
+                                        <input type="text" class="form-control" id="proveedor-categoria" placeholder="Ej. Carnes, Bebidas" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="proveedor-telefono" class="form-label">Teléfono</label>
+                                        <input type="text" class="form-control" id="proveedor-telefono" placeholder="Ej. 555-1234" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="proveedor-email" class="form-label">Correo electrónico</label>
+                                        <input type="email" class="form-control" id="proveedor-email" placeholder="Ej. contacto@proveedor.com" required>
+                                    </div>
                                 </div>
                                 
-                                <div class="mb-3">
-                                    <label for="proveedor-categoria" class="form-label">Categoría</label>
-                                    <input type="text" class="form-control" id="proveedor-categoria" placeholder="Ej. Carnes, Bebidas" required>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="proveedor-telefono" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="proveedor-telefono" placeholder="Ej. 555-1234" required>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="proveedor-email" class="form-label">Correo electrónico</label>
-                                    <input type="email" class="form-control" id="proveedor-email" placeholder="Ej. contacto@proveedor.com" required>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="proveedor-direccion" class="form-label">Dirección</label>
+                                        <input type="text" class="form-control" id="proveedor-direccion" placeholder="Ej. Calle 123, Ciudad" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="proveedor-productos" class="form-label">Productos ofrecidos</label>
+                                        <textarea class="form-control" id="proveedor-productos" rows="2" placeholder="Ej. Res $120/kg, Pollo $80/kg"></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="proveedor-entrega" class="form-label">Tiempos de entrega</label>
+                                        <input type="text" class="form-control" id="proveedor-entrega" placeholder="Ej. 24-48 horas">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="proveedor-pago" class="form-label">Condiciones de pago</label>
+                                        <select class="form-select" id="proveedor-pago" required>
+                                            <option value="" selected disabled>Seleccione una opción</option>
+                                            <option value="credito">Crédito</option>
+                                            <option value="contado">Contado</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="proveedor-direccion" class="form-label">Dirección</label>
-                                    <input type="text" class="form-control" id="proveedor-direccion" placeholder="Ej. Calle 123, Ciudad" required>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="proveedor-productos" class="form-label">Productos ofrecidos</label>
-                                    <textarea class="form-control" id="proveedor-productos" rows="2" placeholder="Ej. Res $120/kg, Pollo $80/kg"></textarea>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="proveedor-entrega" class="form-label">Tiempos de entrega</label>
-                                    <input type="text" class="form-control" id="proveedor-entrega" placeholder="Ej. 24-48 horas">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="proveedor-pago" class="form-label">Condiciones de pago</label>
-                                    <select class="form-select" id="proveedor-pago" required>
-                                        <option value="" selected disabled>Seleccione una opción</option>
-                                        <option value="credito">Crédito</option>
-                                        <option value="contado">Contado</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn-addNew" id="saveProveedor">Guardar</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn-addNew" id="saveProveedor">Guardar</button>
+                        <button type="button" class="btn btn-success" id="updateProveedor" style="display: none;">Actualizar</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
             
  <!-- Reportes -->
             <div id="reportes" class="section-content" style="display: none;">
@@ -658,7 +686,7 @@
                 </div>
             </div>
             
-            <!-- Gestión de Empleados -->
+<!-- Gestión de Empleados -->
             <div id="gestion-empleados" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestión de Empleados</h1>
@@ -669,7 +697,7 @@
                 
                 <div class="tabs">
                     <div class="tab active" onclick="changeTab('lista-empleados')">Lista</div>
-                    <div class="tab" onclick="changeTab('nomina-empleados')">Nómina</div>
+                    <!-- <div class="tab" onclick="changeTab('nomina-empleados')">Nómina</div> -->
                     <div class="tab" onclick="changeTab('turnos-empleados')">Turnos</div>
                 </div>
                 
@@ -699,9 +727,11 @@
                                     <td>ctorrez@gmail.com</td>
                                     <td>Mesera</td>
                                     <td>
-                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    </td>
+                                    <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#empleadoModal" onclick="cargarEmpleadoParaEditar(0)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
                                 </tr>
                                 <tr>
                                     <td>Juan Pérez</td>
@@ -709,10 +739,12 @@
                                     <td>85261245</td>
                                     <td>juanP13@gmail.com</td>
                                     <td>Cocinero</td>
-                                    <td>
-                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    </td>
+                                <td>
+                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#empleadoModal" onclick="cargarEmpleadoParaEditar(1)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
                                 </tr>
                                 <tr>
                                     <td>Mariana Castillo</td>
@@ -721,7 +753,9 @@
                                     <td>mcastillo@hotmail.com</td>
                                     <td>Cajera</td>
                                     <td>
-                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#empleadoModal" onclick="cargarEmpleadoParaEditar(2)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
                                         <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
@@ -730,12 +764,12 @@
                     </div>
                 </div>
                 
-                <div id="nomina-empleados" class="tab-content" style="display: none;">
+                <!-- <div id="nomina-empleados" class="tab-content" style="display: none;">
                     <div class="table-container">
                         <h2>Nómina de Empleados</h2>
                         <p>Contenido de nómina aquí...</p>
                     </div>
-                </div>
+                </div> -->
                 
                 <div id="turnos-empleados" class="tab-content" style="display: none;">
                     <div class="table-container">
@@ -744,86 +778,97 @@
                     </div>
                 </div>
                 
-                        <!-- Modal para agregar/editar empleado -->
-            <div class="modal fade" id="empleadoModal" tabindex="-1" aria-labelledby="empleadoModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header p-2">
-                            <h5 class="modal-title" id="empleadoModalLabel">Agregar Nuevo Empleado</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="empleadoForm">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="empleado-nombre" class="form-label">Nombre</label>
-                                            <input type="text" class="form-control" id="empleado-nombre" placeholder="Ingrese el nombre" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="empleado-apellido" class="form-label">Apellido</label>
-                                            <input type="text" class="form-control" id="empleado-apellido" placeholder="Ingrese el apellido" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="empleado-cedula" class="form-label">Cédula</label>
-                                            <input type="text" class="form-control" id="empleado-cedula" placeholder="Ingrese la cédula" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="empleado-telefono" class="form-label">Teléfono</label>
-                                            <input type="text" class="form-control" id="empleado-telefono" placeholder="Ingrese el teléfono" required>
+<!-- Modal para agregar/editar empleado -->
+        <div class="modal fade" id="empleadoModal" tabindex="-1" aria-labelledby="empleadoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header p-2">
+                        <h5 class="modal-title" id="empleadoModalLabel">Agregar Nuevo Empleado</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="empleadoForm">
+                            <input type="hidden" id="empleado-id" value="">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="empleado-nombre" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="empleado-nombre" placeholder="Ingrese el nombre" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="empleado-apellido" class="form-label">Apellido</label>
+                                        <input type="text" class="form-control" id="empleado-apellido" placeholder="Ingrese el apellido" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="empleado-cedula" class="form-label">Cédula</label>
+                                        <input type="text" class="form-control" id="empleado-cedula" placeholder="Ingrese la cédula" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="empleado-telefono" class="form-label">Teléfono</label>
+                                        <input type="text" class="form-control" id="empleado-telefono" placeholder="Ingrese el teléfono" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="empleado-email" class="form-label">Correo electrónico</label>
+                                        <input type="email" class="form-control" id="empleado-email" placeholder="Ingrese el correo" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="empleado-puesto" class="form-label">Puesto</label>
+                                        <select id="empleado-puesto" class="form-select" required>
+                                            <option value="" selected disabled>Seleccione un puesto</option>
+                                            <option value="mesero">Mesero/a</option>
+                                            <option value="cocinero">Cocinero/a</option>
+                                            <option value="cajero">Cajero/a</option>
+                                            <option value="limpieza">Limpieza</option>
+                                            <option value="admin">Administrativo</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="empleado-salario" class="form-label">Salario</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="empleado-salario" placeholder="0.00" min="0" step="0.01">
                                         </div>
                                     </div>
                                     
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="empleado-email" class="form-label">Correo electrónico</label>
-                                            <input type="email" class="form-control" id="empleado-email" placeholder="Ingrese el correo" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="empleado-puesto" class="form-label">Puesto</label>
-                                            <select id="empleado-puesto" class="form-select" required>
-                                                <option value="" selected disabled>Seleccione un puesto</option>
-                                                <option value="mesero">Mesero/a</option>
-                                                <option value="cocinero">Cocinero/a</option>
-                                                <option value="cajero">Cajero/a</option>
-                                                <option value="limpieza">Limpieza</option>
-                                                <option value="admin">Administrativo</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="empleado-salario" class="form-label">Salario</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                                <input type="number" class="form-control" id="empleado-salario" placeholder="0.00" min="0" step="0.01" required>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="empleado-fecha" class="form-label">Fecha de Contratación</label>
-                                            <input type="date" class="form-control" id="empleado-fecha" required>
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="empleado-fecha" class="form-label">Fecha de Contratación</label>
+                                        <input type="date" class="form-control" id="empleado-fecha">
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn-addNew" id="saveEmpleado">Guardar</button>
-                        </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="empleado-direccion" class="form-label">Dirección</label>
+                                        <textarea class="form-control" id="empleado-direccion" rows="2" placeholder="Dirección completa"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn-addNew" id="saveEmpleado">Guardar</button>
+                        <button type="button" class="btn btn-success" id="updateEmpleado" style="display: none;">Actualizar</button>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
 
-            <!-- Pedidos -->
+<!-- Pedidos -->
             <div id="pedidos" class="section-content" style="display: none;">
                 <div class="header">
-                    <h1>Pedidos</h1>
+                    <h1>Gestión de Pedidos</h1>
                     <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#pedidoModal">
                     <i class="fas fa-plus"></i> Nuevo Pedido
                 </button>
@@ -837,6 +882,7 @@
                 
                 <div id="pedidos-activos" class="tab-content">
                     <div class="table-container">
+                        <h2>Pedidos Recibidos</h2>
                         <table>
                             <thead>
                                 <tr>
@@ -858,7 +904,76 @@
                                     <td>12:34</td>
                                     <td>$350.00</td>
                                     <td>
-                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal"  data-bs-target="#pedidoEditModal" onclick="cargarPedidoParaEditar(0)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                         <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1024</td>
+                                    <td>Axel López</td>
+                                    <td>1x Hamburguesa (3x Queso)</td>
+                                    <td><span class="badge badge-warning">Recibido</span></td>
+                                    <td>12:36</td>
+                                    <td>$150.00</td>
+                                    <td>
+                                        <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#pedidoEditModal" onclick="cargarPedidoParaEditar(1)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                         <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1025</td>
+                                    <td>Carlos Alcántara</td>
+                                    <td>3x Tostadas</td>
+                                    <td><span class="badge badge-warning">Recibido</span></td>
+                                    <td>12:40</td>
+                                    <td>$95.00</td>
+                                    <td>
+                                        <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#pedidoEditModal" onclick="cargarPedidoParaEditar(2)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="pedidos-proceso" class="tab-content" style="display: none;">
+                    <!-- <div class="table-container">-->
+                        
+                         <div class="table-container">
+                            <h2>Pedidos en Proceso</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Productos</th>
+                                    <th>Estado</th>
+                                    <th>Hora</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#1023</td>
+                                    <td>Carlos Pérez</td>
+                                    <td>3x Tacos, 2x Enchiladas</td>
+                                    <td><span class="badge badge-success">En preparación</span></td>
+                                    <td>12:34</td>
+                                    <td>$350.00</td>
+                                    <td>
+                                        <!-- <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button> -->
                                         <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
                                     </td>
                                 </tr>
@@ -870,7 +985,7 @@
                                     <td>12:36</td>
                                     <td>$150.00</td>
                                     <td>
-                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <!-- <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button> -->
                                         <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
                                     </td>
                                 </tr>
@@ -882,29 +997,73 @@
                                     <td>12:40</td>
                                     <td>$95.00</td>
                                     <td>
-                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <!-- <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button> -->
                                         <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-                
-                <div id="pedidos-proceso" class="tab-content" style="display: none;">
-                    <div class="table-container">
-                        <h2>Pedidos en Proceso</h2>
-                        <p>Contenido de pedidos en proceso aquí...</p>
-                    </div>
+                    <!-- </div> -->
                 </div>
                 
                 <div id="pedidos-completados" class="tab-content" style="display: none;">
-                    <div class="table-container">
-                        <h2>Pedidos Completados</h2>
-                        <p>Contenido de pedidos completados aquí...</p>
+                     <div class="table-container">
+                            <h2>Pedidos Completados</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Productos</th>
+                                    <th>Estado</th>
+                                    <th>Hora</th>
+                                    <th>Total</th>
+                                    <!-- <th>Acciones</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#1023</td>
+                                    <td>Carlos Pérez</td>
+                                    <td>3x Tacos, 2x Enchiladas</td>
+                                    <td><span class="badge badge-danger">Completado</span></td>
+                                    <td>12:34</td>
+                                    <td>$350.00</td>
+                                    <!-- <td>
+                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                    </td> -->
+                                </tr>
+                                <tr>
+                                    <td>#1024</td>
+                                    <td>Axel López</td>
+                                    <td>1x Hamburguesa (3x Queso)</td>
+                                     <td><span class="badge badge-danger">Completado</span></td>
+                                    <td>12:36</td>
+                                    <td>$150.00</td>
+                                    <!-- <td>
+                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                    </td> -->
+                                </tr>
+                                <tr>
+                                    <td>#1025</td>
+                                    <td>Carlos Alcántara</td>
+                                    <td>3x Tostadas</td>
+                                     <td><span class="badge badge-danger">Completado</span></td>
+                                    <td>12:40</td>
+                                    <td>$95.00</td>
+                                    <!-- <td>
+                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                    </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                
+            
               <!-- Modal para nuevo pedido -->
                 <div class="modal fade" id="pedidoModal" tabindex="-1" aria-labelledby="pedidoModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -998,10 +1157,97 @@
                         </div>
                     </div>
                 </div>
-     </div>
+
+<!-- Modal para editar pedido -->
+                <div class="modal fade" id="pedidoEditModal" tabindex="-1" aria-labelledby="pedidoEditModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header p-2">
+                                <h5 class="modal-title" id="pedidoEditModalLabel">Editar Pedido</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="pedidoEditForm">
+                                    <input type="hidden" id="pedido-edit-id" value="">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="pedido-edit-cliente" class="form-label">Nombre del Cliente</label>
+                                                <input type="text" id="pedido-edit-cliente" class="form-control" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="pedido-edit-telefono" class="form-label">Teléfono de Contacto</label>
+                                                <input type="text" id="pedido-edit-telefono" class="form-control" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="pedido-edit-mesa" class="form-label">Número de Mesa</label>
+                                                <input type="text" id="pedido-edit-mesa" class="form-control">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="pedido-edit-estado" class="form-label">Estado del Pedido</label>
+                                                <select class="form-select" id="pedido-edit-estado" required>
+                                                    <option value="recibido">Recibido</option>
+                                                    <option value="preparacion">En preparación</option>
+                                                    <option value="completado">Completado</option>
+                                                    <option value="cancelado">Cancelado</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="pedido-edit-hora" class="form-label">Hora del Pedido</label>
+                                                <input type="time" id="pedido-edit-hora" class="form-control" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="pedido-edit-total" class="form-label">Total</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">$</span>
+                                                    <input type="number" id="pedido-edit-total" class="form-control" min="0" step="0.01" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Productos del Pedido</label>
+                                        <div id="pedido-edit-productos" class="border rounded p-3" style="min-height: 100px;">
+                                            <!-- Los productos se cargarán dinámicamente -->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="pedido-edit-notas" class="form-label">Notas Especiales</label>
+                                        <textarea id="pedido-edit-notas" class="form-control" rows="3" placeholder="Ej. Sin cebolla, extra picante"></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3 p-3 bg-light rounded">
+                                        <h5>Resumen del Pedido</h5>
+                                        <div id="pedido-edit-resumen"></div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between fw-bold">
+                                            <span>Total:</span>
+                                            <span id="pedido-edit-total-display">$0.00</span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar Pedido</button>
+                                <!-- <button type="button" class="btn btn-danger" id="cancelPedido">Cancelar Pedido</button> -->
+                                <button type="button" class="btn btn-success" id="updatePedido">Actualizar Pedido</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 <!-- Gestionar Reseñas con pestañas -->
- <div id="gestion-reseñas" class="section-content" style="display: none;">
+<div id="gestion-reseñas" class="section-content" style="display: none;">
         <div class="header">
         <h1>Gestionar Reseñas</h1>
        <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#resenaModal">
@@ -1015,130 +1261,178 @@
     <div id="reseñas-local" class="tab-content">
         <div class="table-container">
             <h2>Reseñas de Local</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Referencia</th>
-                        <th>Cliente</th>
-                        <th>Calificación</th>
-                        <th>Comentario</th>
-                        <th>Fecha</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Local Centro</td>
-                        <td>Juan Pérez</td>
-                        <td>5</td>
-                        <td>Excelente servicio y comida.</td>
-                        <td>2025-08-24</td>
-                        <td>
-                            <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <!-- Más reseñas de local aquí -->
-                </tbody>
-            </table>
+           <table>
+    <thead>
+        <tr>
+            <th>Referencia</th>
+            <th>Cliente</th>
+            <th>Calificación</th>
+            <th>Comentario</th>
+            <th>Respuesta</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Local Centro</td>
+            <td>Juan Pérez</td>
+            <td>
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </td>
+            <td>Excelente servicio y comida.</td>
+            <td></td>
+            <td>2025-08-24</td>
+            <td>
+                <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(0)">
+                    <i class="fas fa-reply"></i> Responder
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>#1023</td>
+            <td>Ana Torrez</td>
+            <td>
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                </div>
+            </td>
+            <td>Rápido y delicioso.</td>
+            <td>¡Gracias por tu comentario! Nos alegra que hayas disfrutado.</td>
+            <td>2025-08-23</td>
+            <td>
+                <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(1)">
+                    <i class="fas fa-edit"></i> Editar Respuesta
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
         </div>
     </div>
     <div id="reseñas-pedido" class="tab-content" style="display: none;">
         <div class="table-container">
             <h2>Reseñas de Pedido</h2>
             <table>
-                <thead>
-                    <tr>
-                        <th>Referencia</th>
-                        <th>Cliente</th>
-                        <th>Calificación</th>
-                        <th>Comentario</th>
-                        <th>Fecha</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>#1023</td>
-                        <td>Ana Torrez</td>
-                        <td>4</td>
-                        <td>Rápido y delicioso.</td>
-                        <td>2025-08-23</td>
-                        <td>
-                            <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <!-- Más reseñas de pedido aquí -->
-                </tbody>
-            </table>
+    <thead>
+        <tr>
+            <th>Referencia</th>
+            <th>Cliente</th>
+            <th>Calificación</th>
+            <th>Comentario</th>
+            <th>Respuesta</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Local Centro</td>
+            <td>Juan Pérez</td>
+            <td>
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </td>
+            <td>Excelente servicio y comida.</td>
+            <td></td>
+            <td>2025-08-24</td>
+            <td>
+                <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(0)">
+                    <i class="fas fa-reply"></i> Responder
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>#1023</td>
+            <td>Ana Torrez</td>
+            <td>
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                </div>
+            </td>
+            <td>Rápido y delicioso.</td>
+            <td>¡Gracias por tu comentario! Nos alegra que hayas disfrutado.</td>
+            <td>2025-08-23</td>
+            <td>
+                <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(1)">
+                    <i class="fas fa-edit"></i> Editar Respuesta
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
         </div>
     </div>
-        <!-- Modal para agregar reseña -->
-        <div class="modal fade" id="resenaModal" tabindex="-1" aria-labelledby="resenaModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header p-2">
-                        <h5 class="modal-title" id="resenaModalLabel">Agregar Reseña</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+ <!-- Modal para responder/editar respuesta de reseña -->
+<div class="modal fade" id="responderResenaModal" tabindex="-1" aria-labelledby="responderResenaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="responderResenaModalLabel">Responder Reseña</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="responderResenaForm">
+                    <input type="hidden" id="resena-id" value="">
+                    
+                    <!-- Información de la reseña (solo lectura) -->
+                    <div class="mb-3">
+                        <label class="form-label">Cliente</label>
+                        <input type="text" class="form-control" id="resena-cliente" readonly>
                     </div>
-                    <div class="modal-body">
-                        <form id="resenaForm">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="resena-tipo" class="form-label">Tipo</label>
-                                        <select id="resena-tipo" class="form-select" required>
-                                            <option value="" selected disabled>Seleccione un tipo</option>
-                                            <option value="local">Local</option>
-                                            <option value="pedido">Pedido</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="resena-referencia" class="form-label">Referencia</label>
-                                        <input type="text" id="resena-referencia" class="form-control" placeholder="Ej. Local Centro o #1023" required>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="resena-cliente" class="form-label">Cliente</label>
-                                        <input type="text" id="resena-cliente" class="form-control" placeholder="Nombre del cliente" required>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="resena-calificacion" class="form-label">Calificación</label>
-                                        <select id="resena-calificacion" class="form-select" required>
-                                            <option value="" selected disabled>Seleccione una calificación</option>
-                                            <option value="5">5 - Excelente</option>
-                                            <option value="4">4 - Muy bueno</option>
-                                            <option value="3">3 - Bueno</option>
-                                            <option value="2">2 - Regular</option>
-                                            <option value="1">1 - Malo</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="resena-fecha" class="form-label">Fecha</label>
-                                        <input type="date" id="resena-fecha" class="form-control" required>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="resena-comentario" class="form-label">Comentario</label>
-                                <textarea id="resena-comentario" class="form-control" rows="4" placeholder="Comentario" required></textarea>
-                            </div>
-                        </form>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Calificación</label>
+                        <div id="resena-calificacion" class="rating-stars"></div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn-addNew" id="saveResena">Guardar Reseña</button>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Comentario del Cliente</label>
+                        <textarea class="form-control" id="resena-comentario" rows="3" readonly></textarea>
                     </div>
-                </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Fecha</label>
+                        <input type="text" class="form-control" id="resena-fecha" readonly>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- Respuesta del administrador -->
+                    <div class="mb-3">
+                        <label for="resena-respuesta" class="form-label">Tu Respuesta</label>
+                        <textarea class="form-control" id="resena-respuesta" rows="4" placeholder="Escribe tu respuesta aquí..." maxlength="500"></textarea>
+                        <div class="form-text"><span id="resena-respuesta-contador">0</span>/500 caracteres</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="eliminarRespuesta" style="display: none;">Eliminar Respuesta</button>
+                <button type="button" class="btn btn-primary" id="guardarRespuesta">Guardar Respuesta</button>
             </div>
         </div>
+    </div>
+</div>
 
  </div>
 

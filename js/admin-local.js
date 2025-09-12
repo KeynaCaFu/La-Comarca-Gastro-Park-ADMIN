@@ -62,7 +62,7 @@ function renderTablaInsumos() {
                 <td>${insumo.proveedor}</td>
                 <td>${estadoHtml}</td>
                 <td>
-                    <button class='btn-edit btn-addNew btn-sm'><i class='fas fa-edit'></i></button>
+                    <button class='btn-edit btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#insumoModal' onclick='cargarInsumoParaEditar(${idx})'><i class='fas fa-edit'></i></button>
                     <button class='btn-edit btn-danger btn-sm'><i class='fas fa-trash'></i></button>
                     <button class='btn-entrada' onclick='mostrarMovimientoInsumo(${idx}, "entrada")'><i class='fas fa-arrow-down'></i> Entrada</button>
                     <button class='btn-salida' onclick='mostrarMovimientoInsumo(${idx}, "salida")'><i class='fas fa-arrow-up'></i> Salida</button>
@@ -183,33 +183,33 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Limpiar el formulario cuando se cierra el modal de proveedores
-    document.getElementById('proveedorModal').addEventListener('hidden.bs.modal', function () {
-        document.getElementById('proveedorForm').reset();
-    });
+// document.addEventListener('DOMContentLoaded', function() {
+//     // Limpiar el formulario cuando se cierra el modal de proveedores
+//     document.getElementById('proveedorModal').addEventListener('hidden.bs.modal', function () {
+//         document.getElementById('proveedorForm').reset();
+//     });
     
-    // Manejar el guardado del proveedor
-    document.getElementById('saveProveedor').addEventListener('click', function() {
-        // Validar el formulario
-        const nombre = document.getElementById('proveedor-nombre').value;
-        const telefono = document.getElementById('proveedor-telefono').value;
-        const email = document.getElementById('proveedor-email').value;
-        const pago = document.getElementById('proveedor-pago').value;
+//     // Manejar el guardado del proveedor
+//     document.getElementById('saveProveedor').addEventListener('click', function() {
+//         // Validar el formulario
+//         const nombre = document.getElementById('proveedor-nombre').value;
+//         const telefono = document.getElementById('proveedor-telefono').value;
+//         const email = document.getElementById('proveedor-email').value;
+//         const pago = document.getElementById('proveedor-pago').value;
         
-        if (!nombre || !telefono || !email || !pago) {
-            alert('Por favor complete todos los campos obligatorios');
-            return;
-        }
+//         if (!nombre || !telefono || !email || !pago) {
+//             alert('Por favor complete todos los campos obligatorios');
+//             return;
+//         }
         
-        // Aquí iría la lógica para guardar el proveedor
-        alert('Proveedor guardado correctamente');
+//         // Aquí iría la lógica para guardar el proveedor
+//         alert('Proveedor guardado correctamente');
         
-        // Cerrar el modal después de guardar
-        const modal = bootstrap.Modal.getInstance(document.getElementById('proveedorModal'));
-        modal.hide();
-    });
-});
+//         // Cerrar el modal después de guardar
+//         const modal = bootstrap.Modal.getInstance(document.getElementById('proveedorModal'));
+//         modal.hide();
+//     });
+// });
 
 // ========== GRÁFICAS DASHBOARD ==========
 document.addEventListener('DOMContentLoaded', function() {
@@ -501,37 +501,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Manejar el modal de reseñas
-    const resenaModal = document.getElementById('resenaModal');
-    if (resenaModal) {
-        resenaModal.addEventListener('hidden.bs.modal', function () {
-            document.getElementById('resenaForm').reset();
-        });
-    }
+    // // Manejar el modal de reseñas
+    // const resenaModal = document.getElementById('resenaModal');
+    // if (resenaModal) {
+    //     resenaModal.addEventListener('hidden.bs.modal', function () {
+    //         document.getElementById('resenaForm').reset();
+    //     });
+    // }
 
-    const saveResena = document.getElementById('saveResena');
-    if (saveResena) {
-        saveResena.addEventListener('click', function() {
-            // Validar el formulario
-            const tipo = document.getElementById('resena-tipo').value;
-            const referencia = document.getElementById('resena-referencia').value;
-            const cliente = document.getElementById('resena-cliente').value;
-            const calificacion = document.getElementById('resena-calificacion').value;
-            const comentario = document.getElementById('resena-comentario').value;
+    // const saveResena = document.getElementById('saveResena');
+    // if (saveResena) {
+    //     saveResena.addEventListener('click', function() {
+    //         // Validar el formulario
+    //         const tipo = document.getElementById('resena-tipo').value;
+    //         const referencia = document.getElementById('resena-referencia').value;
+    //         const cliente = document.getElementById('resena-cliente').value;
+    //         const calificacion = document.getElementById('resena-calificacion').value;
+    //         const comentario = document.getElementById('resena-comentario').value;
             
-            if (!tipo || !referencia || !cliente || !calificacion || !comentario) {
-                alert('Por favor complete todos los campos obligatorios');
-                return;
-            }
+    //         if (!tipo || !referencia || !cliente || !calificacion || !comentario) {
+    //             alert('Por favor complete todos los campos obligatorios');
+    //             return;
+    //         }
             
-            // Aquí iría la lógica para guardar la reseña
-            alert('Reseña guardada correctamente');
+    //         // Aquí iría la lógica para guardar la reseña
+    //         alert('Reseña guardada correctamente');
             
-            // Cerrar el modal después de guardar
-            const modal = bootstrap.Modal.getInstance(document.getElementById('resenaModal'));
-            modal.hide();
-        });
-    }
+    //         // Cerrar el modal después de guardar
+    //         const modal = bootstrap.Modal.getInstance(document.getElementById('resenaModal'));
+    //         modal.hide();
+    //     });
+    // }
 });
 
 // Variable para controlar el modo (agregar/editar)
@@ -652,5 +652,1086 @@ document.addEventListener('DOMContentLoaded', function() {
             updateProduct.addEventListener('click', actualizarProducto);
         }
  
+    }
+});
+
+
+// Variable para controlar el modo (agregar/editar) de insumos
+let modoEdicionInsumo = false;
+
+// Función para cargar datos del insumo en el modal de edición
+function cargarInsumoParaEditar(index) {
+    modoEdicionInsumo = true;
+    
+    // Obtener el insumo del array
+    const insumo = insumos[index];
+    
+    // Guardar el índice para referencia posterior
+    document.getElementById('insumo-id').value = index;
+    
+    // Llenar el formulario con los datos del insumo
+    document.getElementById('insumo-nombre').value = insumo.nombre;
+    document.getElementById('insumo-cantidad').value = insumo.cantidad;
+    document.getElementById('insumo-unidad').value = insumo.unidad;
+    document.getElementById('insumo-minimo').value = insumo.minimo;
+    document.getElementById('insumo-maximo').value = insumo.maximo;
+    
+    // Establecer el proveedor (necesitarías mapear el nombre a un valor)
+    const proveedorSelect = document.getElementById('insumo-proveedor');
+    for (let i = 0; i < proveedorSelect.options.length; i++) {
+        if (proveedorSelect.options[i].text === insumo.proveedor) {
+            proveedorSelect.value = proveedorSelect.options[i].value;
+            break;
+        }
+    }
+    
+    // Cambiar el título del modal
+    document.getElementById('insumoModalLabel').textContent = 'Editar Insumo';
+    
+    // Mostrar el botón de actualizar y ocultar el de guardar
+    document.getElementById('saveInsumo').style.display = 'none';
+    document.getElementById('updateInsumo').style.display = 'block';
+    
+    // Actualizar el estado del stock
+    validarStock();
+}
+
+// Función para resetear el modal a modo agregar
+function resetearModalInsumo() {
+    modoEdicionInsumo = false;
+    document.getElementById('insumoForm').reset();
+    document.getElementById('insumo-id').value = '';
+    document.getElementById('insumoModalLabel').textContent = 'Agregar Nuevo Insumo';
+    document.getElementById('saveInsumo').style.display = 'block';
+    document.getElementById('updateInsumo').style.display = 'none';
+    document.getElementById('minimo-alert').innerHTML = '';
+    document.getElementById('maximo-alert').innerHTML = '';
+    document.getElementById('stock-status').innerHTML = 'Complete los campos de stock para ver el estado del inventario';
+}
+
+// Función para guardar insumo (nuevo)
+function guardarInsumo() {
+    // Validar formulario
+    const nombre = document.getElementById('insumo-nombre').value;
+    const cantidad = parseFloat(document.getElementById('insumo-cantidad').value);
+    const unidad = document.getElementById('insumo-unidad').value;
+    const minimo = parseFloat(document.getElementById('insumo-minimo').value);
+    const maximo = parseFloat(document.getElementById('insumo-maximo').value);
+    const proveedorId = document.getElementById('insumo-proveedor').value;
+    
+    if (!nombre || isNaN(cantidad) || !unidad || isNaN(minimo) || isNaN(maximo) || !proveedorId) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+    }
+    
+    if (maximo <= minimo) {
+        alert('El stock máximo debe ser mayor al stock mínimo');
+        return;
+    }
+    
+    // Obtener el nombre del proveedor
+    const proveedorSelect = document.getElementById('insumo-proveedor');
+    const proveedorNombre = proveedorSelect.options[proveedorSelect.selectedIndex].text;
+    
+    // Determinar el estado según la cantidad
+    let estado, badge;
+    if (cantidad <= 0) {
+        estado = 'Agotado';
+        badge = 'danger';
+    } else if (cantidad <= minimo) {
+        estado = 'Bajo stock';
+        badge = 'warning';
+    } else {
+        estado = 'Disponible';
+        badge = 'success';
+    }
+    
+    // Crear nuevo insumo
+    const nuevoInsumo = {
+        nombre,
+        cantidad,
+        unidad,
+        minimo,
+        maximo,
+        proveedor: proveedorNombre,
+        estado,
+        badge
+    };
+    
+    // Agregar al array (en una aplicación real, aquí harías una petición al servidor)
+    insumos.push(nuevoInsumo);
+    
+    // Actualizar la tabla
+    renderTablaInsumos();
+    
+    alert('Insumo guardado correctamente');
+    
+    // Cerrar el modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insumoModal'));
+    modal.hide();
+}
+
+// Función para actualizar insumo (edición)
+function actualizarInsumo() {
+    const index = document.getElementById('insumo-id').value;
+    const nombre = document.getElementById('insumo-nombre').value;
+    const cantidad = parseFloat(document.getElementById('insumo-cantidad').value);
+    const unidad = document.getElementById('insumo-unidad').value;
+    const minimo = parseFloat(document.getElementById('insumo-minimo').value);
+    const maximo = parseFloat(document.getElementById('insumo-maximo').value);
+    const proveedorId = document.getElementById('insumo-proveedor').value;
+    
+    if (!nombre || isNaN(cantidad) || !unidad || isNaN(minimo) || isNaN(maximo) || !proveedorId) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+    }
+    
+    if (maximo <= minimo) {
+        alert('El stock máximo debe ser mayor al stock mínimo');
+        return;
+    }
+    
+    // Obtener el nombre del proveedor
+    const proveedorSelect = document.getElementById('insumo-proveedor');
+    const proveedorNombre = proveedorSelect.options[proveedorSelect.selectedIndex].text;
+    
+    // Determinar el estado según la cantidad
+    let estado, badge;
+    if (cantidad <= 0) {
+        estado = 'Agotado';
+        badge = 'danger';
+    } else if (cantidad <= minimo) {
+        estado = 'Bajo stock';
+        badge = 'warning';
+    } else {
+        estado = 'Disponible';
+        badge = 'success';
+    }
+    
+    // Actualizar el insumo
+    insumos[index] = {
+        nombre,
+        cantidad,
+        unidad,
+        minimo,
+        maximo,
+        proveedor: proveedorNombre,
+        estado,
+        badge
+    };
+    
+    // Actualizar la tabla
+    renderTablaInsumos();
+    
+    alert('Insumo actualizado correctamente');
+    
+    // Cerrar el modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insumoModal'));
+    modal.hide();
+}
+
+// Event listeners para el modal de insumos
+document.addEventListener('DOMContentLoaded', function() {
+    const insumoModal = document.getElementById('insumoModal');
+    if (insumoModal) {
+        // Evento cuando se abre el modal
+        insumoModal.addEventListener('show.bs.modal', function () {
+            // No hacer nada especial al abrir
+        });
+        
+        // Evento cuando se cierra el modal
+        insumoModal.addEventListener('hidden.bs.modal', function () {
+            resetearModalInsumo();
+        });
+        
+        // Evento para el botón de guardar (nuevo insumo)
+        const saveInsumo = document.getElementById('saveInsumo');
+        if (saveInsumo) {
+            saveInsumo.addEventListener('click', guardarInsumo);
+        }
+        
+        // Evento para el botón de actualizar (editar insumo)
+        const updateInsumo = document.getElementById('updateInsumo');
+        if (updateInsumo) {
+            updateInsumo.addEventListener('click', actualizarInsumo);
+        }
+    }
+});
+
+// Array para almacenar los proveedores (similar a como tienes con insumos)
+let proveedores = [
+    {
+        nombre: 'Distribuidora Central',
+        contacto: 'contacto@central.com - 555-1234',
+        ventas: '$12,500 MXN'
+    },
+    {
+        nombre: 'Alimentos del Norte',
+        contacto: 'ventas@norte.com - 555-5678',
+        ventas: '$8,200 MXN'
+    },
+    {
+        nombre: 'Suministros Express',
+        contacto: 'info@express.com - 555-9012',
+        ventas: '$5,900 MXN'
+    }
+];
+
+// Variable para controlar el modo (agregar/editar) de proveedores
+let modoEdicionProveedor = false;
+
+// Función para cargar datos del proveedor en el modal de edición
+function cargarProveedorParaEditar(index) {
+    modoEdicionProveedor = true;
+    
+    // Obtener el proveedor del array
+    const proveedor = proveedores[index];
+    
+    // Guardar el índice para referencia posterior
+    document.getElementById('proveedor-id').value = index;
+    
+    // Llenar el formulario con los datos del proveedor
+    document.getElementById('proveedor-nombre').value = proveedor.nombre;
+    
+    // Extraer datos de contacto (email y teléfono)
+    const contactoParts = proveedor.contacto.split(' - ');
+    if (contactoParts.length === 2) {
+        document.getElementById('proveedor-email').value = contactoParts[0];
+        document.getElementById('proveedor-telefono').value = contactoParts[1];
+    }
+    
+    // Aquí podrías cargar más campos si los tuvieras en tu estructura de datos
+    // Por ejemplo: categoría, dirección, productos, etc.
+    
+    // Cambiar el título del modal
+    document.getElementById('proveedorModalLabel').textContent = 'Editar Proveedor';
+    
+    // Mostrar el botón de actualizar y ocultar el de guardar
+    document.getElementById('saveProveedor').style.display = 'none';
+    document.getElementById('updateProveedor').style.display = 'block';
+}
+
+// Función para resetear el modal a modo agregar
+function resetearModalProveedor() {
+    modoEdicionProveedor = false;
+    document.getElementById('proveedorForm').reset();
+    document.getElementById('proveedor-id').value = '';
+    document.getElementById('proveedorModalLabel').textContent = 'Agregar Nuevo Proveedor';
+    document.getElementById('saveProveedor').style.display = 'block';
+    document.getElementById('updateProveedor').style.display = 'none';
+}
+
+// Función para guardar proveedor (nuevo)
+function guardarProveedor() {
+    // Validar formulario
+    const nombre = document.getElementById('proveedor-nombre').value;
+    const telefono = document.getElementById('proveedor-telefono').value;
+    const email = document.getElementById('proveedor-email').value;
+    const pago = document.getElementById('proveedor-pago').value;
+    
+    if (!nombre || !telefono || !email || !pago) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+    }
+    
+    // Crear nuevo proveedor
+    const nuevoProveedor = {
+        nombre: nombre,
+        contacto: `${email} - ${telefono}`,
+        ventas: '$0 MXN' // Valor inicial
+    };
+    
+    // Agregar al array (en una aplicación real, aquí harías una petición al servidor)
+    proveedores.push(nuevoProveedor);
+    
+    // Actualizar la tabla
+    actualizarTablaProveedores();
+    
+    alert('Proveedor guardado correctamente');
+    
+    // Cerrar el modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('proveedorModal'));
+    modal.hide();
+}
+
+// Función para actualizar proveedor (edición)
+function actualizarProveedor() {
+    const index = document.getElementById('proveedor-id').value;
+    const nombre = document.getElementById('proveedor-nombre').value;
+    const telefono = document.getElementById('proveedor-telefono').value;
+    const email = document.getElementById('proveedor-email').value;
+    const pago = document.getElementById('proveedor-pago').value;
+    
+    if (!nombre || !telefono || !email || !pago) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+    }
+    
+    // Actualizar el proveedor
+    proveedores[index] = {
+        nombre: nombre,
+        contacto: `${email} - ${telefono}`,
+        ventas: proveedores[index].ventas // Mantener el valor de ventas existente
+    };
+    
+    // Actualizar la tabla
+    actualizarTablaProveedores();
+    
+    alert('Proveedor actualizado correctamente');
+    
+    // Cerrar el modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('proveedorModal'));
+    modal.hide();
+}
+
+// Función para actualizar la tabla de proveedores
+function actualizarTablaProveedores() {
+    const tbody = document.querySelector('#gestion-proveedores table tbody');
+    tbody.innerHTML = '';
+    
+    proveedores.forEach((proveedor, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${proveedor.nombre}</td>
+                <td>${proveedor.contacto}</td>
+                <td>${proveedor.ventas}</td>
+                <td>
+                    <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proveedorModal" onclick="cargarProveedorParaEditar(${index})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    <button class="btn-detalle btn-info btn-sm"><i class="fas fa-eye"></i> Detalles</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// Event listeners para el modal de proveedores
+document.addEventListener('DOMContentLoaded', function() {
+    const proveedorModal = document.getElementById('proveedorModal');
+    if (proveedorModal) {
+        // Evento cuando se abre el modal
+        proveedorModal.addEventListener('show.bs.modal', function () {
+            // No hacer nada especial al abrir
+        });
+        
+        // Evento cuando se cierra el modal
+        proveedorModal.addEventListener('hidden.bs.modal', function () {
+            resetearModalProveedor();
+        });
+        
+        // Evento para el botón de guardar (nuevo proveedor)
+        const saveProveedor = document.getElementById('saveProveedor');
+        if (saveProveedor) {
+            saveProveedor.addEventListener('click', guardarProveedor);
+        }
+        
+        // Evento para el botón de actualizar (editar proveedor)
+        const updateProveedor = document.getElementById('updateProveedor');
+        if (updateProveedor) {
+            updateProveedor.addEventListener('click', actualizarProveedor);
+        }
+    }
+    
+    // Inicializar la tabla de proveedores
+    actualizarTablaProveedores();
+});
+
+// Array para almacenar los empleados
+let empleados = [
+    {
+        nombre: 'Ana',
+        apellido: 'Torrez',
+        cedula: '705610896',
+        telefono: '88871296',
+        email: 'ctorrez@gmail.com',
+        puesto: 'Mesera',
+        salario: '',
+        fechaContratacion: '',
+        direccion: ''
+    },
+    {
+        nombre: 'Juan',
+        apellido: 'Pérez',
+        cedula: '109680125',
+        telefono: '85261245',
+        email: 'juanP13@gmail.com',
+        puesto: 'Cocinero',
+        salario: '',
+        fechaContratacion: '',
+        direccion: ''
+    },
+    {
+        nombre: 'Mariana',
+        apellido: 'Castillo',
+        cedula: '6523896',
+        telefono: '---',
+        email: 'mcastillo@hotmail.com',
+        puesto: 'Cajera',
+        salario: '',
+        fechaContratacion: '',
+        direccion: ''
+    }
+];
+
+// Variable para controlar el modo (agregar/editar) de empleados
+let modoEdicionEmpleado = false;
+
+// Función para cargar datos del empleado en el modal de edición
+function cargarEmpleadoParaEditar(index) {
+    modoEdicionEmpleado = true;
+    
+    // Obtener el empleado del array
+    const empleado = empleados[index];
+    
+    // Guardar el índice para referencia posterior
+    document.getElementById('empleado-id').value = index;
+    
+    // Llenar el formulario con los datos del empleado
+    document.getElementById('empleado-nombre').value = empleado.nombre;
+    document.getElementById('empleado-apellido').value = empleado.apellido;
+    document.getElementById('empleado-cedula').value = empleado.cedula;
+    document.getElementById('empleado-telefono').value = empleado.telefono;
+    document.getElementById('empleado-email').value = empleado.email;
+    document.getElementById('empleado-puesto').value = empleado.puesto.toLowerCase();
+    document.getElementById('empleado-salario').value = empleado.salario;
+    document.getElementById('empleado-fecha').value = empleado.fechaContratacion;
+    document.getElementById('empleado-direccion').value = empleado.direccion;
+    
+    // Cambiar el título del modal
+    document.getElementById('empleadoModalLabel').textContent = 'Editar Empleado';
+    
+    // Mostrar el botón de actualizar y ocultar el de guardar
+    document.getElementById('saveEmpleado').style.display = 'none';
+    document.getElementById('updateEmpleado').style.display = 'block';
+}
+
+// Función para resetear el modal a modo agregar
+function resetearModalEmpleado() {
+    modoEdicionEmpleado = false;
+    document.getElementById('empleadoForm').reset();
+    document.getElementById('empleado-id').value = '';
+    document.getElementById('empleadoModalLabel').textContent = 'Agregar Nuevo Empleado';
+    document.getElementById('saveEmpleado').style.display = 'block';
+    document.getElementById('updateEmpleado').style.display = 'none';
+}
+
+// Función para guardar empleado (nuevo)
+function guardarEmpleado() {
+    // Validar formulario
+    const nombre = document.getElementById('empleado-nombre').value;
+    const apellido = document.getElementById('empleado-apellido').value;
+    const cedula = document.getElementById('empleado-cedula').value;
+    const telefono = document.getElementById('empleado-telefono').value;
+    const email = document.getElementById('empleado-email').value;
+    const puesto = document.getElementById('empleado-puesto').value;
+    
+    if (!nombre || !apellido || !cedula || !telefono || !email || !puesto) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+    }
+    
+    // Crear nuevo empleado
+    const nuevoEmpleado = {
+        nombre,
+        apellido,
+        cedula,
+        telefono,
+        email,
+        puesto: puesto.charAt(0).toUpperCase() + puesto.slice(1),
+        salario: document.getElementById('empleado-salario').value,
+        fechaContratacion: document.getElementById('empleado-fecha').value,
+        direccion: document.getElementById('empleado-direccion').value
+    };
+    
+    // Agregar al array (en una aplicación real, aquí harías una petición al servidor)
+    empleados.push(nuevoEmpleado);
+    
+    // Actualizar la tabla
+    actualizarTablaEmpleados();
+    
+    alert('Empleado guardado correctamente');
+    
+    // Cerrar el modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('empleadoModal'));
+    modal.hide();
+}
+
+// Función para actualizar empleado (edición)
+function actualizarEmpleado() {
+    const index = document.getElementById('empleado-id').value;
+    const nombre = document.getElementById('empleado-nombre').value;
+    const apellido = document.getElementById('empleado-apellido').value;
+    const cedula = document.getElementById('empleado-cedula').value;
+    const telefono = document.getElementById('empleado-telefono').value;
+    const email = document.getElementById('empleado-email').value;
+    const puesto = document.getElementById('empleado-puesto').value;
+    
+    if (!nombre || !apellido || !cedula || !telefono || !email || !puesto) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+    }
+    
+    // Actualizar el empleado
+    empleados[index] = {
+        nombre,
+        apellido,
+        cedula,
+        telefono,
+        email,
+        puesto: puesto.charAt(0).toUpperCase() + puesto.slice(1),
+        salario: document.getElementById('empleado-salario').value,
+        fechaContratacion: document.getElementById('empleado-fecha').value,
+        direccion: document.getElementById('empleado-direccion').value
+    };
+    
+    // Actualizar la tabla
+    actualizarTablaEmpleados();
+    
+    alert('Empleado actualizado correctamente');
+    
+    // Cerrar el modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('empleadoModal'));
+    modal.hide();
+}
+
+// Función para actualizar la tabla de empleados
+function actualizarTablaEmpleados() {
+    const tbody = document.querySelector('#lista-empleados table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    empleados.forEach((empleado, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${empleado.nombre} ${empleado.apellido}</td>
+                <td>${empleado.cedula}</td>
+                <td>${empleado.telefono}</td>
+                <td>${empleado.email}</td>
+                <td>${empleado.puesto}</td>
+                <td>
+                    <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#empleadoModal" onclick="cargarEmpleadoParaEditar(${index})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// Event listeners para el modal de empleados
+document.addEventListener('DOMContentLoaded', function() {
+    const empleadoModal = document.getElementById('empleadoModal');
+    if (empleadoModal) {
+        // Evento cuando se abre el modal
+        empleadoModal.addEventListener('show.bs.modal', function () {
+            // No hacer nada especial al abrir
+        });
+        
+        // Evento cuando se cierra el modal
+        empleadoModal.addEventListener('hidden.bs.modal', function () {
+            resetearModalEmpleado();
+        });
+        
+        // Evento para el botón de guardar (nuevo empleado)
+        const saveEmpleado = document.getElementById('saveEmpleado');
+        if (saveEmpleado) {
+            saveEmpleado.addEventListener('click', guardarEmpleado);
+        }
+        
+        // Evento para el botón de actualizar (editar empleado)
+        const updateEmpleado = document.getElementById('updateEmpleado');
+        if (updateEmpleado) {
+            updateEmpleado.addEventListener('click', actualizarEmpleado);
+        }
+    }
+    
+    // Inicializar la tabla de empleados
+    actualizarTablaEmpleados();
+});
+
+// Array para almacenar los pedidos
+let pedidos = [
+    {
+        id: "#1023",
+        cliente: "Carlos Pérez",
+        productos: "3x Tacos, 2x Enchiladas",
+        estado: "Recibido",
+        hora: "12:34",
+        total: 350.00,
+        telefono: "555-1234",
+        mesa: "5",
+        notas: "",
+        productosDetalle: [
+            { nombre: "Tacos", precio: 50, cantidad: 3 },
+            { nombre: "Enchiladas", precio: 100, cantidad: 2 }
+        ]
+    },
+    {
+        id: "#1024",
+        cliente: "Axel López",
+        productos: "1x Hamburguesa (3x Queso)",
+        estado: "En preparación",
+        hora: "12:36",
+        total: 150.00,
+        telefono: "555-5678",
+        mesa: "3",
+        notas: "Extra queso",
+        productosDetalle: [
+            { nombre: "Hamburguesa", precio: 120, cantidad: 1 },
+            { nombre: "Queso extra", precio: 10, cantidad: 3 }
+        ]
+    },
+    {
+        id: "#1025",
+        cliente: "Carlos Alcántara",
+        productos: "3x Tostadas",
+        estado: "En preparación",
+        hora: "12:40",
+        total: 95.00,
+        telefono: "555-9012",
+        mesa: "7",
+        notas: "",
+        productosDetalle: [
+            { nombre: "Tostadas", precio: 95, cantidad: 1 }
+        ]
+    }
+];
+
+// Variable para controlar el pedido actual en edición
+let pedidoEditando = null;
+
+// Función para cargar datos del pedido en el modal de edición
+function cargarPedidoParaEditar(index) {
+    pedidoEditando = index;
+    
+    // Obtener el pedido del array
+    const pedido = pedidos[index];
+    
+    // Llenar el formulario con los datos del pedido
+    document.getElementById('pedido-edit-id').value = index;
+    document.getElementById('pedido-edit-cliente').value = pedido.cliente;
+    document.getElementById('pedido-edit-telefono').value = pedido.telefono;
+    document.getElementById('pedido-edit-mesa').value = pedido.mesa;
+    document.getElementById('pedido-edit-estado').value = pedido.estado.toLowerCase().replace(" ", "");
+    document.getElementById('pedido-edit-hora').value = pedido.hora;
+    document.getElementById('pedido-edit-total').value = pedido.total;
+    document.getElementById('pedido-edit-notas').value = pedido.notas;
+    document.getElementById('pedido-edit-total-display').textContent = `$${pedido.total.toFixed(2)}`;
+    
+    // Cargar productos
+    const productosContainer = document.getElementById('pedido-edit-productos');
+    productosContainer.innerHTML = '';
+    
+    pedido.productosDetalle.forEach((producto, idx) => {
+        const productoHtml = `
+            <div class="producto-edit mb-2 p-2 border rounded" data-precio="${producto.precio}" data-index="${idx}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>${producto.nombre} - $${producto.precio.toFixed(2)}</span>
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-sm btn-danger btn-restar-edit me-2">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="cantidad-edit mx-2">${producto.cantidad}</span>
+                        <button type="button" class="btn btn-sm btn-success btn-sumar-edit me-3">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger btn-eliminar-producto">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        productosContainer.innerHTML += productoHtml;
+    });
+    
+    // Actualizar resumen
+    actualizarResumenEdicion();
+    
+    // Agregar event listeners a los botones de productos
+    setTimeout(() => {
+        document.querySelectorAll('.btn-sumar-edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const cantidadEl = this.parentElement.querySelector('.cantidad-edit');
+                cantidadEl.textContent = parseInt(cantidadEl.textContent) + 1;
+                actualizarResumenEdicion();
+            });
+        });
+        
+        document.querySelectorAll('.btn-restar-edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const cantidadEl = this.parentElement.querySelector('.cantidad-edit');
+                let cantidad = parseInt(cantidadEl.textContent);
+                if (cantidad > 1) {
+                    cantidadEl.textContent = cantidad - 1;
+                    actualizarResumenEdicion();
+                }
+            });
+        });
+        
+        document.querySelectorAll('.btn-eliminar-producto').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.producto-edit').remove();
+                actualizarResumenEdicion();
+            });
+        });
+    }, 100);
+}
+
+// Función para actualizar el resumen en edición
+function actualizarResumenEdicion() {
+    const resumen = document.getElementById('pedido-edit-resumen');
+    let total = 0;
+    resumen.innerHTML = '';
+    
+    document.querySelectorAll('.producto-edit').forEach(productoEl => {
+        const precio = parseFloat(productoEl.getAttribute('data-precio'));
+        const cantidad = parseInt(productoEl.querySelector('.cantidad-edit').textContent);
+        const nombre = productoEl.querySelector('span').textContent.split(' - ')[0];
+        const subtotal = precio * cantidad;
+        total += subtotal;
+        
+        const item = document.createElement('div');
+        item.className = 'd-flex justify-content-between mb-1';
+        item.innerHTML = `<span>${nombre} x${cantidad}</span><span>$${subtotal.toFixed(2)}</span>`;
+        resumen.appendChild(item);
+    });
+    
+    document.getElementById('pedido-edit-total').value = total;
+    document.getElementById('pedido-edit-total-display').textContent = `$${total.toFixed(2)}`;
+}
+
+// Función para resetear el modal de edición
+function resetearModalPedidoEdit() {
+    pedidoEditando = null;
+    document.getElementById('pedidoEditForm').reset();
+    document.getElementById('pedido-edit-productos').innerHTML = '';
+    document.getElementById('pedido-edit-resumen').innerHTML = '';
+    document.getElementById('pedido-edit-total-display').textContent = '$0.00';
+}
+
+// Función para actualizar pedido
+function actualizarPedido() {
+    if (pedidoEditando === null) return;
+    
+    const cliente = document.getElementById('pedido-edit-cliente').value;
+    const telefono = document.getElementById('pedido-edit-telefono').value;
+    const estado = document.getElementById('pedido-edit-estado').value;
+    const notas = document.getElementById('pedido-edit-notas').value;
+    const total = parseFloat(document.getElementById('pedido-edit-total').value);
+    
+    if (!cliente || !telefono || !estado) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+    }
+    
+    // Recopilar productos actualizados
+    const productosDetalle = [];
+    let productosDesc = '';
+    
+    document.querySelectorAll('.producto-edit').forEach(productoEl => {
+        const precio = parseFloat(productoEl.getAttribute('data-precio'));
+        const cantidad = parseInt(productoEl.querySelector('.cantidad-edit').textContent);
+        const nombre = productoEl.querySelector('span').textContent.split(' - ')[0];
+        
+        productosDetalle.push({ nombre, precio, cantidad });
+        
+        if (productosDesc) productosDesc += ', ';
+        productosDesc += `${cantidad}x ${nombre}`;
+    });
+    
+    // Actualizar el pedido
+    pedidos[pedidoEditando] = {
+        ...pedidos[pedidoEditando],
+        cliente,
+        telefono,
+        estado: estado.charAt(0).toUpperCase() + estado.slice(1),
+        total,
+        notas,
+        productos: productosDesc,
+        productosDetalle
+    };
+    
+    // Actualizar la tabla
+    actualizarTablaPedidos();
+    
+    alert('Pedido actualizado correctamente');
+    
+    // Cerrar el modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('pedidoEditModal'));
+    modal.hide();
+}
+
+// Función para cancelar pedido
+function cancelarPedido() {
+    if (pedidoEditando === null) return;
+    
+    if (confirm('¿Está seguro de que desea cancelar este pedido?')) {
+        // Cambiar estado a cancelado
+        pedidos[pedidoEditando].estado = 'Cancelado';
+        
+        // Actualizar la tabla
+        actualizarTablaPedidos();
+        
+        alert('Pedido cancelado correctamente');
+        
+        // Cerrar el modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('pedidoEditModal'));
+        modal.hide();
+    }
+}
+
+// Función para actualizar la tabla de pedidos
+function actualizarTablaPedidos() {
+    const tbody = document.querySelector('#pedidos-activos table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    pedidos.forEach((pedido, index) => {
+        // Determinar clase badge según estado
+        let badgeClass = 'badge-warning';
+        if (pedido.estado.toLowerCase().includes('preparacion')) badgeClass = 'badge-success';
+        if (pedido.estado.toLowerCase().includes('completado')) badgeClass = 'badge-info';
+        if (pedido.estado.toLowerCase().includes('cancelado')) badgeClass = 'badge-danger';
+        
+        tbody.innerHTML += `
+            <tr>
+                <td>${pedido.id}</td>
+                <td>${pedido.cliente}</td>
+                <td>${pedido.productos}</td>
+                <td><span class="badge ${badgeClass}">${pedido.estado}</span></td>
+                <td>${pedido.hora}</td>
+                <td>$${pedido.total.toFixed(2)}</td>
+                <td>
+                    <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#pedidoEditModal" onclick="cargarPedidoParaEditar(${index})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-edit btn-success btn-sm"><i class="fas fa-check"></i></button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// Event listeners para el modal de edición de pedidos
+document.addEventListener('DOMContentLoaded', function() {
+    const pedidoEditModal = document.getElementById('pedidoEditModal');
+    if (pedidoEditModal) {
+        // Evento cuando se cierra el modal
+        pedidoEditModal.addEventListener('hidden.bs.modal', function () {
+            resetearModalPedidoEdit();
+        });
+        
+        // Evento para el botón de actualizar pedido
+        const updatePedido = document.getElementById('updatePedido');
+        if (updatePedido) {
+            updatePedido.addEventListener('click', actualizarPedido);
+        }
+        
+        // Evento para el botón de cancelar pedido
+        const cancelPedido = document.getElementById('cancelPedido');
+        if (cancelPedido) {
+            cancelPedido.addEventListener('click', cancelarPedido);
+        }
+    }
+    
+    // Inicializar la tabla de pedidos
+    actualizarTablaPedidos();
+});
+
+
+// Array para almacenar las reseñas
+let resenas = [
+    {
+        tipo: "local",
+        referencia: "Local Centro",
+        cliente: "Juan Pérez",
+        calificacion: 5,
+        comentario: "Excelente servicio y comida.",
+        respuesta: "",
+        fecha: "2025-08-24"
+    },
+    {
+        tipo: "pedido",
+        referencia: "#1023",
+        cliente: "Ana Torrez",
+        calificacion: 4,
+        comentario: "Rápido y delicioso.",
+        respuesta: "¡Gracias por tu comentario! Nos alegra que hayas disfrutado.",
+        fecha: "2025-08-23"
+    }
+];
+
+// Función para generar estrellas de calificación
+function generarEstrellas(calificacion) {
+    let estrellas = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= calificacion) {
+            estrellas += '<i class="fas fa-star"></i>';
+        } else {
+            estrellas += '<i class="far fa-star"></i>';
+        }
+    }
+    return estrellas;
+}
+
+// Función para cargar reseña para responder
+function cargarResenaParaResponder(index) {
+    const resena = resenas[index];
+    
+    // Guardar el índice para referencia posterior
+    document.getElementById('resena-id').value = index;
+    
+    // Llenar los campos de solo lectura
+    document.getElementById('resena-cliente').value = resena.cliente;
+    document.getElementById('resena-calificacion').innerHTML = generarEstrellas(resena.calificacion);
+    document.getElementById('resena-comentario').value = resena.comentario;
+    document.getElementById('resena-fecha').value = resena.fecha;
+    document.getElementById('resena-respuesta').value = resena.respuesta || '';
+    
+    // Actualizar contador de caracteres
+    document.getElementById('resena-respuesta-contador').textContent = resena.respuesta ? resena.respuesta.length : 0;
+    
+    // Mostrar u ocultar botón de eliminar respuesta
+    if (resena.respuesta) {
+        document.getElementById('eliminarRespuesta').style.display = 'block';
+        document.getElementById('guardarRespuesta').textContent = 'Actualizar Respuesta';
+    } else {
+        document.getElementById('eliminarRespuesta').style.display = 'none';
+        document.getElementById('guardarRespuesta').textContent = 'Guardar Respuesta';
+    }
+}
+
+// Función para guardar respuesta
+function guardarRespuesta() {
+    const index = document.getElementById('resena-id').value;
+    const respuesta = document.getElementById('resena-respuesta').value;
+    
+    if (!respuesta.trim()) {
+        alert('Por favor escribe una respuesta');
+        return;
+    }
+    
+    // Actualizar la respuesta
+    resenas[index].respuesta = respuesta;
+    
+    // Actualizar la tabla
+    actualizarTablaResenas();
+    
+    alert('Respuesta guardada correctamente');
+    
+    // Cerrar el modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('responderResenaModal'));
+    modal.hide();
+}
+
+// Función para eliminar respuesta
+function eliminarRespuesta() {
+    const index = document.getElementById('resena-id').value;
+    
+    if (confirm('¿Está seguro de que desea eliminar esta respuesta?')) {
+        // Eliminar la respuesta
+        resenas[index].respuesta = '';
+        
+        // Actualizar la tabla
+        actualizarTablaResenas();
+        
+        alert('Respuesta eliminada correctamente');
+        
+        // Cerrar el modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('responderResenaModal'));
+        modal.hide();
+    }
+}
+
+// Función para actualizar la tabla de reseñas
+function actualizarTablaResenas() {
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabContents.forEach(tabContent => {
+        const tbody = tabContent.querySelector('tbody');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+        
+        // Filtrar reseñas por tipo (local o pedido)
+        const tipo = tabContent.id === 'reseñas-local' ? 'local' : 'pedido';
+        const resenasFiltradas = resenas.filter(resena => resena.tipo === tipo);
+        
+        resenasFiltradas.forEach((resena, index) => {
+            // Encontrar el índice real en el array principal
+            const realIndex = resenas.findIndex(r => 
+                r.tipo === resena.tipo && 
+                r.referencia === resena.referencia && 
+                r.cliente === resena.cliente
+            );
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td>${resena.referencia}</td>
+                    <td>${resena.cliente}</td>
+                    <td>
+                        <div class="rating-stars">
+                            ${generarEstrellas(resena.calificacion)}
+                        </div>
+                    </td>
+                    <td>${resena.comentario}</td>
+                    <td>${resena.respuesta || ''}</td>
+                    <td>${resena.fecha}</td>
+                    <td>
+                        <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(${realIndex})">
+                            <i class="fas ${resena.respuesta ? 'fa-edit' : 'fa-reply'}"></i> 
+                            ${resena.respuesta ? 'Editar Respuesta' : 'Responder'}
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    });
+}
+
+// Event listeners para el modal de responder reseñas
+document.addEventListener('DOMContentLoaded', function() {
+    const responderResenaModal = document.getElementById('responderResenaModal');
+    if (responderResenaModal) {
+        // Evento cuando se cierra el modal
+        responderResenaModal.addEventListener('hidden.bs.modal', function () {
+            document.getElementById('responderResenaForm').reset();
+            document.getElementById('resena-id').value = '';
+        });
+        
+        // Evento para el botón de guardar respuesta
+        const guardarRespuesta = document.getElementById('guardarRespuesta');
+        if (guardarRespuesta) {
+            guardarRespuesta.addEventListener('click', guardarRespuesta);
+        }
+        
+        // Evento para el botón de eliminar respuesta
+        const eliminarRespuesta = document.getElementById('eliminarRespuesta');
+        if (eliminarRespuesta) {
+            eliminarRespuesta.addEventListener('click', eliminarRespuesta);
+        }
+        
+        // Evento para contar caracteres en la respuesta
+        const respuestaTextarea = document.getElementById('resena-respuesta');
+        if (respuestaTextarea) {
+            respuestaTextarea.addEventListener('input', function() {
+                document.getElementById('resena-respuesta-contador').textContent = this.value.length;
+            });
+        }
+    }
+    
+    // Inicializar la tabla de reseñas
+    actualizarTablaResenas();
+    
+    // Eliminar el botón de agregar reseña ya que no se necesita
+    const addResenaButton = document.querySelector('button[onclick*="Resena"]');
+    if (addResenaButton) {
+        addResenaButton.style.display = 'none';
     }
 });
