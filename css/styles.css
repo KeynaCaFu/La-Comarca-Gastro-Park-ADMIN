@@ -626,11 +626,18 @@
         }
        
 
-      .rating-stars {
-    color: #ffc107;
-    font-size: 0.9rem;
-}
+            .rating-stars {
+            color: #ffc107;
+            font-size: 0.9rem;
+        }
 
-.rating-stars .far {
-    color: #ddd;
-}
+        .rating-stars .far {
+            color: #ddd;
+        }
+
+        .btn-responder {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            
+        }

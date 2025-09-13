@@ -1249,142 +1249,126 @@
 <!-- Gestionar Reseñas con pestañas -->
 <div id="gestion-reseñas" class="section-content" style="display: none;">
         <div class="header">
-        <h1>Gestionar Reseñas</h1>
-       <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#resenaModal">
+        <!-- <h1>Gestionar Reseñas</h1> -->
+       <!-- <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#resenaModal">
         <i class="fas fa-plus"></i> Agregar Reseña
-    </button>
+    </button> -->
     </div>
     <div class="tabs">
         <div class="tab active" onclick="changeTab('reseñas-local')">Local</div>
         <div class="tab" onclick="changeTab('reseñas-pedido')">Pedido</div>
     </div>
-    <div id="reseñas-local" class="tab-content">
-        <div class="table-container">
-            <h2>Reseñas de Local</h2>
-           <table>
-    <thead>
-        <tr>
-            <th>Referencia</th>
-            <th>Cliente</th>
-            <th>Calificación</th>
-            <th>Comentario</th>
-            <th>Respuesta</th>
-            <th>Fecha</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Local Centro</td>
-            <td>Juan Pérez</td>
-            <td>
-                <div class="rating-stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-            </td>
-            <td>Excelente servicio y comida.</td>
-            <td></td>
-            <td>2025-08-24</td>
-            <td>
-                <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(0)">
-                    <i class="fas fa-reply"></i> Responder
-                </button>
-            </td>
-        </tr>
-        <tr>
-            <td>#1023</td>
-            <td>Ana Torrez</td>
-            <td>
-                <div class="rating-stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="far fa-star"></i>
-                </div>
-            </td>
-            <td>Rápido y delicioso.</td>
-            <td>¡Gracias por tu comentario! Nos alegra que hayas disfrutado.</td>
-            <td>2025-08-23</td>
-            <td>
-                <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(1)">
-                    <i class="fas fa-edit"></i> Editar Respuesta
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-        </div>
+   <!-- En la sección de reseñas de local -->
+<div id="reseñas-local" class="tab-content">
+    <div class="table-container">
+        <h2>Reseñas sobre el Local</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Respuesta</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Juan Pérez</td>
+                    <td>
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </td>
+                    <td>Excelente ambiente y servicio. Volveré pronto.</td>
+                    <td></td>
+                    <td>2025-08-24</td>
+                    <td>
+                        <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(0, 'local')">
+                            <i class="fas fa-reply"></i> Responder
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>María González</td>
+                    <td>
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                        </div>
+                    </td>
+                    <td>Buen lugar pero la música estaba muy alta.</td>
+                    <td>Agradecemos tu comentario. Ajustaremos el volumen.</td>
+                    <td>2025-08-23</td>
+                    <td>
+                        <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(1, 'local')">
+                            <i class="fas fa-edit"></i> Editar Respuesta
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <div id="reseñas-pedido" class="tab-content" style="display: none;">
-        <div class="table-container">
-            <h2>Reseñas de Pedido</h2>
-            <table>
-    <thead>
-        <tr>
-            <th>Referencia</th>
-            <th>Cliente</th>
-            <th>Calificación</th>
-            <th>Comentario</th>
-            <th>Respuesta</th>
-            <th>Fecha</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Local Centro</td>
-            <td>Juan Pérez</td>
-            <td>
-                <div class="rating-stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-            </td>
-            <td>Excelente servicio y comida.</td>
-            <td></td>
-            <td>2025-08-24</td>
-            <td>
-                <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(0)">
-                    <i class="fas fa-reply"></i> Responder
-                </button>
-            </td>
-        </tr>
-        <tr>
-            <td>#1023</td>
-            <td>Ana Torrez</td>
-            <td>
-                <div class="rating-stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="far fa-star"></i>
-                </div>
-            </td>
-            <td>Rápido y delicioso.</td>
-            <td>¡Gracias por tu comentario! Nos alegra que hayas disfrutado.</td>
-            <td>2025-08-23</td>
-            <td>
-                <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(1)">
-                    <i class="fas fa-edit"></i> Editar Respuesta
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-        </div>
+</div>
+
+ <!-- En la sección de reseñas de pedido -->
+<div id="reseñas-pedido" class="tab-content" style="display: none;">
+    <div class="table-container">
+        <h2>Reseñas sobre Pedidos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Respuesta</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#1023</td>
+                    <td>Ana Torrez</td>
+                    <td>
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                        </div>
+                    </td>
+                    <td>Rápido y delicioso. Los tacos al pastor excelentes.</td>
+                    <td>¡Gracias por tu comentario! Nos alegra que hayas disfrutado.</td>
+                    <td>2025-08-23</td>
+                    <td>
+                        <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(0, 'pedido')">
+                            <i class="fas fa-edit"></i> Editar Respuesta
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#1025</td>
+                    <td>Carlos López</td>
+                    <td>
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                        </div>
+                    </td>
+                    <td>El pedido llegó frío y faltó un ingrediente.</td>
+                    <td></td>
+                    <td>2025-08-22</td>
+                    <td>
+                        <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(1, 'pedido')">
+                            <i class="fas fa-reply"></i> Responder
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+</div>
  <!-- Modal para responder/editar respuesta de reseña -->
 <div class="modal fade" id="responderResenaModal" tabindex="-1" aria-labelledby="responderResenaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="responderResenaModalLabel">Responder Reseña</h5>
@@ -1392,27 +1376,45 @@
             </div>
             <div class="modal-body">
                 <form id="responderResenaForm">
-                    <input type="hidden" id="resena-id" value="">
+                    <input type="hidden" id="resena-tipo" value="">
+                    <input type="hidden" id="resena-index" value="">
                     
-                    <!-- Información de la reseña (solo lectura) -->
-                    <div class="mb-3">
-                        <label class="form-label">Cliente</label>
-                        <input type="text" class="form-control" id="resena-cliente" readonly>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Calificación</label>
-                        <div id="resena-calificacion" class="rating-stars"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Información de la reseña (solo lectura) -->
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Reseña</label>
+                                <input type="text" class="form-control" id="resena-tipo-display" readonly>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Cliente</label>
+                                <input type="text" class="form-control" id="resena-cliente" readonly>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Referencia</label>
+                                <input type="text" class="form-control" id="resena-referencia" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Calificación</label>
+                                <div id="resena-calificacion" class="rating-stars mb-2"></div>
+                                <input type="text" class="form-control" id="resena-calificacion-text" readonly>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Fecha</label>
+                                <input type="text" class="form-control" id="resena-fecha" readonly>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="mb-3">
                         <label class="form-label">Comentario del Cliente</label>
                         <textarea class="form-control" id="resena-comentario" rows="3" readonly></textarea>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Fecha</label>
-                        <input type="text" class="form-control" id="resena-fecha" readonly>
                     </div>
                     
                     <hr>
