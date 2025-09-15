@@ -4,20 +4,12 @@ function showLocalSection(sectionId) {
     document.querySelectorAll('.section-content').forEach(section => {
         section.style.display = 'none';
     });
-
+    
     // Mostrar la sección seleccionada
     document.getElementById(sectionId).style.display = 'block';
-
+    
     // Actualizar el título
-    var link = document.querySelector(`.sidebar-menu a[onclick="showLocalSection('${sectionId}')"]`);
-    if (link) {
-        document.getElementById('local-section-title').textContent = link.textContent.trim();
-    }
-
-    // Quitar 'active' de todos los enlaces
-    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
-    // Agregar 'active' al enlace actual
-    if (link) link.classList.add('active');
+    document.getElementById('local-section-title').textContent = document.querySelector(`a[onclick="showLocalSection('${sectionId}')"]`).textContent.trim();
 }
 
 // Funciones para mostrar/ocultar formularios
@@ -190,6 +182,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     // Limpiar el formulario cuando se cierra el modal de proveedores
+//     document.getElementById('proveedorModal').addEventListener('hidden.bs.modal', function () {
+//         document.getElementById('proveedorForm').reset();
+//     });
+    
+//     // Manejar el guardado del proveedor
+//     document.getElementById('saveProveedor').addEventListener('click', function() {
+//         // Validar el formulario
+//         const nombre = document.getElementById('proveedor-nombre').value;
+//         const telefono = document.getElementById('proveedor-telefono').value;
+//         const email = document.getElementById('proveedor-email').value;
+//         const pago = document.getElementById('proveedor-pago').value;
+        
+//         if (!nombre || !telefono || !email || !pago) {
+//             alert('Por favor complete todos los campos obligatorios');
+//             return;
+//         }
+        
+//         // Aquí iría la lógica para guardar el proveedor
+//         alert('Proveedor guardado correctamente');
+        
+//         // Cerrar el modal después de guardar
+//         const modal = bootstrap.Modal.getInstance(document.getElementById('proveedorModal'));
+//         modal.hide();
+//     });
+// });
 
 // ========== GRÁFICAS DASHBOARD ==========
 document.addEventListener('DOMContentLoaded', function() {
@@ -481,6 +501,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // // Manejar el modal de reseñas
+    // const resenaModal = document.getElementById('resenaModal');
+    // if (resenaModal) {
+    //     resenaModal.addEventListener('hidden.bs.modal', function () {
+    //         document.getElementById('resenaForm').reset();
+    //     });
+    // }
+
+    // const saveResena = document.getElementById('saveResena');
+    // if (saveResena) {
+    //     saveResena.addEventListener('click', function() {
+    //         // Validar el formulario
+    //         const tipo = document.getElementById('resena-tipo').value;
+    //         const referencia = document.getElementById('resena-referencia').value;
+    //         const cliente = document.getElementById('resena-cliente').value;
+    //         const calificacion = document.getElementById('resena-calificacion').value;
+    //         const comentario = document.getElementById('resena-comentario').value;
+            
+    //         if (!tipo || !referencia || !cliente || !calificacion || !comentario) {
+    //             alert('Por favor complete todos los campos obligatorios');
+    //             return;
+    //         }
+            
+    //         // Aquí iría la lógica para guardar la reseña
+    //         alert('Reseña guardada correctamente');
+            
+    //         // Cerrar el modal después de guardar
+    //         const modal = bootstrap.Modal.getInstance(document.getElementById('resenaModal'));
+    //         modal.hide();
+    //     });
+    // }
 });
 
 // Variable para controlar el modo (agregar/editar)
@@ -505,6 +556,9 @@ function cargarProductoParaEditar(id, nombre, precio, tipo, descripcion, estado)
     document.getElementById('saveProduct').style.display = 'none';
     document.getElementById('updateProduct').style.display = 'block';
     
+    // Aquí podrías cargar la imagen si tuvieras una URL
+    // document.getElementById('image-preview').src = urlImagen;
+    // document.getElementById('image-preview-container').style.display = 'block';
 }
 
 // Función para resetear el modal a modo agregar

@@ -30,7 +30,7 @@
         
         /* Sidebar */
         .sidebar {
-            width: 246px;
+            width: 266px;
             /* background-color: #020024; */
             /* background: linear-gradient(90deg, #000000,#230b10,#331016,#230b10,#000000); */
             /* background: linear-gradient(90deg, #000000,#0d1521,#070e18); */
@@ -40,7 +40,6 @@
             color: white;
             padding: 20px 0;
             transition: all 0.3s;
-            flex-shrink: 0;
         }
         
         .sidebar-header {
@@ -63,7 +62,7 @@
         }
         
         .sidebar-menu li {
-            margin-bottom: 17px;
+            margin-bottom: 5px;
         }
         
         .sidebar-menu a {
@@ -199,9 +198,9 @@
         }
         
         th, td {
-           padding: 12px 26px;
-            text-align: center;
-            border-bottom: 2px solid #ccc;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
         
         th {
