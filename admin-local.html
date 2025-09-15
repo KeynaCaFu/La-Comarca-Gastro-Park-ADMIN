@@ -92,7 +92,7 @@
                     </div>
             </div>
             
-            <!-- Gestión de Productos -->
+  <!-- Gestión de Productos -->
             <div id="gestion-productos" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestión de Platillos</h1>
@@ -1249,14 +1249,14 @@
 <!-- Gestionar Reseñas con pestañas -->
 <div id="gestion-reseñas" class="section-content" style="display: none;">
         <div class="header">
-        <!-- <h1>Gestionar Reseñas</h1> -->
-       <!-- <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#resenaModal">
+        <h1>Gestionar Reseñas</h1>
+       <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#resenaModal">
         <i class="fas fa-plus"></i> Agregar Reseña
-    </button> -->
+    </button>
     </div>
     <div class="tabs">
-        <div class="tab active" onclick="changeTab('reseñas-local')">Local</div>
-        <div class="tab" onclick="changeTab('reseñas-pedido')">Pedido</div>
+        <div class="tab active" onclick="changeTab('reseñas-local')">Reseñas Local</div>
+        <div class="tab" onclick="changeTab('reseñas-pedido')">Reseñas Pedido</div>
     </div>
    <!-- En la sección de reseñas de local -->
 <div id="reseñas-local" class="tab-content">
@@ -1368,7 +1368,7 @@
 </div>
  <!-- Modal para responder/editar respuesta de reseña -->
 <div class="modal fade" id="responderResenaModal" tabindex="-1" aria-labelledby="responderResenaModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="responderResenaModalLabel">Responder Reseña</h5>
@@ -1376,45 +1376,27 @@
             </div>
             <div class="modal-body">
                 <form id="responderResenaForm">
-                    <input type="hidden" id="resena-tipo" value="">
-                    <input type="hidden" id="resena-index" value="">
+                    <input type="hidden" id="resena-id" value="">
                     
-                    <div class="row">
-                        <div class="col-md-6">
-                            <!-- Información de la reseña (solo lectura) -->
-                            <div class="mb-3">
-                                <label class="form-label">Tipo de Reseña</label>
-                                <input type="text" class="form-control" id="resena-tipo-display" readonly>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Cliente</label>
-                                <input type="text" class="form-control" id="resena-cliente" readonly>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Referencia</label>
-                                <input type="text" class="form-control" id="resena-referencia" readonly>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Calificación</label>
-                                <div id="resena-calificacion" class="rating-stars mb-2"></div>
-                                <input type="text" class="form-control" id="resena-calificacion-text" readonly>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Fecha</label>
-                                <input type="text" class="form-control" id="resena-fecha" readonly>
-                            </div>
-                        </div>
+                    <!-- Información de la reseña (solo lectura) -->
+                    <div class="mb-3">
+                        <label class="form-label">Cliente</label>
+                        <input type="text" class="form-control" id="resena-cliente" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Calificación</label>
+                        <div id="resena-calificacion" class="rating-stars"></div>
                     </div>
                     
                     <div class="mb-3">
                         <label class="form-label">Comentario del Cliente</label>
                         <textarea class="form-control" id="resena-comentario" rows="3" readonly></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Fecha</label>
+                        <input type="text" class="form-control" id="resena-fecha" readonly>
                     </div>
                     
                     <hr>
