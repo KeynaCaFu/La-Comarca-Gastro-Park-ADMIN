@@ -9,7 +9,7 @@ function showLocalSection(sectionId) {
     document.getElementById(sectionId).style.display = 'block';
 
     // Actualizar el título
-    var link = document.querySelector(`.sidebar-menu a[onclick="showLocalSection('${sectionId}')"]`);
+    var link = document.querySelector(.sidebar-menu a[onclick="showLocalSection('${sectionId}')"]);
     if (link) {
         document.getElementById('local-section-title').textContent = link.textContent.trim();
     }
@@ -60,7 +60,7 @@ function renderTablaInsumos() {
     const tbody = document.querySelector('#tabla-insumos tbody');
     tbody.innerHTML = '';
     insumos.forEach((insumo, idx) => {
-        let estadoHtml = `<span class="badge badge-${insumo.badge}">${insumo.estado}</span>`;
+        let estadoHtml = <span class="badge badge-${insumo.badge}">${insumo.estado}</span>;
         tbody.innerHTML += `
             <tr>
                 <td>${insumo.nombre}</td>
@@ -89,7 +89,7 @@ function mostrarMovimientoInsumo(idx, movimiento) {
     // Cambiar título y label
     let insumo = insumos[idx];
     document.getElementById('movimientoInsumoModalLabel').textContent = (movimiento === 'entrada' ? 'Entrada' : 'Salida') + ' de Insumo';
-    document.getElementById('movimiento-insumo-label').textContent = `Cantidad a ${(movimiento === 'entrada' ? 'sumar' : 'restar')} para "${insumo.nombre}" (${insumo.unidad})`;
+    document.getElementById('movimiento-insumo-label').textContent = Cantidad a ${(movimiento === 'entrada' ? 'sumar' : 'restar')} para "${insumo.nombre}" (${insumo.unidad});
     // Asignar handler
     document.getElementById('btn-confirmar-movimiento').onclick = confirmarMovimientoInsumo;
     // Mostrar modal Bootstrap
@@ -285,7 +285,7 @@ function actualizarResumen() {
         }
     });
 
-    document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+    document.getElementById("total").textContent = $${total.toFixed(2)};
 }
 window.actualizarResumen = actualizarResumen;
 
@@ -365,11 +365,11 @@ function validarStock() {
         if (cantidad <= 0) {
             statusElement.innerHTML = '<span class="stock-low">¡STOCK AGOTADO! Es necesario reponer urgentemente</span>';
         } else if (cantidad <= minimo) {
-            statusElement.innerHTML = `<span class="stock-low">¡STOCK BAJO! Quedan ${cantidad} ${unidad}. Se recomienda reponer</span>`;
+            statusElement.innerHTML = <span class="stock-low">¡STOCK BAJO! Quedan ${cantidad} ${unidad}. Se recomienda reponer</span>;
         } else if (cantidad >= maximo) {
-            statusElement.innerHTML = `<span class="stock-ok">Stock completo (${cantidad} ${unidad}). No es necesario reponer</span>`;
+            statusElement.innerHTML = <span class="stock-ok">Stock completo (${cantidad} ${unidad}). No es necesario reponer</span>;
         } else {
-            statusElement.innerHTML = `<span class="stock-ok">Stock adecuado (${cantidad} ${unidad})</span>`;
+            statusElement.innerHTML = <span class="stock-ok">Stock adecuado (${cantidad} ${unidad})</span>;
         }
     }
 }
@@ -883,7 +883,7 @@ function guardarProveedor() {
     // Crear nuevo proveedor
     const nuevoProveedor = {
         nombre: nombre,
-        contacto: `${email} - ${telefono}`,
+        contacto: ${email} - ${telefono},
         ventas: '$0 MXN' // Valor inicial
     };
     
@@ -916,7 +916,7 @@ function actualizarProveedor() {
     // Actualizar el proveedor
     proveedores[index] = {
         nombre: nombre,
-        contacto: `${email} - ${telefono}`,
+        contacto: ${email} - ${telefono},
         ventas: proveedores[index].ventas // Mantener el valor de ventas existente
     };
     
@@ -1266,7 +1266,7 @@ function cargarPedidoParaEditar(index) {
     document.getElementById('pedido-edit-hora').value = pedido.hora;
     document.getElementById('pedido-edit-total').value = pedido.total;
     document.getElementById('pedido-edit-notas').value = pedido.notas;
-    document.getElementById('pedido-edit-total-display').textContent = `$${pedido.total.toFixed(2)}`;
+    document.getElementById('pedido-edit-total-display').textContent = $${pedido.total.toFixed(2)};
     
     // Cargar productos
     const productosContainer = document.getElementById('pedido-edit-productos');
@@ -1343,12 +1343,12 @@ function actualizarResumenEdicion() {
         
         const item = document.createElement('div');
         item.className = 'd-flex justify-content-between mb-1';
-        item.innerHTML = `<span>${nombre} x${cantidad}</span><span>$${subtotal.toFixed(2)}</span>`;
+        item.innerHTML = <span>${nombre} x${cantidad}</span><span>$${subtotal.toFixed(2)}</span>;
         resumen.appendChild(item);
     });
     
     document.getElementById('pedido-edit-total').value = total;
-    document.getElementById('pedido-edit-total-display').textContent = `$${total.toFixed(2)}`;
+    document.getElementById('pedido-edit-total-display').textContent = $${total.toFixed(2)};
 }
 
 // Función para resetear el modal de edición
@@ -1387,7 +1387,7 @@ function actualizarPedido() {
         productosDetalle.push({ nombre, precio, cantidad });
         
         if (productosDesc) productosDesc += ', ';
-        productosDesc += `${cantidad}x ${nombre}`;
+        productosDesc += ${cantidad}x ${nombre};
     });
     
     // Actualizar el pedido
