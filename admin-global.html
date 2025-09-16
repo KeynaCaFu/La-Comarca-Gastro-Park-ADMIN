@@ -205,14 +205,9 @@
         }
     </style>
 </head>
-<div>
+<body>
     <!-- Admin Global Dashboard -->
-<<<<<<< HEAD
-    <div id="admin-global" class="container">
-
-=======
     <div id="admin-global">
->>>>>>> parent of 5ec6250 (Revert "nuevo")
 
           <div class="sidebar">
             <div class="sidebar-header">
@@ -585,15 +580,6 @@
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
-
-
-        
-
-    </div>
-
-    
-=======
     </div>
 
     <!-- Modal para responder/editar reseñas -->
@@ -762,8 +748,10 @@
     </div>
 
 
->>>>>>> parent of 5ec6250 (Revert "nuevo")
     <!-- </div> -->
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 
     <script src="js/auth.js"></script>
     <script src="js/admin-global.js"></script>
@@ -852,37 +840,11 @@
         };
         
         // Funciones existentes para cambiar secciones y pestañas
-        function showSection(sectionId) {
-            // Ocultar todas las secciones
-            document.querySelectorAll('.section-content').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Mostrar la sección seleccionada
-            document.getElementById(sectionId).style.display = 'block';
-            
-            // Actualizar el título de la sección
-            document.getElementById('section-title').textContent = 
-                document.getElementById(sectionId).querySelector('h1').textContent;
-        }
-        
-        function changeTab(tabId) {
-            // Ocultar todos los contenidos de pestañas
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.style.display = 'none';
-            });
-            
-            // Desactivar todas las pestañas
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Activar la pestaña seleccionada
-            document.querySelector(`[onclick="changeTab('${tabId}')"]`).classList.add('active');
-            
-            // Mostrar el contenido de la pestaña seleccionada
-            document.getElementById(tabId).style.display = 'block';
-        }
+            // function logout() {
+            //     alert('Cerrando sesión...');
+            //     // Redirigir al login
+            //     window.location.href = 'index.html';
+            // }
         
         // function logout() {
         //     alert('Cerrando sesión...');
