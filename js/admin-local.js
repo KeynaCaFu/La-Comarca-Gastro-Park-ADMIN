@@ -1489,27 +1489,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar la tabla de pedidos
     actualizarTablaPedidos();
 });
-
-
-// Array para almacenar las reseñas
-let resenas = [
+// Arrays para almacenar las reseñas de clientes
+let resenasLocal = [
     {
-        tipo: "local",
-        referencia: "Local Centro",
         cliente: "Juan Pérez",
         calificacion: 5,
-        comentario: "Excelente servicio y comida.",
+        comentario: "Excelente ambiente y servicio. Volveré pronto.",
         respuesta: "",
         fecha: "2025-08-24"
     },
     {
-        tipo: "pedido",
-        referencia: "#1023",
+        cliente: "María González",
+        calificacion: 4,
+        comentario: "Buen lugar pero la música estaba muy alta.",
+        respuesta: "Agradecemos tu comentario. Ajustaremos el volumen.",
+        fecha: "2025-08-23"
+    }
+];
+
+let resenasPedido = [
+    {
+        pedido: "#1023",
         cliente: "Ana Torrez",
         calificacion: 4,
-        comentario: "Rápido y delicioso.",
+        comentario: "Rápido y delicioso. Los tacos al pastor excelentes.",
         respuesta: "¡Gracias por tu comentario! Nos alegra que hayas disfrutado.",
         fecha: "2025-08-23"
+    },
+    {
+        pedido: "#1025",
+        cliente: "Carlos López",
+        calificacion: 2,
+        comentario: "El pedido llegó frío y faltó un ingrediente.",
+        respuesta: "",
+        fecha: "2025-08-22"
     }
 ];
 
@@ -1526,16 +1539,32 @@ function generarEstrellas(calificacion) {
     return estrellas;
 }
 
+// Función para obtener texto de calificación
+function obtenerTextoCalificacion(calificacion) {
+    const textos = {
+        1: "Malo",
+        2: "Regular",
+        3: "Bueno",
+        4: "Muy Bueno",
+        5: "Excelente"
+    };
+    return textos[calificacion] || "";
+}
+
 // Función para cargar reseña para responder
-function cargarResenaParaResponder(index) {
-    const resena = resenas[index];
+function cargarResenaParaResponder(index, tipo) {
+    const resena = tipo === 'local' ? resenasLocal[index] : resenasPedido[index];
     
-    // Guardar el índice para referencia posterior
-    document.getElementById('resena-id').value = index;
+    // Guardar el tipo e índice para referencia posterior
+    document.getElementById('resena-tipo').value = tipo;
+    document.getElementById('resena-index').value = index;
     
     // Llenar los campos de solo lectura
+    document.getElementById('resena-tipo-display').value = tipo === 'local' ? 'Reseña sobre el Local' : 'Reseña sobre Pedido';
     document.getElementById('resena-cliente').value = resena.cliente;
+    document.getElementById('resena-referencia').value = tipo === 'local' ? 'Local Centro' : resena.pedido;
     document.getElementById('resena-calificacion').innerHTML = generarEstrellas(resena.calificacion);
+    document.getElementById('resena-calificacion-text').value = `${resena.calificacion}/5 - ${obtenerTextoCalificacion(resena.calificacion)}`;
     document.getElementById('resena-comentario').value = resena.comentario;
     document.getElementById('resena-fecha').value = resena.fecha;
     document.getElementById('resena-respuesta').value = resena.respuesta || '';
@@ -1547,15 +1576,18 @@ function cargarResenaParaResponder(index) {
     if (resena.respuesta) {
         document.getElementById('eliminarRespuesta').style.display = 'block';
         document.getElementById('guardarRespuesta').textContent = 'Actualizar Respuesta';
+        document.getElementById('responderResenaModalLabel').textContent = 'Editar Respuesta a Reseña';
     } else {
         document.getElementById('eliminarRespuesta').style.display = 'none';
         document.getElementById('guardarRespuesta').textContent = 'Guardar Respuesta';
+        document.getElementById('responderResenaModalLabel').textContent = 'Responder Reseña';
     }
 }
 
 // Función para guardar respuesta
 function guardarRespuesta() {
-    const index = document.getElementById('resena-id').value;
+    const tipo = document.getElementById('resena-tipo').value;
+    const index = document.getElementById('resena-index').value;
     const respuesta = document.getElementById('resena-respuesta').value;
     
     if (!respuesta.trim()) {
@@ -1563,11 +1595,16 @@ function guardarRespuesta() {
         return;
     }
     
-    // Actualizar la respuesta
-    resenas[index].respuesta = respuesta;
+    // Actualizar la respuesta según el tipo
+    if (tipo === 'local') {
+        resenasLocal[index].respuesta = respuesta;
+    } else {
+        resenasPedido[index].respuesta = respuesta;
+    }
     
-    // Actualizar la tabla
-    actualizarTablaResenas();
+    // Actualizar las tablas
+    actualizarTablaResenasLocal();
+    actualizarTablaResenasPedido();
     
     alert('Respuesta guardada correctamente');
     
@@ -1578,14 +1615,20 @@ function guardarRespuesta() {
 
 // Función para eliminar respuesta
 function eliminarRespuesta() {
-    const index = document.getElementById('resena-id').value;
+    const tipo = document.getElementById('resena-tipo').value;
+    const index = document.getElementById('resena-index').value;
     
     if (confirm('¿Está seguro de que desea eliminar esta respuesta?')) {
-        // Eliminar la respuesta
-        resenas[index].respuesta = '';
+        // Eliminar la respuesta según el tipo
+        if (tipo === 'local') {
+            resenasLocal[index].respuesta = '';
+        } else {
+            resenasPedido[index].respuesta = '';
+        }
         
-        // Actualizar la tabla
-        actualizarTablaResenas();
+        // Actualizar las tablas
+        actualizarTablaResenasLocal();
+        actualizarTablaResenasPedido();
         
         alert('Respuesta eliminada correctamente');
         
@@ -1595,49 +1638,64 @@ function eliminarRespuesta() {
     }
 }
 
-// Función para actualizar la tabla de reseñas
-function actualizarTablaResenas() {
-    const tabContents = document.querySelectorAll('.tab-content');
+// Función para actualizar la tabla de reseñas de local
+function actualizarTablaResenasLocal() {
+    const tbody = document.querySelector('#reseñas-local table tbody');
+    if (!tbody) return;
     
-    tabContents.forEach(tabContent => {
-        const tbody = tabContent.querySelector('tbody');
-        if (!tbody) return;
-        
-        tbody.innerHTML = '';
-        
-        // Filtrar reseñas por tipo (local o pedido)
-        const tipo = tabContent.id === 'reseñas-local' ? 'local' : 'pedido';
-        const resenasFiltradas = resenas.filter(resena => resena.tipo === tipo);
-        
-        resenasFiltradas.forEach((resena, index) => {
-            // Encontrar el índice real en el array principal
-            const realIndex = resenas.findIndex(r => 
-                r.tipo === resena.tipo && 
-                r.referencia === resena.referencia && 
-                r.cliente === resena.cliente
-            );
-            
-            tbody.innerHTML += `
-                <tr>
-                    <td>${resena.referencia}</td>
-                    <td>${resena.cliente}</td>
-                    <td>
-                        <div class="rating-stars">
-                            ${generarEstrellas(resena.calificacion)}
-                        </div>
-                    </td>
-                    <td>${resena.comentario}</td>
-                    <td>${resena.respuesta || ''}</td>
-                    <td>${resena.fecha}</td>
-                    <td>
-                        <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(${realIndex})">
-                            <i class="fas ${resena.respuesta ? 'fa-edit' : 'fa-reply'}"></i> 
-                            ${resena.respuesta ? 'Editar Respuesta' : 'Responder'}
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
+    tbody.innerHTML = '';
+    
+    resenasLocal.forEach((resena, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${resena.cliente}</td>
+                <td>
+                    <div class="rating-stars">
+                        ${generarEstrellas(resena.calificacion)}
+                    </div>
+                </td>
+                <td>${resena.comentario}</td>
+                <td>${resena.respuesta || ''}</td>
+                <td>${resena.fecha}</td>
+                <td>
+                    <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(${index}, 'local')">
+                        <i class="fas ${resena.respuesta ? 'fa-edit' : 'fa-reply'}"></i> 
+                        ${resena.respuesta ? 'Editar Respuesta' : 'Responder'}
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// Función para actualizar la tabla de reseñas de pedido
+function actualizarTablaResenasPedido() {
+    const tbody = document.querySelector('#reseñas-pedido table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    resenasPedido.forEach((resena, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${resena.pedido}</td>
+                <td>${resena.cliente}</td>
+                <td>
+                    <div class="rating-stars">
+                        ${generarEstrellas(resena.calificacion)}
+                    </div>
+                </td>
+                <td>${resena.comentario}</td>
+                <td>${resena.respuesta || ''}</td>
+                <td>${resena.fecha}</td>
+                <td>
+                    <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(${index}, 'pedido')">
+                        <i class="fas ${resena.respuesta ? 'fa-edit' : 'fa-reply'}"></i> 
+                        ${resena.respuesta ? 'Editar Respuesta' : 'Responder'}
+                    </button>
+                </td>
+            </tr>
+        `;
     });
 }
 
@@ -1648,7 +1706,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Evento cuando se cierra el modal
         responderResenaModal.addEventListener('hidden.bs.modal', function () {
             document.getElementById('responderResenaForm').reset();
-            document.getElementById('resena-id').value = '';
+            document.getElementById('resena-tipo').value = '';
+            document.getElementById('resena-index').value = '';
         });
         
         // Evento para el botón de guardar respuesta
@@ -1672,10 +1731,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Inicializar la tabla de reseñas
-    actualizarTablaResenas();
+    // Inicializar las tablas de reseñas
+    actualizarTablaResenasLocal();
+    actualizarTablaResenasPedido();
     
-    // Eliminar el botón de agregar reseña ya que no se necesita
+    // Ocultar el botón de agregar reseña ya que no se necesita
     const addResenaButton = document.querySelector('button[onclick*="Resena"]');
     if (addResenaButton) {
         addResenaButton.style.display = 'none';
