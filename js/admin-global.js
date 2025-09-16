@@ -517,3 +517,302 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mostrar la sección del dashboard por defecto
     showSection('dashboard-global');
 });
+
+
+// Datos de ejemplo para eventos
+const eventos = [
+    { 
+        id: 1, 
+        nombre: "Noche de Tapas Españolas", 
+        fecha: "2023-10-15", 
+        hora: "19:00", 
+        descripcion: "Disfruta de una noche especial con las mejores tapas españolas acompañadas de vinos seleccionados.", 
+        imagen: "img/eventos/tapas.jpg",
+        estado: "activo" 
+    },
+    { 
+        id: 2, 
+        nombre: "Festival de Cervezas Artesanales", 
+        fecha: "2023-11-05", 
+        hora: "17:00", 
+        descripcion: "Prueba más de 20 variedades de cervezas artesanales locales e internacionales con food pairing especial.", 
+        imagen: "img/eventos/cervezas.jpg",
+        estado: "activo" 
+    },
+    { 
+        id: 3, 
+        nombre: "Cena de Degustación 5 Tiempos", 
+        fecha: "2023-09-28", 
+        hora: "20:00", 
+        descripcion: "Una experiencia culinaria exclusiva con 5 tiempos maridados con vinos premium.", 
+        imagen: "img/eventos/cena.jpg",
+        estado: "inactivo" 
+    }
+];
+
+// Función para renderizar las tarjetas de eventos
+function renderizarEventos(eventosMostrar = eventos) {
+    const contenedor = document.getElementById('contenedor-eventos');
+    const sinResultados = document.getElementById('sin-resultados-eventos');
+    
+    // Limpiar contenedor
+    contenedor.innerHTML = '';
+    
+    if (eventosMostrar.length === 0) {
+        sinResultados.style.display = 'block';
+        return;
+    }
+    
+    sinResultados.style.display = 'none';
+    
+    eventosMostrar.forEach(evento => {
+        const tarjeta = document.createElement('div');
+        tarjeta.className = 'evento-card';
+        
+        // Formatear fecha para mostrar
+        const fechaObj = new Date(evento.fecha + 'T' + evento.hora);
+        const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
+        const fechaFormateada = fechaObj.toLocaleDateString('es-ES', opcionesFecha);
+        const horaFormateada = evento.hora.substring(0, 5);
+        
+        // Determinar clase según estado
+        const claseEstado = evento.estado === 'activo' ? 'estado-activo' : 'estado-inactivo';
+        const textoEstado = evento.estado === 'activo' ? 'Activo' : 'Inactivo';
+        
+        tarjeta.innerHTML = `
+            <img src="${evento.imagen}" alt="${evento.nombre}" class="evento-imagen" onerror="this.src='img/eventos/default.jpg'">
+            <div class="evento-contenido">
+                <h3 class="evento-titulo">${evento.nombre}</h3>
+                <div class="evento-fecha-hora">
+                    <span><i class="far fa-calendar-alt"></i> ${fechaFormateada}</span>
+                    <span><i class="far fa-clock"></i> ${horaFormateada}</span>
+                </div>
+                <div class="evento-estado ${claseEstado}">${textoEstado}</div>
+                <p class="evento-descripcion">${evento.descripcion}</p>
+                <div class="evento-acciones">
+                    <button class="btn-evento btn-editar-evento" onclick="showEventoModal('edit', ${evento.id})">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn-evento btn-eliminar-evento" onclick="eliminarEvento(${evento.id})">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        contenedor.appendChild(tarjeta);
+    });
+}
+
+// Función para filtrar eventos
+function filtrarEventos() {
+    const filtroNombre = document.getElementById('filtro-evento-nombre').value.toLowerCase();
+    const filtroFecha = document.getElementById('filtro-evento-fecha').value;
+    
+    const eventosFiltrados = eventos.filter(evento => {
+        const coincideNombre = evento.nombre.toLowerCase().includes(filtroNombre);
+        const coincideFecha = filtroFecha ? evento.fecha === filtroFecha : true;
+        
+        return coincideNombre && coincideFecha;
+    });
+    
+    renderizarEventos(eventosFiltrados);
+}
+
+// Función para limpiar filtros de eventos
+function limpiarFiltrosEventos() {
+    document.getElementById('filtro-evento-nombre').value = '';
+    document.getElementById('filtro-evento-fecha').value = '';
+    renderizarEventos();
+}
+
+// Funciones para el modal de evento
+function showEventoModal(mode, eventoId = null) {
+    const modal = document.getElementById('evento-modal');
+    const title = document.getElementById('evento-modal-title');
+    const submitBtn = document.getElementById('evento-modal-submit');
+    const form = document.getElementById('evento-form');
+    const preview = document.getElementById('preview-imagen');
+    
+    // Ocultar preview inicialmente
+    preview.style.display = 'none';
+    
+    if (mode === 'new') {
+        // Modo agregar
+        title.textContent = 'Agregar Nuevo Evento';
+        submitBtn.textContent = 'Guardar Evento';
+        form.reset();
+        document.getElementById('evento-id').value = '';
+        document.getElementById('evento-fecha').valueAsDate = new Date();
+        document.getElementById('evento-hora').value = '19:00';
+    } else if (mode === 'edit' && eventoId) {
+        // Modo editar
+        title.textContent = 'Editar Evento';
+        submitBtn.textContent = 'Actualizar Evento';
+        
+        // Buscar evento por ID
+        const evento = eventos.find(e => e.id === eventoId);
+        if (evento) {
+            document.getElementById('evento-id').value = evento.id;
+            document.getElementById('evento-nombre').value = evento.nombre;
+            document.getElementById('evento-fecha').value = evento.fecha;
+            document.getElementById('evento-hora').value = evento.hora;
+            document.getElementById('evento-descripcion').value = evento.descripcion;
+            document.getElementById('evento-estado').value = evento.estado;
+            
+            // Mostrar preview de imagen existente
+            const previewImg = document.getElementById('preview-img');
+            previewImg.src = evento.imagen;
+            preview.style.display = 'block';
+        }
+    }
+    
+    modal.style.display = 'block';
+}
+
+function hideEventoModal() {
+    document.getElementById('evento-modal').style.display = 'none';
+}
+
+// Función para previsualizar imagen seleccionada
+function setupImagePreview() {
+    const inputImagen = document.getElementById('evento-imagen');
+    const preview = document.getElementById('preview-imagen');
+    const previewImg = document.getElementById('preview-img');
+    
+    inputImagen.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+}
+
+// Función para eliminar evento
+function eliminarEvento(eventoId) {
+    if (confirm('¿Está seguro de que desea eliminar este evento?')) {
+        // Aquí iría el código para eliminar el evento
+        console.log('Eliminando evento con ID:', eventoId);
+        alert('Evento eliminado correctamente!');
+        
+        // En una aplicación real, aquí actualizarías la lista de eventos
+        const index = eventos.findIndex(e => e.id === eventoId);
+        if (index !== -1) {
+            eventos.splice(index, 1);
+            renderizarEventos();
+        }
+    }
+}
+
+// Actualiza la función DOMContentLoaded para incluir la configuración de eventos
+document.addEventListener('DOMContentLoaded', function() {
+    // ... código existente ...
+    
+    // Configurar eventos para los filtros de eventos
+    const filtroNombreEvento = document.getElementById('filtro-evento-nombre');
+    const filtroFechaEvento = document.getElementById('filtro-evento-fecha');
+    
+    if (filtroNombreEvento) {
+        filtroNombreEvento.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                filtrarEventos();
+            }
+        });
+    }
+    
+    if (filtroFechaEvento) {
+        filtroFechaEvento.addEventListener('change', function() {
+            filtrarEventos();
+        });
+    }
+    
+    // Configurar previsualización de imagen
+    setupImagePreview();
+    
+    // Formulario de evento
+    const eventoForm = document.getElementById('evento-form');
+    if (eventoForm) {
+        eventoForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar formulario
+            const id = document.getElementById('evento-id').value;
+            const nombre = document.getElementById('evento-nombre').value.trim();
+            const fecha = document.getElementById('evento-fecha').value;
+            const hora = document.getElementById('evento-hora').value;
+            const descripcion = document.getElementById('evento-descripcion').value.trim();
+            const estado = document.getElementById('evento-estado').value;
+            const imagenInput = document.getElementById('evento-imagen');
+            
+            if (!nombre || !fecha || !hora || !descripcion || !estado) {
+                alert('Por favor, complete todos los campos obligatorios.');
+                return;
+            }
+            
+            // En una aplicación real, aquí procesarías la imagen
+            let imagenUrl = '';
+            if (imagenInput.files.length > 0) {
+                // Aquí iría el código para subir la imagen al servidor
+                console.log('Imagen seleccionada:', imagenInput.files[0].name);
+                imagenUrl = 'img/eventos/' + imagenInput.files[0].name;
+            } else if (id) {
+                // Si estamos editando y no se seleccionó nueva imagen, mantener la existente
+                const eventoExistente = eventos.find(e => e.id == id);
+                if (eventoExistente) {
+                    imagenUrl = eventoExistente.imagen;
+                }
+            }
+            
+            // Determinar si es creación o edición
+            if (id) {
+                // Modo edición
+                console.log('Actualizando evento:', { id, nombre, fecha, hora, descripcion, imagenUrl, estado });
+                alert('Evento actualizado correctamente!');
+                
+                // Actualizar en el array (en una app real, sería una llamada al servidor)
+                const index = eventos.findIndex(e => e.id == id);
+                if (index !== -1) {
+                    eventos[index] = { 
+                        ...eventos[index], 
+                        nombre, 
+                        fecha, 
+                        hora, 
+                        descripcion, 
+                        imagen: imagenUrl, 
+                        estado 
+                    };
+                    renderizarEventos();
+                }
+            } else {
+                // Modo creación
+                console.log('Creando evento:', { nombre, fecha, hora, descripcion, imagenUrl, estado });
+                alert('Evento creado correctamente!');
+                
+                // Agregar al array (en una app real, sería una llamada al servidor)
+                const nuevoId = eventos.length > 0 ? Math.max(...eventos.map(e => e.id)) + 1 : 1;
+                eventos.push({
+                    id: nuevoId,
+                    nombre,
+                    fecha,
+                    hora,
+                    descripcion,
+                    imagen: imagenUrl || 'img/eventos/default.jpg',
+                    estado
+                });
+                renderizarEventos();
+            }
+            
+            // Cerrar el modal
+            hideEventoModal();
+        });
+    }
+    
+    // Renderizar eventos al cargar la página
+    renderizarEventos();
+});

@@ -219,6 +219,7 @@
                     <li><a href="#" onclick="showSection('gestion-administradores')"><i class="fas fa-user-tie"></i> Administradores</a></li>
                     <li><a href="#" onclick="showSection('gestion-locales')"><i class="fas fa-store"></i> Locales</a></li>
                     <li><a href="#" onclick="showSection('gestion-reseñas')"><i class="fas fa-star"></i> Reseñas</a></li>
+                    <li><a href="#" onclick="showSection('gestion-eventos')"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
                     <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
                 </ul>
             </div>
@@ -579,6 +580,35 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Gestión de Eventos -->
+        <div id="gestion-eventos" class="section-content" style="display: none;">
+            <div class="header">
+                <h1>Gestión de Eventos</h1>
+                <button class="btn btn-add" onclick="showEventoModal('new')"><i class="fas fa-plus"></i> Nuevo Evento</button>
+            </div>
+            
+            <!-- Filtros de búsqueda -->
+            <div class="filtros-container" style="margin-bottom: 20px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <input type="text" id="filtro-evento-nombre" class="form-control" placeholder="Buscar por nombre..." style="width: 250px;">
+                    <input type="date" id="filtro-evento-fecha" class="form-control" style="width: 200px;">
+                    <button class="btn btn-success" onclick="filtrarEventos()"><i class="fas fa-search"></i> Buscar</button>
+                    <button class="btn btn-secondary" onclick="limpiarFiltrosEventos()"><i class="fas fa-times"></i> Limpiar</button>
+                </div>
+            </div>
+            
+            <!-- Contenedor de tarjetas de eventos -->
+            <div id="contenedor-eventos" class="eventos-container">
+                <!-- Las tarjetas de eventos se generarán dinámicamente con JavaScript -->
+            </div>
+            
+            <!-- Mensaje cuando no hay resultados -->
+            <div id="sin-resultados-eventos" style="display: none; text-align: center; padding: 40px; color: #666;">
+                <i class="fas fa-calendar-times" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                <h3>No se encontraron eventos</h3>
+                <p>No hay eventos que coincidan con los criterios de búsqueda.</p>
+            </div>
         </div>
     </div>
 
@@ -747,6 +777,63 @@
         </div>
     </div>
 
+    <!-- Modal para agregar/editar evento -->
+<div id="evento-modal" class="modal-admin">
+    <div class="modal-content-admin">
+        <span class="close-modal" onclick="hideEventoModal()">&times;</span>
+        <h2 id="evento-modal-title">Agregar Nuevo Evento</h2>
+        
+        <form id="evento-form" enctype="multipart/form-data">
+            <input type="hidden" id="evento-id" value="">
+            
+            <div class="form-columns">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="evento-nombre">Nombre del Evento *</label>
+                        <input type="text" id="evento-nombre" class="form-control" placeholder="Ej. Noche de Tapas" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="evento-fecha">Fecha *</label>
+                        <input type="date" id="evento-fecha" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="evento-hora">Hora *</label>
+                        <input type="time" id="evento-hora" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="evento-imagen">Imagen del Evento</label>
+                        <input type="file" id="evento-imagen" class="form-control" accept="image/*">
+                        <small>Formatos: JPG, PNG. Tamaño máximo: 2MB</small>
+                        <div id="preview-imagen" style="margin-top: 10px; display: none;">
+                            <img id="preview-img" src="#" alt="Vista previa" style="max-width: 100%; max-height: 150px; border-radius: 4px;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="evento-estado">Estado *</label>
+                        <select id="evento-estado" class="form-control" required>
+                            <option value="">Seleccione un estado</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 15px;">
+                <label for="evento-descripcion">Descripción *</label>
+                <textarea id="evento-descripcion" class="form-control" rows="4" placeholder="Describe el evento..." required></textarea>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="hideEventoModal()">Cancelar</button>
+                <button type="submit" class="btn btn-success" id="evento-modal-submit">Guardar Evento</button>
+            </div>
+        </form>
+    </div>
+</div>
 
     <!-- </div> -->
      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -826,8 +913,6 @@
             // Cerrar el modal
             cerrarModal();
             
-            // En una aplicación real, aquí actualizarías la interfaz con la nueva respuesta
-            // Por ahora, simulamos una actualización con un alert
             alert('¡Respuesta guardada correctamente! En una aplicación real, la tabla se actualizaría con la nueva respuesta.');
         }
         
@@ -839,18 +924,6 @@
             }
         };
         
-        // Funciones existentes para cambiar secciones y pestañas
-            // function logout() {
-            //     alert('Cerrando sesión...');
-            //     // Redirigir al login
-            //     window.location.href = 'index.html';
-            // }
-        
-        // function logout() {
-        //     alert('Cerrando sesión...');
-        //     // Redirigir al login
-        //     window.location.href = 'index.html';
-        // }
     </script>
 </body>
 </html>
