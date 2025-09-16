@@ -113,7 +113,7 @@
                 </div>
             </div>
             
-  <!-- Gestión de Productos -->
+            <!-- Gestión de Productos -->
             <div id="gestion-productos" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestión de Platillos</h1>
@@ -831,70 +831,12 @@
  <div id="gestion-reseñas" class="section-content" style="display: none;">
         <div class="header">
         <h1>Gestionar Reseñas</h1>
-
-       <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#resenaModal">
-        <i class="fas fa-plus"></i> Agregar Reseña
-    </button>
-
         <button class="btn btn-primary" onclick="showAddResenaForm()"><i class="fas fa-plus"></i> Agregar Reseña</button>
-
     </div>
     <div class="tabs">
         <div class="tab active" onclick="changeTab('reseñas-local')">Local</div>
         <div class="tab" onclick="changeTab('reseñas-pedido')">Pedido</div>
     </div>
-
-   <!-- En la sección de reseñas de local -->
-<div id="reseñas-local" class="tab-content">
-    <div class="table-container">
-        <h2>Reseñas sobre el Local</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Calificación</th>
-                    <th>Comentario</th>
-                    <th>Respuesta</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Juan Pérez</td>
-                    <td>
-                        <div class="rating-stars">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                    </td>
-                    <td>Excelente ambiente y servicio. Volveré pronto.</td>
-                    <td></td>
-                    <td>2025-08-24</td>
-                    <td>
-                        <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(0, 'local')">
-                            <i class="fas fa-reply"></i> Responder
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>María González</td>
-                    <td>
-                        <div class="rating-stars">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                        </div>
-                    </td>
-                    <td>Buen lugar pero la música estaba muy alta.</td>
-                    <td>Agradecemos tu comentario. Ajustaremos el volumen.</td>
-                    <td>2025-08-23</td>
-                    <td>
-                        <button class="btn-responder btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#responderResenaModal" onclick="cargarResenaParaResponder(1, 'local')">
-                            <i class="fas fa-edit"></i> Editar Respuesta
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
     <div id="reseñas-local" class="tab-content">
         <div class="table-container">
             <h2>Reseñas de Local</h2>
@@ -925,7 +867,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
     <div id="reseñas-pedido" class="tab-content" style="display: none;">
         <div class="table-container">
@@ -958,51 +899,6 @@
             </table>
         </div>
     </div>
-
-</div>
- <!-- Modal para responder/editar respuesta de reseña -->
-<div class="modal fade" id="responderResenaModal" tabindex="-1" aria-labelledby="responderResenaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="responderResenaModalLabel">Responder Reseña</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="responderResenaForm">
-                    <input type="hidden" id="resena-id" value="">
-                    
-                    <!-- Información de la reseña (solo lectura) -->
-                    <div class="mb-3">
-                        <label class="form-label">Cliente</label>
-                        <input type="text" class="form-control" id="resena-cliente" readonly>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Calificación</label>
-                        <div id="resena-calificacion" class="rating-stars"></div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Comentario del Cliente</label>
-                        <textarea class="form-control" id="resena-comentario" rows="3" readonly></textarea>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Fecha</label>
-                        <input type="text" class="form-control" id="resena-fecha" readonly>
-                    </div>
-                    
-                    <hr>
-                    
-                    <!-- Respuesta del administrador -->
-                    <div class="mb-3">
-                        <label for="resena-respuesta" class="form-label">Tu Respuesta</label>
-                        <textarea class="form-control" id="resena-respuesta" rows="4" placeholder="Escribe tu respuesta aquí..." maxlength="500"></textarea>
-                        <div class="form-text"><span id="resena-respuesta-contador">0</span>/500 caracteres</div>
-                    </div>
-                </form>
-
     <!-- Formulario para agregar reseña -->
     <div id="add-resena-form" class="form-container" style="display: none;">
         <h2>Agregar Reseña</h2>
@@ -1017,7 +913,6 @@
             <div class="form-group">
                 <label for="resena-referencia">Referencia (Local o Pedido)</label>
                 <input type="text" id="resena-referencia" class="form-control" placeholder="Ej. Local Centro o #1023">
-
             </div>
             <div class="form-group">
                 <label for="resena-cliente">Cliente</label>
