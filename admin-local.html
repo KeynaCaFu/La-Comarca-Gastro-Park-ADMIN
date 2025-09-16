@@ -573,118 +573,288 @@
         </div>
     </div>
             
- <!-- Reportes -->
-            <div id="reportes" class="section-content" style="display: none;">
-                <div class="header">
-                    <!-- <h1>Gestión de Reportes</h1> -->
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn-addNew"><i class="fas fa-calendar-day"></i> Día</button>
-                        <button class="btn-addNew"><i class="fas fa-calendar-week"></i> Semana</button>
-                        <button class="btn-addNew"><i class="fas fa-calendar-alt"></i> Mes</button>
-                        <button class="btn-addNew"><i class="fas fa-calendar-range"></i> Rango</button>
-                    </div>
+<!-- Reportes -->
+<div id="reportes" class="section-content" style="display: none;">
+    <div class="header">
+        <h1>Gestión de Reportes</h1>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-addNew" onclick="filtrarReportes('dia')"><i class="fas fa-calendar-day"></i> Día</button>
+            <button class="btn-addNew" onclick="filtrarReportes('semana')"><i class="fas fa-calendar-week"></i> Semana</button>
+            <button class="btn-addNew" onclick="filtrarReportes('mes')"><i class="fas fa-calendar-alt"></i> Mes</button>
+            <button class="btn-addNew" onclick="mostrarFiltroRango()"><i class="fas fa-calendar-range"></i> Rango</button>
+        </div>
+    </div>
+    
+    <!-- Filtro de rango personalizado (oculto inicialmente) -->
+    <div id="filtro-rango" class="filtro-rango" style="display: none; margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="fecha-inicio">Desde:</label>
+            <input type="date" id="fecha-inicio" class="form-control" style="width: 200px;">
+            <label for="fecha-fin">Hasta:</label>
+            <input type="date" id="fecha-fin" class="form-control" style="width: 200px;">
+            <button class="btn-addNew" onclick="filtrarPorRango()">Aplicar</button>
+            <button class="btn btn-secondary" onclick="ocultarFiltroRango()">Cancelar</button>
+        </div>
+    </div>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="changeReportTab('reportes-pedidos')">Reporte de Pedidos</div>
+        <div class="tab" onclick="changeReportTab('reportes-insumos')">Reporte de Insumos</div>
+    </div>
+    
+    <!-- Reporte de Pedidos -->
+    <div id="reportes-pedidos" class="tab-content">
+        <div class="table-container">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <div>
+                    <span id="periodo-actual" style="font-weight: bold; color: var(--primary);">Hoy: 12 Jun 2024</span>
                 </div>
-                
-                <div class="table-container">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                        <input type="date" class="form-control" style="width: 200px;">
-                        <div>
-                            <button class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-                            <button class="btn btn-secondary"><i class="fas fa-file-excel"></i> Exportar Excel</button>
-                        </div>
-                    </div>
-                    
-                    <table>
+                <div>
+                    <button class="btn btn-secondary" onclick="exportarPDF('pedidos')"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                    <button class="btn btn-secondary" onclick="exportarExcel('pedidos')"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Pedido</th>
+                        <th>Cliente</th>
+                        <th>Productos</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Fecha/Hora</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-pedidos-reporte">
+                    <tr>
+                        <td>#12345</td>
+                        <td>Juan Pérez</td>
+                        <td>Tacos al Pastor, Agua de Horchata</td>
+                        <td>$90.50</td>
+                        <td><span class="badge badge-success">Pagado</span></td>
+                        <td>2024-06-12 13:45</td>
+                    </tr>
+                    <tr>
+                        <td>#12347</td>
+                        <td>Carlos Ruiz</td>
+                        <td>Enchiladas Verdes, Refresco</td>
+                        <td>$78.00</td>
+                        <td><span class="badge badge-success">Pagado</span></td>
+                        <td>2024-06-12 11:10</td>
+                    </tr>
+                    <tr>
+                        <td>#12348</td>
+                        <td>María López</td>
+                        <td>Quesadillas, Agua de Jamaica</td>
+                        <td>$65.00</td>
+                        <td><span class="badge badge-warning">Pendiente</span></td>
+                        <td>2025-05-11 14:20</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr style="background-color: #f8f9fa; font-weight: bold;">
+                        <td colspan="3" style="text-align: right;">Total:</td>
+                        <td id="total-pedidos">$168.50</td>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr style="background-color: #f8f9fa;">
+                        <td colspan="3" style="text-align: right;">Cantidad de pedidos:</td>
+                        <td id="cantidad-pedidos">3</td>
+                        <td colspan="3"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="card-container" style="grid-template-columns: 1fr 1fr; margin-top: 20px;">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Artículos más vendidos</span>
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div style="padding: 15px;">
+                    <table style="width: 100%;">
                         <thead>
                             <tr>
-                                <th>ID Pedido</th>
-                                <th>Cliente</th>
-                                <th>Productos</th>
+                                <th>Producto</th>
+                                <th>Tipo</th>
+                                <th>Cantidad</th>
                                 <th>Total</th>
-                                <th>Estado</th>
-                                <th>Fecha/Hora</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>#12345</td>
-                                <td>Juan Pérez</td>
-                                <td>Tacos al Pastor, Agua de Horchata</td>
-                                <td>$90.50</td>
-                                <td><span class="badge badge-success">Pagado</span></td>
-                                <td>2024-06-12 13:45</td>
+                                <td>Tacos al pastor</td>
+                                <td>Platillo</td>
+                                <td>15</td>
+                                <td>$750.00</td>
                             </tr>
                             <tr>
-                                <td>#12347</td>
-                                <td>Carlos Ruiz</td>
-                                <td>Enchiladas Verdes, Refresco</td>
-                                <td>$78.00</td>
-                                <td><span class="badge badge-success">Pagado</span></td>
-                                <td>2024-06-12 11:10</td>
+                                <td>Agua de horchata</td>
+                                <td>Bebida</td>
+                                <td>8</td>
+                                <td>$160.00</td>
+                            </tr>
+                            <tr>
+                                <td>Enchiladas verdes</td>
+                                <td>Platillo</td>
+                                <td>5</td>
+                                <td>$320.00</td>
+                            </tr>
+                            <tr>
+                                <td>Refresco</td>
+                                <td>Bebida</td>
+                                <td>4</td>
+                                <td>$100.00</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
-                <div class="card-container" style="grid-template-columns: 1fr 1fr; margin-top: 20px;">
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Artículos más vendidos</span>
-                            <i class="fas fa-chart-pie"></i>
-                        </div>
-                        <div style="padding: 15px;">
-                            <table style="width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th>Producto</th>
-                                        <th>Tipo</th>
-                                        <th>Cantidad</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Tacos al pastor</td>
-                                        <td>Platillo</td>
-                                        <td>15</td>
-                                        <td>$750.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Agua de horchata</td>
-                                        <td>Bebida</td>
-                                        <td>8</td>
-                                        <td>$160.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Enchiladas verdes</td>
-                                        <td>Platillo</td>
-                                        <td>5</td>
-                                        <td>$320.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Resumen de Ventas</span>
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div style="padding: 15px;">
+                    <div style="margin-bottom: 15px;">
+                        <h3>Total Ventas: <strong id="total-ventas">$1,250.00</strong></h3>
                     </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Resumen de Ventas</span>
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div style="padding: 15px;">
-                            <div style="margin-bottom: 15px;">
-                                <h3>Total Ventas: <strong>$1,250.00</strong></h3>
-                            </div>
-                            <div style="margin-bottom: 15px;">
-                                <p>Variación: <span style="color: var(--success);">+15%</span></p>
-                                <small>vs. semana anterior</small>
-                            </div>
-                            <div>
-                                <p>Total Pedidos: <strong>320</strong></p>
-                            </div>
-                        </div>
+                    <div style="margin-bottom: 15px;">
+                        <p>Variación: <span style="color: var(--success);">+15%</span></p>
+                        <small>vs. semana anterior</small>
+                    </div>
+                    <div>
+                        <p>Total Pedidos: <strong>320</strong></p>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Reporte de Insumos -->
+    <div id="reportes-insumos" class="tab-content" style="display: none;">
+        <div class="table-container">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <div>
+                    <span id="periodo-actual-insumos" style="font-weight: bold; color: var(--primary);">Hoy: 12 Jun 2024</span>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" onclick="exportarPDF('insumos')"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                    <button class="btn btn-secondary" onclick="exportarExcel('insumos')"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Insumo</th>
+                        <th>Movimiento</th>
+                        <th>Cantidad</th>
+                        <th>Fecha/Hora</th>
+                        <th>Responsable</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-insumos-reporte">
+                    <tr>
+                        <td>Carne de Res</td>
+                        <td><span class="badge badge-success">Entrada</span></td>
+                        <td>10 kg</td>
+                        <td>2024-06-12 09:30</td>
+                        <td>Admin Local</td>
+                    </tr>
+                    <tr>
+                        <td>Cebolla</td>
+                        <td><span class="badge badge-danger">Salida</span></td>
+                        <td>2 kg</td>
+                        <td>2024-06-12 11:45</td>
+                        <td>Chef Juan</td>
+                    </tr>
+                    <tr>
+                        <td>Tortillas</td>
+                        <td><span class="badge badge-success">Entrada</span></td>
+                        <td>5 lb</td>
+                        <td>2024-06-12 08:15</td>
+                        <td>Admin Local</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr style="background-color: #f8f9fa; font-weight: bold;">
+                        <td colspan="2" style="text-align: right;">Total entradas:</td>
+                        <td id="total-entradas">15</td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr style="background-color: #f8f9fa; font-weight: bold;">
+                        <td colspan="2" style="text-align: right;">Total salidas:</td>
+                        <td id="total-salidas">2</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="card-container" style="grid-template-columns: 1fr 1fr; margin-top: 20px;">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Insumos con más movimiento</span>
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div style="padding: 15px;">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Insumo</th>
+                                <th>Entradas</th>
+                                <th>Salidas</th>
+                                <th>Stock actual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Carne de Res</td>
+                                <td>45 kg</td>
+                                <td>32 kg</td>
+                                <td>13 kg</td>
+                            </tr>
+                            <tr>
+                                <td>Cebolla</td>
+                                <td>20 kg</td>
+                                <td>18 kg</td>
+                                <td>2 kg</td>
+                            </tr>
+                            <tr>
+                                <td>Tortillas</td>
+                                <td>30 lb</td>
+                                <td>28 lb</td>
+                                <td>2 lb</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Resumen de Insumos</span>
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div style="padding: 15px;">
+                    <div style="margin-bottom: 15px;">
+                        <h3>Total movimientos: <strong>28</strong></h3>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <p>Entradas: <span style="color: var(--success);">15</span></p>
+                        <p>Salidas: <span style="color: var(--danger);">13</span></p>
+                    </div>
+                    <div>
+                        <p>Insumos con stock bajo: <strong>3</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
             
 <!-- Gestión de Empleados -->
             <div id="gestion-empleados" class="section-content" style="display: none;">
