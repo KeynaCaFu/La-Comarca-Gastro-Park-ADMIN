@@ -226,7 +226,7 @@ function showSection(sectionId) {
     document.getElementById(sectionId).style.display = 'block';
 
     // Actualizar el título
-    var link = document.querySelector(`.sidebar-menu a[onclick="showSection('${sectionId}')"]`);
+    var link = document.querySelector(.sidebar-menu a[onclick="showSection('${sectionId}')"]);
     if (link) {
         document.getElementById('section-title').textContent = link.textContent.trim();
     }
