@@ -4,20 +4,12 @@ function showLocalSection(sectionId) {
     document.querySelectorAll('.section-content').forEach(section => {
         section.style.display = 'none';
     });
-
+    
     // Mostrar la sección seleccionada
     document.getElementById(sectionId).style.display = 'block';
-
+    
     // Actualizar el título
-    var link = document.querySelector(`.sidebar-menu a[onclick="showLocalSection('${sectionId}')"]`);
-    if (link) {
-        document.getElementById('local-section-title').textContent = link.textContent.trim();
-    }
-
-    // Quitar 'active' de todos los enlaces
-    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
-    // Agregar 'active' al enlace actual
-    if (link) link.classList.add('active');
+    document.getElementById('local-section-title').textContent = document.querySelector(`a[onclick="showLocalSection('${sectionId}')"]`).textContent.trim();
 }
 
 // Funciones para mostrar/ocultar formularios
@@ -32,118 +24,48 @@ function hideAddProductForm() {
 
 // Funciones para mostrar/ocultar formularios
 
-function showAddInsumoForm() {
-    document.getElementById('add-insumo-form').style.display = 'block';
-}
-function hideAddInsumoForm() {
-    document.getElementById('add-insumo-form').style.display = 'none';
-}
-
-// --- INICIO FUNCIONALIDAD ENTRADAS Y SALIDAS DE INSUMOS ---
-// Obtener datos de la tabla HTML y mantenerlos en memoria
-let insumos = [
-    {
-        nombre: 'Carne de Res', cantidad: 45, unidad: 'kg', minimo: 25, maximo: 100, proveedor: 'Distribuidora Central', estado: 'Disponible', badge: 'success'
-    },
-    {
-        nombre: 'Cebolla', cantidad: 3, unidad: 'kg', minimo: 2, maximo: 15, proveedor: 'Alimentos del Norte', estado: 'Bajo stock', badge: 'warning'
-    },
-    {
-        nombre: 'Tortillas', cantidad: 3, unidad: 'lb', minimo: 2, maximo: 10, proveedor: 'Suministros Express', estado: 'Agotado', badge: 'danger'
-    }
-];
-
-let insumoSeleccionado = null;
-let tipoMovimiento = null;
-
-function renderTablaInsumos() {
-    const tbody = document.querySelector('#tabla-insumos tbody');
-    tbody.innerHTML = '';
-    insumos.forEach((insumo, idx) => {
-        let estadoHtml = `<span class="badge badge-${insumo.badge}">${insumo.estado}</span>`;
-        tbody.innerHTML += `
-            <tr>
-                <td>${insumo.nombre}</td>
-                <td>${insumo.cantidad} ${insumo.unidad}</td>
-                <td>${insumo.minimo} ${insumo.unidad}</td>
-                <td>${insumo.maximo} ${insumo.unidad}</td>
-                <td>${insumo.proveedor}</td>
-                <td>${estadoHtml}</td>
-                <td>
-                    <button class='btn-edit btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#insumoModal' onclick='cargarInsumoParaEditar(${idx})'><i class='fas fa-edit'></i></button>
-                    <button class='btn-edit btn-danger btn-sm'><i class='fas fa-trash'></i></button>
-                    <button class='btn-entrada' onclick='mostrarMovimientoInsumo(${idx}, "entrada")'><i class='fas fa-arrow-down'></i> Entrada</button>
-                    <button class='btn-salida' onclick='mostrarMovimientoInsumo(${idx}, "salida")'><i class='fas fa-arrow-up'></i> Salida</button>
-                </td>
-            </tr>
-        `;
-    });
-}
-
-function mostrarMovimientoInsumo(idx, movimiento) {
-    insumoSeleccionado = idx;
-    tipoMovimiento = movimiento;
-    // Limpiar campo y alerta
-    document.getElementById('movimiento-insumo-cantidad').value = '';
-    document.getElementById('movimiento-alert').textContent = '';
-    // Cambiar título y label
-    let insumo = insumos[idx];
-    document.getElementById('movimientoInsumoModalLabel').textContent = (movimiento === 'entrada' ? 'Entrada' : 'Salida') + ' de Insumo';
-    document.getElementById('movimiento-insumo-label').textContent = `Cantidad a ${(movimiento === 'entrada' ? 'sumar' : 'restar')} para "${insumo.nombre}" (${insumo.unidad})`;
-    // Asignar handler
-    document.getElementById('btn-confirmar-movimiento').onclick = confirmarMovimientoInsumo;
-    // Mostrar modal Bootstrap
-    const movimientoModal = new bootstrap.Modal(document.getElementById('movimientoInsumoModal'));
-    movimientoModal.show();
-}
-
-function ocultarMovimientoInsumo() {
-    // Cerrar el modal de movimiento si está abierto
-    const modalEl = document.getElementById('movimientoInsumoModal');
-    if (modalEl) {
-        const movimientoModal = bootstrap.Modal.getInstance(modalEl);
-        if (movimientoModal) movimientoModal.hide();
-    }
-    insumoSeleccionado = null;
-    tipoMovimiento = null;
-}
-
-function confirmarMovimientoInsumo() {
-    const cantidad = parseFloat(document.getElementById('movimiento-insumo-cantidad').value);
-    const alertDiv = document.getElementById('movimiento-alert');
-    alertDiv.textContent = '';
-    if (isNaN(cantidad) || cantidad <= 0) {
-        alertDiv.textContent = 'Ingrese una cantidad válida.';
-        alertDiv.className = 'movimiento-alert alert-danger';
-        return;
-    }
-    let insumo = insumos[insumoSeleccionado];
-    if (tipoMovimiento === 'entrada') {
-        insumo.cantidad += cantidad;
-    } else if (tipoMovimiento === 'salida') {
-        if (insumo.cantidad < cantidad) {
-            alertDiv.textContent = 'No hay suficiente cantidad para realizar la salida.';
-            alertDiv.className = 'movimiento-alert alert-danger';
-            return;
+        function showAddInsumoForm() {
+            document.getElementById('add-insumo-form').style.display = 'block';
         }
-        insumo.cantidad -= cantidad;
-    }
-    // Actualizar estado visual según stock
-    if (insumo.cantidad <= 0) {
-        insumo.estado = 'Agotado';
-        insumo.badge = 'danger';
-    } else if (insumo.cantidad <= insumo.minimo) {
-        insumo.estado = 'Bajo stock';
-        insumo.badge = 'warning';
-    } else {
-        insumo.estado = 'Disponible';
-        insumo.badge = 'success';
-    }
-    renderTablaInsumos();
-    ocultarMovimientoInsumo();
+        
+        function hideAddInsumoForm() {
+            document.getElementById('add-insumo-form').style.display = 'none';
+        }
+        
+        function showAddProveedorForm() {
+            document.getElementById('add-proveedor-form').style.display = 'block';
+        }
+        
+        function hideAddProveedorForm() {
+            document.getElementById('add-proveedor-form').style.display = 'none';
+        }
+        
+        function showAddEmpleadoForm() {
+            document.getElementById('add-empleado-form').style.display = 'block';
+        }
+        
+        function hideAddEmpleadoForm() {
+            document.getElementById('add-empleado-form').style.display = 'none';
+        }
+        
+        function showNuevoPedidoForm() {
+            document.getElementById('nuevo-pedido-form').style.display = 'block';
+        }
+        
+        function hideNuevoPedidoForm() {
+            document.getElementById('nuevo-pedido-form').style.display = 'none';
+        }
+
+
+function showAddResenaForm() {
+    document.getElementById('add-resena-form').style.display = 'block';
 }
-// --- FIN FUNCIONALIDAD ENTRADAS Y SALIDAS DE INSUMOS ---
-         
+
+function hideAddResenaForm() {
+    document.getElementById('add-resena-form').style.display = 'none';
+}
+
+
 function changePedidoTab(tabId) {
             changeTab(tabId);
 }
@@ -184,6 +106,7 @@ function changeTab(tabId) {
 document.addEventListener('DOMContentLoaded', function() {
     // Mostrar la sección del dashboard por defecto
     showLocalSection('dashboard-local');
+
     // Inicializar tabla de insumos si existe
     if (document.getElementById('tabla-insumos')) {
         renderTablaInsumos();
