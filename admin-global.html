@@ -6,11 +6,208 @@
     <link rel="stylesheet" href="css/styles.css">
     <title>Admin Global - La Comarca Gastro Park</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<div>
-    <!-- Admin Global Dashboard -->
-    <div id="admin-global" class="container">
+    <style>
+        /* Estilos adicionales para corregir el layout */
+        #admin-global {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 246px;
+            padding: 20px 8px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .main-content {
+            flex: 1; /* Ocupa el espacio restante */
+            overflow: auto; /* Permite scroll si el contenido es muy largo */
+        }
+         /* Estilos para el modal de respuesta */
+        .modal-respuesta {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content-respuesta {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: black;
+        }
+        
+        .respuesta-text {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        
+        .btn-responder {
+            background-color: #485a1a;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-responder:hover {
+            background-color: #3a4915;
+        }
+        
+        .sin-respuesta {
+            color: #888;
+            font-style: italic;
+        }
+         /* Estilos para el modal de administrador */
+        /* Estilos para los modales */
+        .modal-admin, .modal-local {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content-admin, .modal-content-local {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 60%;
+            max-width: 700px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: black;
+        }
+        
+        .form-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .form-column {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        /* Estilos para botones de acción en tabla */
+        .btn-action {
+           padding: 11px 4px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 70px;
+        }
 
+        btn-asig {
+           padding: 11px 4px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 130px;
+        }
+        
+       .btn-edit {
+            background-color: #485a1a;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #3a4915;
+        }
+        
+        .btn-delete {
+            background-color: #d87307;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #ac5c1b;
+        }
+        
+        .btn-asignar {
+            background-color: #6c806c;
+            color: white;
+        }
+        
+        .btn-asignar:hover {
+            background-color: #5a6a5a;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Global Dashboard -->
+    <div id="admin-global">
 
           <div class="sidebar">
             <div class="sidebar-header">
@@ -104,207 +301,209 @@
                 </div>
             </div>
             
-            <!-- Gestión de Administradores -->
-            <div id="gestion-administradores" class="section-content" style="display: none;">
-                <div class="header">
-                    <h1>Gestión de Administradores</h1>
-                    <button class="btn btn-add" onclick="showAddAdminForm()"><i class="fas fa-plus"></i> Agregar Administrador</button>
-                </div>
-                
-                <div class="table-container">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                        <input type="text" class="form-control" placeholder="Buscar administrador..." style="width: 300px;">
-                        <button class="btn btn-success"><i class="fas fa-filter"></i> Filtrar</button>
-                    </div>
-                    
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Cédula</th>
-                                <th>Teléfono</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Ana Torrez</td>
-                                <td>705610896</td>
-                                <td>88871296</td>
-                                <td><span class="badge badge-success">Activo</span></td>
-                                <td>
-                                    <button class="btn-edit btn-add btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Juan Pérez</td>
-                                <td>109680125</td>
-                                <td>85261245</td>
-                                <td><span class="badge badge-success">Activo</span></td>
-                                <td>
-                                    <button class="btn-edit btn-add btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Mariana Castillo</td>
-                                <td>6523896</td>
-                                <td>---</td>
-                                <td><span class="badge badge-danger">Inactivo</span></td>
-                                <td>
-                                    <button class="btn-edit btn-add btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Formulario para agregar administrador -->
-                <div id="add-admin-form" class="form-container" style="display: none;">
-                    <h2>Agregar Nuevo Administrador</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="admin-nombre">Nombre</label>
-                            <input type="text" id="admin-nombre" class="form-control" placeholder="Ingrese el nombre">
-                        </div>
-                        <div class="form-group">
-                            <label for="admin-apellido">Apellido</label>
-                            <input type="text" id="admin-apellido" class="form-control" placeholder="Ingrese el apellido">
-                        </div>
-                        <div class="form-group">
-                            <label for="admin-cedula">Cédula</label>
-                            <input type="text" id="admin-cedula" class="form-control" placeholder="Ingrese la cédula">
-                        </div>
-                        <div class="form-group">
-                            <label for="admin-telefono">Teléfono</label>
-                            <input type="text" id="admin-telefono" class="form-control" placeholder="Ingrese el teléfono">
-                        </div>
-                        <div class="form-group">
-                            <label for="admin-estado">Estado</label>
-                            <select id="admin-estado" class="form-control">
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button type="button" class="btn btn-danger" onclick="hideAddAdminForm()">Cancelar</button>
-                            <button type="button" class="btn btn-success">Guardar</button>
-                        </div>
-                    </form>
-                </div>
+<!-- Gestión de Administradores -->
+<div id="gestion-administradores" class="section-content" style="display: none;">
+    <div class="header">
+        <h1>Gestión de Administradores</h1>
+        <button class="btn btn-add" onclick="showAdminModal('new')"><i class="fas fa-plus"></i> Agregar Administrador</button>
+    </div>
+    
+    <div class="table-container">
+        <!-- Filtros de búsqueda -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <input type="text" id="filtro-admin-nombre" class="form-control" placeholder="Buscar por nombre..." style="width: 250px;">
+                <input type="text" id="filtro-admin-cedula" class="form-control" placeholder="Buscar por cédula..." style="width: 250px;">
+                <button class="btn btn-success" onclick="filtrarAdministradores()"><i class="fas fa-search"></i> Buscar</button>
+                <button class="btn btn-secondary" onclick="limpiarFiltrosAdmin()"><i class="fas fa-times"></i> Limpiar</button>
             </div>
+        </div>
+        
+        <table id="tabla-administradores">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cédula</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo-tabla-administradores">
+                <tr>
+                    <td>Ana Torrez</td>
+                    <td>705610896</td>
+                    <td>88871296</td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showAdminModal('edit', 1)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteAdmin(1)"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Juan Pérez</td>
+                    <td>109680125</td>
+                    <td>85261245</td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showAdminModal('edit', 2)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteAdmin(2)"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mariana Castillo</td>
+                    <td>6523896</td>
+                    <td>---</td>
+                    <td><span class="badge badge-danger">Inactivo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showAdminModal('edit', 3)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteAdmin(3)"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Carlos López</td>
+                    <td>12345678</td>
+                    <td>77778888</td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showAdminModal('edit', 4)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteAdmin(4)"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Laura Martínez</td>
+                    <td>87654321</td>
+                    <td>99990000</td>
+                    <td><span class="badge badge-danger">Inactivo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showAdminModal('edit', 5)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteAdmin(5)"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Mensaje cuando no hay resultados -->
+        <div id="sin-resultados-admin" style="display: none; text-align: center; padding: 20px; color: #666;">
+            <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i>
+            <p>No se encontraron administradores que coincidan con los criterios de búsqueda.</p>
+        </div>
+    </div>
+</div>
             
-            <!-- Gestión de Locales -->
-            <div id="gestion-locales" class="section-content" style="display: none;">
-                <div class="header">
-                    <h1>Gestión de Locales</h1>
-                    <button class="btn btn-primary" onclick="showAddLocalForm()"><i class="fas fa-plus"></i> Agregar Local</button>
-                </div>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nombre del Local</th>
-                                <th>Administrador</th>
-                                <th>Estado</th>
-                                <th class="accion">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Local Sur</td>
-                                <td>Ana Torrez</td>
-                                <td><span class="badge badge-danger">Inactivo</span></td>
-                                <td class="baction">
-                                    <button class="btn-edit btn-add btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn btn-asignar btn-sm"><i class="fas fa-user-tie"></i> Asignar Admin</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Local Centro</td>
-                                <td>Juan Pérez</td>
-                                <td><span class="badge badge-danger">Inactivo</span></td>
-                                <td class="baction">
-                                    <button class="btn-edit btn-add btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn btn-asignar btn-sm"><i class="fas fa-user-tie"></i> Asignar Admin</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Local Norte</td>
-                                <td>Marina Castillo</td>
-                                <td><span class="badge badge-danger">Inactivo</span></td>
-                                <td class="baction">
-                                    <button class="btn-edit btn-add btn-sm"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    <button class="btn btn-asignar btn-sm"><i class="fas fa-user-tie"></i> Asignar Admin</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Formulario para agregar local -->
-                <div id="add-local-form" class="form-container" style="display: none;">
-                    <h2>Agregar Nuevo Local</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="local-nombre">Nombre del Local</label>
-                            <input type="text" id="local-nombre" class="form-control" placeholder="Ej. Local Centro">
-                        </div>
-                        <div class="form-group">
-                            <label for="local-direccion">Dirección</label>
-                            <input type="text" id="local-direccion" class="form-control" placeholder="Ej. Calle Principal #123">
-                        </div>
-                        <div class="form-group">
-                            <label for="local-telefono">Teléfono</label>
-                            <input type="text" id="local-telefono" class="form-control" placeholder="Ej. 555-1234">
-                        </div>
-                        <div class="form-group">
-                            <label for="local-tipo">Tipo de Local</label>
-                            <select id="local-tipo" class="form-control">
-                                <option value="comida">Comida</option>
-                                <option value="bebidas">Bebidas</option>
-                                <option value="mixto">Mixto</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button type="button" class="btn btn-danger" onclick="hideAddLocalForm()">Cancelar</button>
-                            <button type="button" class="btn btn-success">Guardar</button>
-                        </div>
-                    </form>
-                </div>
+ <!-- Gestión de Locales -->
+<div id="gestion-locales" class="section-content" style="display: none;">
+    <div class="header">
+        <h1>Gestión de Locales</h1>
+        <button class="btn btn-primary" onclick="showLocalModal('new')"><i class="fas fa-plus"></i> Agregar Local</button>
+    </div>
+    
+    <div class="table-container">
+        <!-- Filtros de búsqueda -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <input type="text" id="filtro-local" class="form-control" placeholder="Buscar por nombre del local..." style="width: 250px;">
+                <input type="text" id="filtro-administrador" class="form-control" placeholder="Buscar por administrador..." style="width: 250px;">
+                <button class="btn btn-success" onclick="filtrarLocales()"><i class="fas fa-search"></i> Buscar</button>
+                <button class="btn btn-secondary" onclick="limpiarFiltros()"><i class="fas fa-times"></i> Limpiar</button>
             </div>
+        </div>
+        
+        <table id="tabla-locales">
+            <thead>
+                <tr>
+                    <th>Nombre del Local</th>
+                    <th>Administrador</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo-tabla-locales">
+                <tr>
+                    <td>Local Sur</td>
+                    <td>Ana Torrez</td>
+                    <td><span class="badge badge-danger">Inactivo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showLocalModal('edit', 1)"><i class="fas fa-edit"></i> </button>
+                        <button class="btn-action btn-delete" onclick="deleteLocal(1)"><i class="fas fa-trash"></i> </button>
+                        <button class="btn-asig btn-asignar" onclick="asignarAdmin(1)"><i class="fas fa-user-tie"></i> Asignar Admin</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Local Centro</td>
+                    <td>Juan Pérez</td>
+                    <td><span class="badge badge-danger">Inactivo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showLocalModal('edit', 2)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteLocal(2)"><i class="fas fa-trash"></i></button>
+                        <button class="btn-asig btn-asignar" onclick="asignarAdmin(2)"><i class="fas fa-user-tie"></i> Asignar Admin</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Local Norte</td>
+                    <td>Marina Castillo</td>
+                    <td><span class="badge badge-danger">Inactivo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showLocalModal('edit', 3)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteLocal(3)"><i class="fas fa-trash"></i></button>
+                        <button class="btn-asig btn-asignar" onclick="asignarAdmin(3)"><i class="fas fa-user-tie"></i> Asignar Admin</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Local Este</td>
+                    <td>Carlos López</td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showLocalModal('edit', 4)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteLocal(4)"><i class="fas fa-trash"></i></button>
+                        <button class="btn-asig btn-asignar" onclick="asignarAdmin(4)"><i class="fas fa-user-tie"></i> Asignar Admin</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Local Oeste</td>
+                    <td>Ana Torrez</td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="showLocalModal('edit', 5)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteLocal(5)"><i class="fas fa-trash"></i></button>
+                        <button class="btn-asig btn-asignar" onclick="asignarAdmin(5)"><i class="fas fa-user-tie"></i> Asignar Admin</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Mensaje cuando no hay resultados -->
+        <div id="sin-resultados" style="display: none; text-align: center; padding: 20px; color: #666;">
+            <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i>
+            <p>No se encontraron locales que coincidan con los criterios de búsqueda.</p>
+        </div>
+    </div>
+</div>
 
 
-
- <!-- Gestionar Reseñas con pestañas -->
-        <div id="gestion-reseñas" class="section-content" style="display: none;">
-
+  <!-- Gestionar Reseñas con pestañas -->
+            <div id="gestion-reseñas" class="section-content" style="display: none;">
                 <div class="header">
                     <h1>Gestionar Reseñas</h1>
-                    <button class="btn btn-primary" onclick="showAddResenaForm()"><i class="fas fa-plus"></i> Agregar Reseña</button>
                 </div>
                 <div class="tabs">
-                    <div class="tab active" onclick="changeTab('reseñas-local-global')">Local</div>
-                    <div class="tab" onclick="changeTab('reseñas-pedido-global')">Pedido</div>
+                    <div class="tab active" onclick="changeTab('reseñas-local-global')">Reseñas de Local</div>
+                    <div class="tab" onclick="changeTab('reseñas-pedido-global')">Reseñas de Pedido</div>
                 </div>
+                
+                <!-- Reseñas de Local -->
                 <div id="reseñas-local-global" class="tab-content">
                     <div class="table-container">
                         <h2>Reseñas de Local</h2>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Referencia</th>
+                                    <th>Local</th>
                                     <th>Cliente</th>
                                     <th>Calificación</th>
                                     <th>Comentario</th>
                                     <th>Fecha</th>
+                                    <th>Respuesta</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -312,30 +511,43 @@
                                 <tr>
                                     <td>Local Sur</td>
                                     <td>Carlos Ruiz</td>
-                                    <td>5</td>
-                                    <td>Ambiente agradable.</td>
+                                    <td>5 ★</td>
+                                    <td>Ambiente agradable y comida deliciosa.</td>
                                     <td>2025-08-22</td>
+                                    <td class="sin-respuesta">Sin respuesta aún</td>
                                     <td>
-                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-responder" onclick="mostrarModalRespuesta(1, 'local')">Responder</button>
                                     </td>
                                 </tr>
-                                <!-- Más reseñas de local aquí -->
+                                <tr>
+                                    <td>Local Centro</td>
+                                    <td>Ana Martínez</td>
+                                    <td>4 ★</td>
+                                    <td>Buen servicio pero la comida tardó en llegar.</td>
+                                    <td>2025-08-21</td>
+                                    <td>Gracias por tu comentario. Estamos trabajando para mejorar nuestros tiempos de entrega.</td>
+                                    <td>
+                                        <button class="btn-responder" onclick="mostrarModalEditarRespuesta(2, 'local', 'Gracias por tu comentario. Estamos trabajando para mejorar nuestros tiempos de entrega.')">Editar Respuesta</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                
+                <!-- Reseñas de Pedido -->
                 <div id="reseñas-pedido-global" class="tab-content" style="display: none;">
                     <div class="table-container">
                         <h2>Reseñas de Pedido</h2>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Referencia</th>
+                                    <th>Pedido #</th>
                                     <th>Cliente</th>
                                     <th>Calificación</th>
-                                    <th>Comentario</th>
+                                    <th>Comentario</td>
                                     <th>Fecha</th>
+                                    <th>Respuesta</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -343,71 +555,302 @@
                                 <tr>
                                     <td>#12345</td>
                                     <td>María López</td>
-                                    <td>4</td>
-                                    <td>Buen sabor y atención.</td>
+                                    <td>4 ★</td>
+                                    <td>Buen sabor y atención, pero el pedido llegó frío.</td>
                                     <td>2025-08-21</td>
+                                    <td class="sin-respuesta">Sin respuesta aún</td>
                                     <td>
-                                        <button class="btn-edit btn-primary btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-edit btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-responder" onclick="mostrarModalRespuesta(101, 'pedido')">Responder</button>
                                     </td>
                                 </tr>
-                                <!-- Más reseñas de pedido aquí -->
+                                <tr>
+                                    <td>#12346</td>
+                                    <td>Jorge Ramírez</td>
+                                    <td>5 ★</td>
+                                    <td>¡Excelente servicio! Todo perfecto.</td>
+                                    <td>2025-08-20</td>
+                                    <td>¡Nos alegra mucho que hayas disfrutado tu experiencia! Esperamos verte pronto nuevamente.</td>
+                                    <td>
+                                        <button class="btn-responder" onclick="mostrarModalEditarRespuesta(102, 'pedido', '¡Nos alegra mucho que hayas disfrutado tu experiencia! Esperamos verte pronto nuevamente.')">Editar Respuesta</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <!-- Formulario para agregar reseña -->
-                <div id="add-resena-form" class="form-container" style="display: none;">
-                    <h2>Agregar Reseña</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="resena-tipo">Tipo</label>
-                            <select id="resena-tipo" class="form-control">
-                                <option value="local">Local</option>
-                                <option value="pedido">Pedido</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="resena-referencia">Referencia (Local o Pedido)</label>
-                            <input type="text" id="resena-referencia" class="form-control" placeholder="Ej. Local Sur o #12345">
-                        </div>
-                        <div class="form-group">
-                            <label for="resena-cliente">Cliente</label>
-                            <input type="text" id="resena-cliente" class="form-control" placeholder="Nombre del cliente">
-                        </div>
-                        <div class="form-group">
-                            <label for="resena-calificacion">Calificación</label>
-                            <select id="resena-calificacion" class="form-control">
-                                <option value="5">5 - Excelente</option>
-                                <option value="4">4 - Muy bueno</option>
-                                <option value="3">3 - Bueno</option>
-                                <option value="2">2 - Regular</option>
-                                <option value="1">1 - Malo</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="resena-comentario">Comentario</label>
-                            <textarea id="resena-comentario" class="form-control" rows="3" placeholder="Comentario"></textarea>
-                        </div>
-                        <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button type="button" class="btn btn-danger" onclick="hideAddResenaForm()">Cancelar</button>
-                            <button type="button" class="btn btn-success">Guardar</button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
-
-
-        
-
     </div>
 
-</div>
+    <!-- Modal para responder/editar reseñas -->
+    <div id="modal-respuesta" class="modal-respuesta">
+        <div class="modal-content-respuesta">
+            <span class="close-modal" onclick="cerrarModal()">&times;</span>
+            <h2 id="modal-titulo">Responder a Reseña</h2>
+            <div id="reseña-info" style="margin-bottom: 15px; padding: 10px; background-color: #f5f5f5; border-radius: 4px;">
+                <!-- Aquí se mostrará la información de la reseña -->
+            </div>
+            <textarea id="texto-respuesta" class="respuesta-text" placeholder="Escribe tu respuesta aquí..."></textarea>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-danger" onclick="cerrarModal()">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="guardarRespuesta()">Guardar Respuesta</button>
+            </div>
+        </div>
+    </div>
+
+ <!-- Modal para agregar/editar administrador -->
+    <div id="admin-modal" class="modal-admin">
+        <div class="modal-content-admin">
+            <span class="close-modal" onclick="hideAdminModal()">&times;</span>
+            <h2 id="admin-modal-title">Agregar Nuevo Administrador</h2>
+            
+            <form id="admin-form">
+                <input type="hidden" id="admin-id" value="">
+                
+                <div class="form-columns">
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="admin-nombre">Nombre *</label>
+                            <input type="text" id="admin-nombre" class="form-control" placeholder="Ingrese el nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-apellido">Apellido *</label>
+                            <input type="text" id="admin-apellido" class="form-control" placeholder="Ingrese el apellido" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-cedula">Cédula *</label>
+                            <input type="text" id="admin-cedula" class="form-control" placeholder="Ingrese la cédula" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="admin-telefono">Teléfono *</label>
+                            <input type="text" id="admin-telefono" class="form-control" placeholder="Ingrese el teléfono" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-email">Correo Electrónico *</label>
+                            <input type="email" id="admin-email" class="form-control" placeholder="ejemplo@correo.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-estado">Estado *</label>
+                            <select id="admin-estado" class="form-control" required>
+                                <option value="">Seleccione un estado</option>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="hideAdminModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-success" id="admin-modal-submit">Guardar Administrador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     
+    <!-- Modal para agregar/editar local -->
+    <div id="local-modal" class="modal-local">
+        <div class="modal-content-local">
+            <span class="close-modal" onclick="hideLocalModal()">&times;</span>
+            <h2 id="local-modal-title">Agregar Nuevo Local</h2>
+            
+            <form id="local-form">
+                <input type="hidden" id="local-id" value="">
+                
+                <div class="form-columns">
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="local-nombre">Nombre del Local *</label>
+                            <input type="text" id="local-nombre" class="form-control" placeholder="Ej. Local Centro" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="local-direccion">Dirección *</label>
+                            <input type="text" id="local-direccion" class="form-control" placeholder="Ej. Calle Principal #123" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="local-telefono">Teléfono *</label>
+                            <input type="text" id="local-telefono" class="form-control" placeholder="Ej. 555-1234" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="local-administrador">Administrador Asignado</label>
+                            <select id="local-administrador" class="form-control">
+                                <option value="">Seleccione un administrador</option>
+                                <option value="1">Ana Torrez</option>
+                                <option value="2">Juan Pérez</option>
+                                <option value="3">Marina Castillo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="local-tipo">Tipo de Local *</label>
+                            <select id="local-tipo" class="form-control" required>
+                                <option value="">Seleccione un tipo</option>
+                                <option value="comida">Comida</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="mixto">Mixto</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="local-estado">Estado *</label>
+                            <select id="local-estado" class="form-control" required>
+                                <option value="">Seleccione un estado</option>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="hideLocalModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-success" id="local-modal-submit">Guardar Local</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para asignar administrador -->
+    <div id="asignar-admin-modal" class="modal-local">
+        <div class="modal-content-local">
+            <span class="close-modal" onclick="hideAsignarAdminModal()">&times;</span>
+            <h2>Asignar Administrador a Local</h2>
+            
+            <form id="asignar-admin-form">
+                <input type="hidden" id="asignar-local-id" value="">
+                
+                <div class="form-group">
+                    <label for="asignar-local-nombre">Local</label>
+                    <input type="text" id="asignar-local-nombre" class="form-control" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="asignar-administrador">Seleccionar Administrador *</label>
+                    <select id="asignar-administrador" class="form-control" required>
+                        <option value="">Seleccione un administrador</option>
+                        <option value="1">Ana Torrez</option>
+                        <option value="2">Juan Pérez</option>
+                        <option value="3">Marina Castillo</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="hideAsignarAdminModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Asignar Administrador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <!-- </div> -->
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 
     <script src="js/auth.js"></script>
     <script src="js/admin-global.js"></script>
+      <script>
+        // Variables globales
+        let reseñaActualId = null;
+        let reseñaActualTipo = null;
+        
+        // Función para mostrar el modal de respuesta
+        function mostrarModalRespuesta(id, tipo) {
+            reseñaActualId = id;
+            reseñaActualTipo = tipo;
+            
+            // Obtener información de la reseña (en un caso real, esto vendría de una base de datos)
+            let reseñaInfo = "";
+            if (tipo === 'local') {
+                if (id === 1) {
+                    reseñaInfo = "<strong>Local:</strong> Local Sur<br><strong>Cliente:</strong> Carlos Ruiz<br><strong>Comentario:</strong> Ambiente agradable y comida deliciosa.";
+                }
+            } else if (tipo === 'pedido') {
+                if (id === 101) {
+                    reseñaInfo = "<strong>Pedido:</strong> #12345<br><strong>Cliente:</strong> María López<br><strong>Comentario:</strong> Buen sabor y atención, pero el pedido llegó frío.";
+                }
+            }
+            
+            document.getElementById('modal-titulo').textContent = 'Responder a Reseña';
+            document.getElementById('reseña-info').innerHTML = reseñaInfo;
+            document.getElementById('texto-respuesta').value = '';
+            document.getElementById('modal-respuesta').style.display = 'block';
+        }
+        
+        // Función para mostrar el modal de edición de respuesta
+        function mostrarModalEditarRespuesta(id, tipo, respuestaActual) {
+            reseñaActualId = id;
+            reseñaActualTipo = tipo;
+            
+            // Obtener información de la reseña (en un caso real, esto vendría de una base de datos)
+            let reseñaInfo = "";
+            if (tipo === 'local') {
+                if (id === 2) {
+                    reseñaInfo = "<strong>Local:</strong> Local Centro<br><strong>Cliente:</strong> Ana Martínez<br><strong>Comentario:</strong> Buen servicio pero la comida tardó en llegar.";
+                }
+            } else if (tipo === 'pedido') {
+                if (id === 102) {
+                    reseñaInfo = "<strong>Pedido:</strong> #12346<br><strong>Cliente:</strong> Jorge Ramírez<br><strong>Comentario:</strong> ¡Excelente servicio! Todo perfecto.";
+                }
+            }
+            
+            document.getElementById('modal-titulo').textContent = 'Editar Respuesta';
+            document.getElementById('reseña-info').innerHTML = reseñaInfo;
+            document.getElementById('texto-respuesta').value = respuestaActual;
+            document.getElementById('modal-respuesta').style.display = 'block';
+        }
+        
+        // Función para cerrar el modal
+        function cerrarModal() {
+            document.getElementById('modal-respuesta').style.display = 'none';
+        }
+        
+        // Función para guardar la respuesta
+        function guardarRespuesta() {
+            const respuesta = document.getElementById('texto-respuesta').value.trim();
+            
+            if (!respuesta) {
+                alert('Por favor, escribe una respuesta.');
+                return;
+            }
+            
+            // Aquí iría el código para guardar la respuesta en la base de datos
+            alert(`Respuesta guardada para ${reseñaActualTipo} ID: ${reseñaActualId}\nRespuesta: ${respuesta}`);
+            
+            // Cerrar el modal
+            cerrarModal();
+            
+            // En una aplicación real, aquí actualizarías la interfaz con la nueva respuesta
+            // Por ahora, simulamos una actualización con un alert
+            alert('¡Respuesta guardada correctamente! En una aplicación real, la tabla se actualizaría con la nueva respuesta.');
+        }
+        
+        // Cerrar el modal si se hace clic fuera de él
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-respuesta');
+            if (event.target === modal) {
+                cerrarModal();
+            }
+        };
+        
+        // Funciones existentes para cambiar secciones y pestañas
+            // function logout() {
+            //     alert('Cerrando sesión...');
+            //     // Redirigir al login
+            //     window.location.href = 'index.html';
+            // }
+        
+        // function logout() {
+        //     alert('Cerrando sesión...');
+        //     // Redirigir al login
+        //     window.location.href = 'index.html';
+        // }
+    </script>
 </body>
 </html>
