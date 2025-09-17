@@ -1741,3 +1741,297 @@ document.addEventListener('DOMContentLoaded', function() {
         addResenaButton.style.display = 'none';
     }
 });
+
+// ========== FUNCIONALIDAD PARA REPORTES ==========
+
+// Variables para el control de reportes
+let filtroActual = 'dia';
+let datosReportePedidos = [];
+let datosReporteInsumos = [];
+
+// Función para cambiar entre pestañas de reportes
+function changeReportTab(tabId) {
+    // Ocultar todos los contenidos de pestañas de reportes
+    document.querySelectorAll('#reportes .tab-content').forEach(tab => {
+        tab.style.display = 'none';
+    });
+
+    // Desactivar todas las pestañas de reportes
+    document.querySelectorAll('#reportes .tabs .tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // Mostrar el contenido de la pestaña seleccionada
+    document.getElementById(tabId).style.display = 'block';
+
+    // Activar la pestaña seleccionada
+    let tabs = document.querySelectorAll('#reportes .tabs .tab');
+    tabs.forEach(tab => {
+        if (tab.getAttribute('onclick') && tab.getAttribute('onclick').includes(tabId)) {
+            tab.classList.add('active');
+        }
+    });
+}
+
+// Función para filtrar reportes por período
+function filtrarReportes(periodo) {
+    filtroActual = periodo;
+    ocultarFiltroRango();
+    
+    // Obtener fechas según el período
+    const hoy = new Date();
+    let fechaInicio, fechaFin, textoPeriodo;
+    
+    switch(periodo) {
+        case 'dia':
+            fechaInicio = new Date(hoy);
+            fechaInicio.setHours(0, 0, 0, 0);
+            fechaFin = new Date(hoy);
+            fechaFin.setHours(23, 59, 59, 999);
+            textoPeriodo = `Hoy: ${formatearFecha(hoy)}`;
+            break;
+        case 'semana':
+            // Obtener el primer día de la semana (lunes)
+            fechaInicio = new Date(hoy);
+            fechaInicio.setDate(hoy.getDate() - hoy.getDay() + (hoy.getDay() === 0 ? -6 : 1));
+            fechaInicio.setHours(0, 0, 0, 0);
+            
+            // Obtener el último día de la semana (domingo)
+            fechaFin = new Date(fechaInicio);
+            fechaFin.setDate(fechaInicio.getDate() + 6);
+            fechaFin.setHours(23, 59, 59, 999);
+            
+            textoPeriodo = `Semana: ${formatearFecha(fechaInicio)} - ${formatearFecha(fechaFin)}`;
+            break;
+        case 'mes':
+            // Obtener el primer día del mes
+            fechaInicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+            fechaInicio.setHours(0, 0, 0, 0);
+            
+            // Obtener el último día del mes
+            fechaFin = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+            fechaFin.setHours(23, 59, 59, 999);
+            
+            textoPeriodo = `Mes: ${obtenerNombreMes(hoy.getMonth())} ${hoy.getFullYear()}`;
+            break;
+    }
+    
+    // Actualizar el texto del período
+    document.getElementById('periodo-actual').textContent = textoPeriodo;
+    document.getElementById('periodo-actual-insumos').textContent = textoPeriodo;
+    
+    // Aquí iría la lógica para filtrar los datos del servidor
+    // Por ahora, simulamos la carga de datos
+    cargarDatosReporte(fechaInicio, fechaFin);
+}
+
+// Función para mostrar el filtro de rango personalizado
+function mostrarFiltroRango() {
+    document.getElementById('filtro-rango').style.display = 'block';
+    
+    // Establecer fechas por defecto (últimos 7 días)
+    const fechaFin = new Date();
+    const fechaInicio = new Date();
+    fechaInicio.setDate(fechaFin.getDate() - 7);
+    
+    document.getElementById('fecha-inicio').value = formatearFechaInput(fechaInicio);
+    document.getElementById('fecha-fin').value = formatearFechaInput(fechaFin);
+}
+
+// Función para ocultar el filtro de rango personalizado
+function ocultarFiltroRango() {
+    document.getElementById('filtro-rango').style.display = 'none';
+}
+
+// Función para filtrar por rango de fechas personalizado
+function filtrarPorRango() {
+    const fechaInicio = new Date(document.getElementById('fecha-inicio').value);
+    const fechaFin = new Date(document.getElementById('fecha-fin').value);
+    
+    if (fechaInicio > fechaFin) {
+        alert('La fecha de inicio no puede ser mayor a la fecha final');
+        return;
+    }
+    
+    fechaInicio.setHours(0, 0, 0, 0);
+    fechaFin.setHours(23, 59, 59, 999);
+    
+    filtroActual = 'rango';
+    const textoPeriodo = `Período: ${formatearFecha(fechaInicio)} - ${formatearFecha(fechaFin)}`;
+    
+    // Actualizar el texto del período
+    document.getElementById('periodo-actual').textContent = textoPeriodo;
+    document.getElementById('periodo-actual-insumos').textContent = textoPeriodo;
+    
+    // Cargar datos para el rango seleccionado
+    cargarDatosReporte(fechaInicio, fechaFin);
+    ocultarFiltroRango();
+}
+
+// Función para cargar datos de reporte (simulada)
+function cargarDatosReporte(fechaInicio, fechaFin) {
+    // Simular carga de datos de pedidos
+    setTimeout(() => {
+        // En una aplicación real, aquí harías una petición al servidor
+        // con las fechas de inicio y fin para obtener los datos
+        
+        // Datos de ejemplo para pedidos
+        const pedidosFiltrados = [
+            {
+                id: "#12345",
+                cliente: "Juan Pérez",
+                productos: "Tacos al Pastor, Agua de Horchata",
+                total: 90.50,
+                estado: "Pagado",
+                fecha: "2024-06-12 13:45"
+            },
+            {
+                id: "#12347",
+                cliente: "Carlos Ruiz",
+                productos: "Enchiladas Verdes, Refresco",
+                total: 78.00,
+                estado: "Pagado",
+                fecha: "2024-06-12 11:10"
+            }
+        ];
+        
+        // Actualizar tabla de pedidos
+        actualizarTablaPedidosReporte(pedidosFiltrados);
+        
+        // Datos de ejemplo para insumos
+        const insumosFiltrados = [
+            {
+                insumo: "Carne de Res",
+                movimiento: "Entrada",
+                cantidad: "10 kg",
+                fecha: "2024-06-12 09:30",
+                responsable: "Admin Local"
+            },
+            {
+                insumo: "Cebolla",
+                movimiento: "Salida",
+                cantidad: "2 kg",
+                fecha: "2024-06-12 11:45",
+                responsable: "Chef Juan"
+            },
+            {
+                insumo: "Tortillas",
+                movimiento: "Entrada",
+                cantidad: "5 lb",
+                fecha: "2024-06-12 08:15",
+                responsable: "Admin Local"
+            }
+        ];
+        
+        // Actualizar tabla de insumos
+        actualizarTablaInsumosReporte(insumosFiltrados);
+        
+    }, 500);
+}
+
+// Función para actualizar la tabla de reporte de pedidos
+function actualizarTablaPedidosReporte(pedidos) {
+    const tbody = document.getElementById('tabla-pedidos-reporte');
+    tbody.innerHTML = '';
+    
+    let totalPedidos = 0;
+    
+    pedidos.forEach(pedido => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${pedido.id}</td>
+                <td>${pedido.cliente}</td>
+                <td>${pedido.productos}</td>
+                <td>$${pedido.total.toFixed(2)}</td>
+                <td><span class="badge badge-success">${pedido.estado}</span></td>
+                <td>${pedido.fecha}</td>
+            </tr>
+        `;
+        
+        totalPedidos += pedido.total;
+    });
+    
+    // Actualizar totales
+    document.getElementById('total-pedidos').textContent = `$${totalPedidos.toFixed(2)}`;
+    document.getElementById('cantidad-pedidos').textContent = pedidos.length;
+    document.getElementById('total-ventas').textContent = `$${totalPedidos.toFixed(2)}`;
+}
+
+// Función para actualizar la tabla de reporte de insumos
+function actualizarTablaInsumosReporte(insumos) {
+    const tbody = document.getElementById('tabla-insumos-reporte');
+    tbody.innerHTML = '';
+    
+    let totalEntradas = 0;
+    let totalSalidas = 0;
+    
+    insumos.forEach(insumo => {
+        const esEntrada = insumo.movimiento === "Entrada";
+        const badgeClass = esEntrada ? "badge-success" : "badge-danger";
+        
+        tbody.innerHTML += `
+            <tr>
+                <td>${insumo.insumo}</td>
+                <td><span class="badge ${badgeClass}">${insumo.movimiento}</span></td>
+                <td>${insumo.cantidad}</td>
+                <td>${insumo.fecha}</td>
+                <td>${insumo.responsable}</td>
+            </tr>
+        `;
+        
+        // Extraer el valor numérico de la cantidad (ej: "10 kg" -> 10)
+        const valorCantidad = parseFloat(insumo.cantidad);
+        
+        if (esEntrada) {
+            totalEntradas += valorCantidad;
+        } else {
+            totalSalidas += valorCantidad;
+        }
+    });
+    
+    // Actualizar totales
+    document.getElementById('total-entradas').textContent = totalEntradas;
+    document.getElementById('total-salidas').textContent = totalSalidas;
+}
+
+// Función para exportar a PDF (simulada)
+function exportarPDF(tipo) {
+    alert(`Exportando reporte de ${tipo} a PDF para el período: ${filtroActual}`);
+    // Aquí iría la lógica real para generar el PDF
+}
+
+// Función para exportar a Excel (simulada)
+function exportarExcel(tipo) {
+    alert(`Exportando reporte de ${tipo} a Excel para el período: ${filtroActual}`);
+    // Aquí iría la lógica real para generar el Excel
+}
+
+// Funciones auxiliares para formato de fechas
+function formatearFecha(fecha) {
+    return fecha.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+}
+
+function formatearFechaInput(fecha) {
+    const año = fecha.getFullYear();
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    return `${año}-${mes}-${dia}`;
+}
+
+function obtenerNombreMes(numeroMes) {
+    const meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    return meses[numeroMes];
+}
+
+// Inicializar reportes al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar reportes con el filtro de día por defecto
+    filtrarReportes('dia');
+});
