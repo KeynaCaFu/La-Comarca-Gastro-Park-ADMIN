@@ -95,9 +95,9 @@
   <!-- Gestión de Productos -->
             <div id="gestion-productos" class="section-content" style="display: none;">
                 <div class="header">
-                    <h1>Gestión de Platillos</h1>
+                    <h1>Gestión de Productos</h1>
                     <button class="btn-addNew" data-bs-toggle="modal" data-bs-target="#productModal">
-                        <i class="fas fa-plus"></i> Agregar Platillo
+                        <i class="fas fa-plus"></i> Agregar Producto
                     </button>
                 </div>
                 
@@ -428,7 +428,7 @@
                                </div>
                                <div class="modal-footer">
                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                   <button type="button" class="btn btn-primary" id="btn-confirmar-movimiento">Confirmar</button>
+                                   <button type="button" class="btn-addNew" id="btn-confirmar-movimiento">Confirmar</button>
                                </div>
                            </div>
                        </div>
@@ -577,7 +577,7 @@
 <div id="reportes" class="section-content" style="display: none;">
     <div class="header">
         <h1>Gestión de Reportes</h1>
-        <div style="display: flex; gap: 10px;">
+        <div class="header-buttons" style="display: flex; gap: 10px;">
             <button class="btn-addNew" onclick="filtrarReportes('dia')"><i class="fas fa-calendar-day"></i> Día</button>
             <button class="btn-addNew" onclick="filtrarReportes('semana')"><i class="fas fa-calendar-week"></i> Semana</button>
             <button class="btn-addNew" onclick="filtrarReportes('mes')"><i class="fas fa-calendar-alt"></i> Mes</button>
