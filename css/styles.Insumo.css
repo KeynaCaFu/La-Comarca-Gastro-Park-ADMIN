@@ -1,0 +1,428 @@
+
+ :root {
+            --primary: #181818; /* negro profundo */
+            --secondary: #ff9900; /* naranja del logo */
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --light: #f7f7f7; /* fondo más claro */
+            --dark: #181818;
+            --gray: #b0b0b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Your original font */
+        }
+        
+        body {
+            background-color: #f5f5f5; /* Your original light grey */
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: row;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 246px;
+            background-color: #232c0c;
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 17px;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #c4d0cc;
+            min-width: 0;
+        }
+        
+        .header img{
+            height: 270px;
+            margin-bottom: -192px;
+            margin-top: -187px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.6rem;
+        }
+        
+        .user-info {
+           padding: 55px;
+           display: flex;
+           align-items: center;
+           margin-top: 7px;
+        }
+
+        .user-infoAdmin{
+            padding: 55px;
+           display: flex;
+           align-items: center;
+           margin-top: 370px;
+        }
+        
+         .user-infoAdmin img{ 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+    
+        /* Tables */
+        .table-container {
+            background-color: #ffffff78;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.342);
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+           padding: 12px 26px;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+        }
+        
+        th {
+            background-color: #a3aa996b;
+            color: var(--dark);
+        }
+        
+        .accion{
+             padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .baction{
+            text-align: center;
+        }
+
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.107);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .badge-success {
+            background-color: #128845;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background-color: #e4b61f;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background-color: #dd414e;
+            color: #721c24;
+        }
+        
+        /* Forms (general) */
+        .form-container {
+            background-color: #ffffff78;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px; /* Adjusted to allow space for login form's specific margins */
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        /* General form-control, specific login form-control will override */
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+        
+        /* General buttons, specific login buttons will override */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-add{
+        background: #485a1a;
+        width:  225px;
+        color: #fff;
+        }
+
+        .btn-add:hover{
+            background-color: #bac7bf;
+        }
+
+        .btn-asignar{
+            background-color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-detalle{
+            background-color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-detalle:hover{
+            background-color: #bac7bf;
+        }
+        
+        .btn-primary {
+        background: #485a1a;
+        width:  193px;
+        color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #6c806c;
+        }
+
+        .btn-addNew {
+            background: #485a1a;
+            width:  193px;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-addNew:hover {
+            background: #6c806c;
+        }
+
+         .btn-save {
+            background: #eaede4;
+            width:  193px;
+            color: #0e0d0d;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #6c806c;
+        }
+
+        .btn-danger {
+            background: #d87307;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #ac5c1b;
+        }
+
+        .btn-success {
+            background-color: #ac5c1b;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #bac7bf;
+        }
+        
+        .btn-edit{
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width:  47px;
+        }
+
+        .btn-entrada {
+              background-color: #0d5926;
+                color: #fff;
+                min-width: -3px;
+                font-weight: bold;
+                font-size: 1rem;
+                margin-right: 5px;
+                padding: 9px 10px;
+                border-radius: 4px;
+                border: none;
+                width: 41%;
+                transition: background 0.3s;
+        }
+        .btn-entrada:hover {
+            background-color: #158a3a;
+        }
+        .btn-salida {
+                background-color: #d7263d;
+                color: #fff;
+                min-width: 97px;
+                font-weight: bold;
+                font-size: 1rem;
+                margin-right: 3px;
+                padding: 9px 14px;
+                border-radius: 4px;
+                border: none;
+                transition: background 0.3s;
+                width: 27%;
+         }
+        .btn-salida:hover {
+            background-color: #a81c2a;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--secondary);
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+          .modal-content {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            background-color: #485a1a;
+            color: white;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            padding: 7px 9px;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #eee;
+            padding: 1rem;
+        }
+        .modal-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+
+
