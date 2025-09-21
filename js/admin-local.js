@@ -43,13 +43,37 @@ function hideAddInsumoForm() {
 // Obtener datos de la tabla HTML y mantenerlos en memoria
 let insumos = [
     {
-        nombre: 'Carne de Res', cantidad: 45, unidad: 'kg', minimo: 25, maximo: 100, proveedor: 'Distribuidora Central', estado: 'Disponible', badge: 'success'
+        nombre: 'Carne de Res', 
+        stockActual: 45, 
+        stockMinimo: 25, 
+        fechaVencimiento: '2025-12-31', 
+        unidadMedida: 'kg', 
+        cantidad: 100, 
+        precio: 350.00, 
+        estado: 'Disponible', 
+        badge: 'success'
     },
     {
-        nombre: 'Cebolla', cantidad: 3, unidad: 'kg', minimo: 2, maximo: 15, proveedor: 'Alimentos del Norte', estado: 'Bajo stock', badge: 'warning'
+        nombre: 'Cebolla', 
+        stockActual: 3, 
+        stockMinimo: 15, 
+        fechaVencimiento: '2025-10-15', 
+        unidadMedida: 'kg', 
+        cantidad: 50, 
+        precio: 25.00, 
+        estado: 'Bajo stock', 
+        badge: 'warning'
     },
     {
-        nombre: 'Tortillas', cantidad: 3, unidad: 'lb', minimo: 2, maximo: 10, proveedor: 'Suministros Express', estado: 'Agotado', badge: 'danger'
+        nombre: 'Tortillas', 
+        stockActual: 3, 
+        stockMinimo: 10, 
+        fechaVencimiento: '2025-09-30', 
+        unidadMedida: 'lb', 
+        cantidad: 20, 
+        precio: 45.00, 
+        estado: 'Agotado', 
+        badge: 'danger'
     }
 ];
 
@@ -57,17 +81,19 @@ let insumoSeleccionado = null;
 let tipoMovimiento = null;
 
 function renderTablaInsumos() {
-    const tbody = document.querySelector('#tabla-insumos tbody');
+    const tbody = document.querySelector('#tabla-insumos-body');
     tbody.innerHTML = '';
     insumos.forEach((insumo, idx) => {
         let estadoHtml = `<span class="badge badge-${insumo.badge}">${insumo.estado}</span>`;
         tbody.innerHTML += `
             <tr>
                 <td>${insumo.nombre}</td>
-                <td>${insumo.cantidad} ${insumo.unidad}</td>
-                <td>${insumo.minimo} ${insumo.unidad}</td>
-                <td>${insumo.maximo} ${insumo.unidad}</td>
-                <td>${insumo.proveedor}</td>
+                <td>${insumo.stockActual} ${insumo.unidadMedida}</td>
+                <td>${insumo.stockMinimo} ${insumo.unidadMedida}</td>
+                <td>${insumo.fechaVencimiento}</td>
+                <td>${insumo.unidadMedida}</td>
+                <td>${insumo.cantidad}</td>
+                <td>$${insumo.precio.toFixed(2)}</td>
                 <td>${estadoHtml}</td>
                 <td>
                     <button class='btn-edit btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#insumoModal' onclick='cargarInsumoParaEditar(${idx})'><i class='fas fa-edit'></i></button>
@@ -89,7 +115,7 @@ function mostrarMovimientoInsumo(idx, movimiento) {
     // Cambiar título y label
     let insumo = insumos[idx];
     document.getElementById('movimientoInsumoModalLabel').textContent = (movimiento === 'entrada' ? 'Entrada' : 'Salida') + ' de Insumo';
-    document.getElementById('movimiento-insumo-label').textContent = `Cantidad a ${(movimiento === 'entrada' ? 'sumar' : 'restar')} para "${insumo.nombre}" (${insumo.unidad})`;
+    document.getElementById('movimiento-insumo-label').textContent = `Cantidad a ${(movimiento === 'entrada' ? 'sumar' : 'restar')} para "${insumo.nombre}" (${insumo.unidadMedida})`;
     // Asignar handler
     document.getElementById('btn-confirmar-movimiento').onclick = confirmarMovimientoInsumo;
     // Mostrar modal Bootstrap
@@ -119,30 +145,132 @@ function confirmarMovimientoInsumo() {
     }
     let insumo = insumos[insumoSeleccionado];
     if (tipoMovimiento === 'entrada') {
-        insumo.cantidad += cantidad;
+        insumo.stockActual += cantidad;
     } else if (tipoMovimiento === 'salida') {
-        if (insumo.cantidad < cantidad) {
-            alertDiv.textContent = 'No hay suficiente cantidad para realizar la salida.';
+        if (insumo.stockActual < cantidad) {
+            alertDiv.textContent = 'No hay suficiente stock para realizar la salida.';
             alertDiv.className = 'movimiento-alert alert-danger';
             return;
         }
-        insumo.cantidad -= cantidad;
+        insumo.stockActual -= cantidad;
     }
     // Actualizar estado visual según stock
-    if (insumo.cantidad <= 0) {
+    if (insumo.stockActual <= 0) {
         insumo.estado = 'Agotado';
         insumo.badge = 'danger';
-    } else if (insumo.cantidad <= insumo.minimo) {
+    } else if (insumo.stockActual <= insumo.stockMinimo) {
         insumo.estado = 'Bajo stock';
         insumo.badge = 'warning';
     } else {
         insumo.estado = 'Disponible';
         insumo.badge = 'success';
     }
+    actualizarInsumosOriginales();
     renderTablaInsumos();
     ocultarMovimientoInsumo();
 }
 // --- FIN FUNCIONALIDAD ENTRADAS Y SALIDAS DE INSUMOS ---
+
+// --- INICIO FUNCIONALIDAD FILTRADO DE INSUMOS ---
+// Array para mantener los insumos originales sin filtrar
+let insumosOriginales = [...insumos];
+
+// Función para filtrar insumos
+function filtrarInsumos() {
+    const busqueda = document.getElementById('buscar-insumo').value.toLowerCase();
+    const filtroFecha = document.getElementById('filtro-fecha-vencimiento').value;
+    const filtroEstado = document.getElementById('filtro-estado').value;
+    
+    let insumosFiltrados = [...insumosOriginales];
+    
+    // Filtrar por nombre
+    if (busqueda.trim() !== '') {
+        insumosFiltrados = insumosFiltrados.filter(insumo => 
+            insumo.nombre.toLowerCase().includes(busqueda)
+        );
+    }
+    
+    // Filtrar por fecha de vencimiento
+    if (filtroFecha !== '') {
+        const hoy = new Date();
+        const treintaDias = new Date();
+        treintaDias.setDate(hoy.getDate() + 30);
+        
+        insumosFiltrados = insumosFiltrados.filter(insumo => {
+            const fechaVenc = new Date(insumo.fechaVencimiento);
+            
+            switch(filtroFecha) {
+                case 'vencido':
+                    return fechaVenc < hoy;
+                case 'proximo-vencer':
+                    return fechaVenc >= hoy && fechaVenc <= treintaDias;
+                case 'vigente':
+                    return fechaVenc > treintaDias;
+                default:
+                    return true;
+            }
+        });
+    }
+    
+    // Filtrar por estado
+    if (filtroEstado !== '') {
+        insumosFiltrados = insumosFiltrados.filter(insumo => 
+            insumo.estado === filtroEstado
+        );
+    }
+    
+    // Actualizar la variable global insumos para la renderización
+    insumos = insumosFiltrados;
+    renderTablaInsumos();
+    
+    // Mostrar mensaje si no hay resultados
+    const tbody = document.querySelector('#tabla-insumos-body');
+    if (insumosFiltrados.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align: center; padding: 30px; color: #666;">
+                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                    No se encontraron insumos que coincidan con los filtros aplicados
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// Función para limpiar todos los filtros
+function limpiarFiltros() {
+    document.getElementById('buscar-insumo').value = '';
+    document.getElementById('filtro-fecha-vencimiento').value = '';
+    document.getElementById('filtro-estado').value = '';
+    
+    // Restaurar todos los insumos
+    insumos = [...insumosOriginales];
+    renderTablaInsumos();
+}
+
+// Función para exportar insumos (simulada)
+function exportarInsumos() {
+    // En una aplicación real, esto generaría un archivo CSV o Excel
+    const datosExport = insumos.map(insumo => ({
+        'Nombre': insumo.nombre,
+        'Stock Actual': `${insumo.stockActual} ${insumo.unidadMedida}`,
+        'Stock Mínimo': `${insumo.stockMinimo} ${insumo.unidadMedida}`,
+        'Fecha Vencimiento': insumo.fechaVencimiento,
+        'Unidad Medida': insumo.unidadMedida,
+        'Cantidad': insumo.cantidad,
+        'Precio': `$${insumo.precio.toFixed(2)}`,
+        'Estado': insumo.estado
+    }));
+    
+    console.log('Datos para exportar:', datosExport);
+    alert(`Se exportarían ${datosExport.length} insumos. Funcionalidad pendiente de implementación completa.`);
+}
+
+// Función para actualizar los insumos originales cuando se agrega/edita/elimina
+function actualizarInsumosOriginales() {
+    insumosOriginales = [...insumos];
+}
+// --- FIN FUNCIONALIDAD FILTRADO DE INSUMOS ---
          
 function changePedidoTab(tabId) {
             changeTab(tabId);
@@ -186,6 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
     showLocalSection('dashboard-local');
     // Inicializar tabla de insumos si existe
     if (document.getElementById('tabla-insumos')) {
+        actualizarInsumosOriginales();
         renderTablaInsumos();
     }
 });
@@ -617,19 +746,13 @@ function cargarInsumoParaEditar(index) {
     
     // Llenar el formulario con los datos del insumo
     document.getElementById('insumo-nombre').value = insumo.nombre;
+    document.getElementById('insumo-stock-actual').value = insumo.stockActual;
+    document.getElementById('insumo-stock-minimo').value = insumo.stockMinimo;
+    document.getElementById('insumo-fecha-vencimiento').value = insumo.fechaVencimiento;
+    document.getElementById('insumo-unidad-medida').value = insumo.unidadMedida;
     document.getElementById('insumo-cantidad').value = insumo.cantidad;
-    document.getElementById('insumo-unidad').value = insumo.unidad;
-    document.getElementById('insumo-minimo').value = insumo.minimo;
-    document.getElementById('insumo-maximo').value = insumo.maximo;
-    
-    // Establecer el proveedor (necesitarías mapear el nombre a un valor)
-    const proveedorSelect = document.getElementById('insumo-proveedor');
-    for (let i = 0; i < proveedorSelect.options.length; i++) {
-        if (proveedorSelect.options[i].text === insumo.proveedor) {
-            proveedorSelect.value = proveedorSelect.options[i].value;
-            break;
-        }
-    }
+    document.getElementById('insumo-precio').value = insumo.precio;
+    document.getElementById('insumo-estado').value = insumo.estado;
     
     // Cambiar el título del modal
     document.getElementById('insumoModalLabel').textContent = 'Editar Insumo';
@@ -659,47 +782,50 @@ function resetearModalInsumo() {
 function guardarInsumo() {
     // Validar formulario
     const nombre = document.getElementById('insumo-nombre').value;
+    const stockActual = parseFloat(document.getElementById('insumo-stock-actual').value);
+    const stockMinimo = parseFloat(document.getElementById('insumo-stock-minimo').value);
+    const fechaVencimiento = document.getElementById('insumo-fecha-vencimiento').value;
+    const unidadMedida = document.getElementById('insumo-unidad-medida').value;
     const cantidad = parseFloat(document.getElementById('insumo-cantidad').value);
-    const unidad = document.getElementById('insumo-unidad').value;
-    const minimo = parseFloat(document.getElementById('insumo-minimo').value);
-    const maximo = parseFloat(document.getElementById('insumo-maximo').value);
-    const proveedorId = document.getElementById('insumo-proveedor').value;
+    const precio = parseFloat(document.getElementById('insumo-precio').value);
+    const estado = document.getElementById('insumo-estado').value;
     
-    if (!nombre || isNaN(cantidad) || !unidad || isNaN(minimo) || isNaN(maximo) || !proveedorId) {
+    if (!nombre || isNaN(stockActual) || isNaN(stockMinimo) || !fechaVencimiento || !unidadMedida || isNaN(cantidad) || isNaN(precio) || !estado) {
         alert('Por favor complete todos los campos obligatorios');
         return;
     }
     
-    if (maximo <= minimo) {
-        alert('El stock máximo debe ser mayor al stock mínimo');
+    if (stockActual < 0 || stockMinimo < 0 || cantidad < 0 || precio < 0) {
+        alert('Los valores numéricos no pueden ser negativos');
         return;
     }
     
-    // Obtener el nombre del proveedor
-    const proveedorSelect = document.getElementById('insumo-proveedor');
-    const proveedorNombre = proveedorSelect.options[proveedorSelect.selectedIndex].text;
-    
-    // Determinar el estado según la cantidad
-    let estado, badge;
-    if (cantidad <= 0) {
-        estado = 'Agotado';
-        badge = 'danger';
-    } else if (cantidad <= minimo) {
-        estado = 'Bajo stock';
-        badge = 'warning';
-    } else {
-        estado = 'Disponible';
-        badge = 'success';
+    // Determinar el badge según el estado
+    let badge;
+    switch(estado) {
+        case 'Disponible':
+            badge = 'success';
+            break;
+        case 'Bajo stock':
+            badge = 'warning';
+            break;
+        case 'Agotado':
+        case 'Vencido':
+            badge = 'danger';
+            break;
+        default:
+            badge = 'secondary';
     }
     
     // Crear nuevo insumo
     const nuevoInsumo = {
         nombre,
+        stockActual,
+        stockMinimo,
+        fechaVencimiento,
+        unidadMedida,
         cantidad,
-        unidad,
-        minimo,
-        maximo,
-        proveedor: proveedorNombre,
+        precio,
         estado,
         badge
     };
@@ -708,6 +834,7 @@ function guardarInsumo() {
     insumos.push(nuevoInsumo);
     
     // Actualizar la tabla
+    actualizarInsumosOriginales();
     renderTablaInsumos();
     
     alert('Insumo guardado correctamente');
@@ -721,52 +848,56 @@ function guardarInsumo() {
 function actualizarInsumo() {
     const index = document.getElementById('insumo-id').value;
     const nombre = document.getElementById('insumo-nombre').value;
+    const stockActual = parseFloat(document.getElementById('insumo-stock-actual').value);
+    const stockMinimo = parseFloat(document.getElementById('insumo-stock-minimo').value);
+    const fechaVencimiento = document.getElementById('insumo-fecha-vencimiento').value;
+    const unidadMedida = document.getElementById('insumo-unidad-medida').value;
     const cantidad = parseFloat(document.getElementById('insumo-cantidad').value);
-    const unidad = document.getElementById('insumo-unidad').value;
-    const minimo = parseFloat(document.getElementById('insumo-minimo').value);
-    const maximo = parseFloat(document.getElementById('insumo-maximo').value);
-    const proveedorId = document.getElementById('insumo-proveedor').value;
+    const precio = parseFloat(document.getElementById('insumo-precio').value);
+    const estado = document.getElementById('insumo-estado').value;
     
-    if (!nombre || isNaN(cantidad) || !unidad || isNaN(minimo) || isNaN(maximo) || !proveedorId) {
+    if (!nombre || isNaN(stockActual) || isNaN(stockMinimo) || !fechaVencimiento || !unidadMedida || isNaN(cantidad) || isNaN(precio) || !estado) {
         alert('Por favor complete todos los campos obligatorios');
         return;
     }
     
-    if (maximo <= minimo) {
-        alert('El stock máximo debe ser mayor al stock mínimo');
+    if (stockActual < 0 || stockMinimo < 0 || cantidad < 0 || precio < 0) {
+        alert('Los valores numéricos no pueden ser negativos');
         return;
     }
     
-    // Obtener el nombre del proveedor
-    const proveedorSelect = document.getElementById('insumo-proveedor');
-    const proveedorNombre = proveedorSelect.options[proveedorSelect.selectedIndex].text;
-    
-    // Determinar el estado según la cantidad
-    let estado, badge;
-    if (cantidad <= 0) {
-        estado = 'Agotado';
-        badge = 'danger';
-    } else if (cantidad <= minimo) {
-        estado = 'Bajo stock';
-        badge = 'warning';
-    } else {
-        estado = 'Disponible';
-        badge = 'success';
+    // Determinar el badge según el estado
+    let badge;
+    switch(estado) {
+        case 'Disponible':
+            badge = 'success';
+            break;
+        case 'Bajo stock':
+            badge = 'warning';
+            break;
+        case 'Agotado':
+        case 'Vencido':
+            badge = 'danger';
+            break;
+        default:
+            badge = 'secondary';
     }
     
     // Actualizar el insumo
     insumos[index] = {
         nombre,
+        stockActual,
+        stockMinimo,
+        fechaVencimiento,
+        unidadMedida,
         cantidad,
-        unidad,
-        minimo,
-        maximo,
-        proveedor: proveedorNombre,
+        precio,
         estado,
         badge
     };
     
     // Actualizar la tabla
+    actualizarInsumosOriginales();
     renderTablaInsumos();
     
     alert('Insumo actualizado correctamente');

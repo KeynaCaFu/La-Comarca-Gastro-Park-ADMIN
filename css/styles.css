@@ -890,6 +890,35 @@
             cursor: pointer;
             transition: background 0.3s;
         }
+
+        /* Estilos para filtros de insumos */
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .form-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            background-color: white;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(255, 153, 0, 0.2);
+        }
        
 
       .rating-stars {

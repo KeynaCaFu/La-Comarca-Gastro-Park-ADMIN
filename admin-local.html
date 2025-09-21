@@ -254,77 +254,47 @@
                 </div>
                 
                 <div class="table-container">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                        <input type="text" class="form-control" placeholder="Buscar insumo..." style="width: 300px;">
-                        <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filtrar</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="buscar-insumo" class="form-control" placeholder="Buscar por nombre..." style="width: 250px;" oninput="filtrarInsumos()">
+                            
+                            <select id="filtro-fecha-vencimiento" class="form-select" style="width: 200px;" onchange="filtrarInsumos()">
+                                <option value="">Filtrar por vencimiento</option>
+                                <option value="vencido">Vencidos</option>
+                                <option value="proximo-vencer">Próximos a vencer (30 días)</option>
+                                <option value="vigente">Vigentes</option>
+                            </select>
+                            
+                            <select id="filtro-estado" class="form-select" style="width: 150px;" onchange="filtrarInsumos()">
+                                <option value="">Todos los estados</option>
+                                <option value="Disponible">Disponible</option>
+                                <option value="Bajo stock">Bajo stock</option>
+                                <option value="Agotado">Agotado</option>
+                                <option value="Vencido">Vencido</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-secondary" onclick="limpiarFiltros()"><i class="fas fa-times"></i> Limpiar</button>
+                            <button class="btn btn-info" onclick="exportarInsumos()"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
                     </div>
                     <table id="tabla-insumos">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
                                 <th>Stock Actual</th>
-                                <th>Mínimo</th>
-                                <th>Máximo</th>
-                                <th>Proveedor</th>
+                                <th>Stock Mínimo</th>
+                                <th>Fecha/Vencimiento</th>
+                                <th>Unidad Medida</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Carne de Res</td>
-                                <td>45 kg</td>
-                                <td>25 kg</td>
-                                <td>100 kg</td>
-                                <td>Distribuidora Central</td>
-                                <td><span class="badge badge-success">Disponible</span></td>
-                                <td>
-                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(0)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(0)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-entrada" onclick='mostrarMovimientoInsumo(0, "entrada")'><i class='fas fa-arrow-down'></i> Entrada</button>
-                                <button class='btn-salida' onclick='mostrarMovimientoInsumo(0, "salida")'><i class='fas fa-arrow-up'></i> Salida</button>
-                            </td>
-                            </tr>
-                            <tr>
-                                <td>Cebolla</td>
-                                <td>3 kg</td>
-                                <td>2 kg</td>
-                                <td>15 kg</td>
-                                <td>Alimentos del Norte</td>
-                                <td><span class="badge badge-warning">Bajo stock</span></td>
-                                <td>
-                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(0)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                               <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(1)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                                <button class="btn-entrada" onclick='mostrarMovimientoInsumo(0, "entrada")'><i class='fas fa-arrow-down'></i> Entrada</button>
-                                <button class='btn-salida' onclick='mostrarMovimientoInsumo(0, "salida")'><i class='fas fa-arrow-up'></i> Salida</button>
-                            </td>
-                            </tr>
-                            <tr>
-                                <td>Tortillas</td>
-                                <td>3 lb</td>
-                                <td>2 lb</td>
-                                <td>10 lb</td>
-                                <td>Suministros Express</td>
-                                <td><span class="badge badge-danger">Agotado</span></td>
-                                <td>
-                                <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(0)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                               <button class="btn-edit btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#insumoModal" onclick="cargarInsumoParaEditar(2)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-entrada" onclick='mostrarMovimientoInsumo(0, "entrada")'><i class='fas fa-arrow-down'></i> Entrada</button>
-                                <button class='btn-salida' onclick='mostrarMovimientoInsumo(0, "salida")'><i class='fas fa-arrow-up'></i> Salida</button>
-                            </td>
-                            </tr>
+                        <tbody id="tabla-insumos-body">
+                            <!-- Los datos se cargarán dinámicamente con JavaScript -->
                         </tbody>
                     </table>
 <!-- Modal para agregar/editar insumo -->
@@ -346,13 +316,26 @@
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="insumo-cantidad" class="form-label">Cantidad Actual</label>
-                                            <input type="number" class="form-control" id="insumo-cantidad" placeholder="45" min="0" step="0.01" required>
+                                            <label for="insumo-stock-actual" class="form-label">Stock Actual</label>
+                                            <input type="number" class="form-control" id="insumo-stock-actual" placeholder="45" min="0" step="0.01" required>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="insumo-unidad" class="form-label">Unidad de Medida</label>
-                                            <select class="form-select" id="insumo-unidad" required>
+                                            <label for="insumo-stock-minimo" class="form-label">Stock Mínimo</label>
+                                            <input type="number" class="form-control" id="insumo-stock-minimo" placeholder="25" min="0" step="0.01" required>
+                                            <div class="stock-alert" id="minimo-alert"></div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="insumo-fecha-vencimiento" class="form-label">Fecha de Vencimiento</label>
+                                            <input type="date" class="form-control" id="insumo-fecha-vencimiento" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="insumo-unidad-medida" class="form-label">Unidad de Medida</label>
+                                            <select class="form-select" id="insumo-unidad-medida" required>
                                                 <option value="" selected disabled>Seleccione una unidad</option>
                                                 <option value="kg">Kilogramos (kg)</option>
                                                 <option value="g">Gramos (g)</option>
@@ -362,28 +345,29 @@
                                                 <option value="unidad">Unidades</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
+                                        
                                         <div class="mb-3">
-                                            <label for="insumo-minimo" class="form-label">Stock Mínimo</label>
-                                            <input type="number" class="form-control" id="insumo-minimo" placeholder="25" min="0" step="0.01" required>
-                                            <div class="stock-alert" id="minimo-alert"></div>
+                                            <label for="insumo-cantidad" class="form-label">Cantidad</label>
+                                            <input type="number" class="form-control" id="insumo-cantidad" placeholder="100" min="0" step="0.01" required>
+                                            <div class="stock-alert" id="cantidad-alert"></div>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="insumo-maximo" class="form-label">Stock Máximo</label>
-                                            <input type="number" class="form-control" id="insumo-maximo" placeholder="100" min="0" step="0.01" required>
-                                            <div class="stock-alert" id="maximo-alert"></div>
+                                            <label for="insumo-precio" class="form-label">Precio</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" class="form-control" id="insumo-precio" placeholder="0.00" min="0" step="0.01" required>
+                                            </div>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="insumo-proveedor" class="form-label">Proveedor Principal</label>
-                                            <select class="form-select" id="insumo-proveedor" required>
-                                                <option value="" selected disabled>Seleccione un proveedor</option>
-                                                <option value="1">Distribuidora Central</option>
-                                                <option value="2">Alimentos del Norte</option>
-                                                <option value="3">Suministros Express</option>
+                                            <label for="insumo-estado" class="form-label">Estado</label>
+                                            <select class="form-select" id="insumo-estado" required>
+                                                <option value="" selected disabled>Seleccione el estado</option>
+                                                <option value="Disponible">Disponible</option>
+                                                <option value="Bajo stock">Bajo stock</option>
+                                                <option value="Agotado">Agotado</option>
+                                                <option value="Vencido">Vencido</option>
                                             </select>
                                         </div>
                                     </div>
