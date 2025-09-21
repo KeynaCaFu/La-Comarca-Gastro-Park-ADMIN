@@ -3,55 +3,777 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/login.css">
-    <title>La Comarca Gastro Park - Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <title>Gestión de Proveedores - La Comarca Gastro Park</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div id="login-screen" class="login-container">
-        <div class="login-box">
-            <img src="img/logo-comarca.png" alt="Logo Comarca" class="login-logo">
-            <h2 class="login-title">Bienvenido</h2>
-            <p class="login-subtitle">Sistema Administrativo <b>La Comarca Gastro Park</b></p>
-            <form id="login-form" class="login-form">
-                <div class="form-group">
-                    <label for="cedula"><i class="fas fa-id-card"></i> Cédula</label>
-                    <input type="text" id="cedula" class="form-control" placeholder="Ingresa tu cédula" required>
+    <div class="container">
+        <main class="main-content">
+            <!-- Header con logo y título -->
+            <div class="header">
+                <img src="img/logo-comarca.png" alt="La Comarca Gastro Park">
+            </div>
+            
+            <!-- Estadísticas rápidas -->
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-truck" style="color: #485a1a;"></i>
+                            Total Proveedores
+                        </div>
+                    </div>
+                    <div class="card-value" id="total-proveedores">0</div>
+                    <div class="card-footer">Registrados en el sistema</div>
                 </div>
-                <div class="form-group">
-                    <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
-                    <input type="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-check-circle" style="color: #27ae60;"></i>
+                            Proveedores Activos
+                        </div>
+                    </div>
+                    <div class="card-value" id="proveedores-activos">0</div>
+                    <div class="card-footer">Estado activo</div>
                 </div>
-                <a href="#" class="forgot-password-link" onclick="openForgotPasswordModal(event)">¿Olvidaste tu contraseña?</a>
-                <div class="form-actions">
-                    <button type="button" class="btn-login btn-cancelar" onclick="resetForm()">Cancelar</button>
-                    <button type="submit" class="btn-login btn-inicio">Entrar</button>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-colon-sign" style="color: #ff9900;"></i>
+                            Total Compras
+                        </div>
+                    </div>
+                    <div class="card-value" id="total-compras">₡0.00</div>
+                    <div class="card-footer">Monto total invertido</div>
                 </div>
-            </form>
-        </div>
+            </div>
+            
+            <!-- Sección principal -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1 style="color: #485a1a; font-size: 2rem; margin: 0;">
+                    <i class="fas fa-users" style="margin-right: 10px;"></i>
+                    Gestión de Proveedores
+                </h1>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-add" onclick="openForm()">
+                        <i class="fas fa-plus" style="margin-right: 8px;"></i>
+                        Agregar Proveedor
+                    </button>
+                    <button class="btn" onclick="cargarDatosHTML()" style="background: #ff9900; color: white; width: auto;">
+                        <i class="fas fa-download" style="margin-right: 8px;"></i>
+                        Cargar desde HTML
+                    </button>
+                    <button class="btn" onclick="resetearDatos()" style="background: #6c757d; color: white; width: auto;">
+                        <i class="fas fa-undo" style="margin-right: 8px;"></i>
+                        Resetear Datos
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tabla de proveedores -->
+            <div class="table-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px;">
+                    <p style="margin: 0; color: #6c757d; font-size: 0.9rem;">
+                        <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                        Datos cargados desde el archivo HTML | Total: <span id="info-total">15</span> registros
+                    </p>
+                    <p style="margin: 0; color: #485a1a; font-size: 0.85rem;">
+                        <i class="fas fa-save" style="margin-right: 5px;"></i>
+                        Los cambios se guardan automáticamente
+                    </p>
+                </div>
+                <table id="proveedores-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-building"></i> Nombre</th>
+                            <th><i class="fas fa-phone"></i> Teléfono</th>
+                            <th><i class="fas fa-envelope"></i> Email</th>
+                            <th><i class="fas fa-map-marker-alt"></i> Dirección</th>
+                            <th><i class="fas fa-colon-sign"></i> Total Compras</th>
+                            <th><i class="fas fa-info-circle"></i> Estado</th>
+                            <th><i class="fas fa-boxes"></i> Insumos</th>
+                            <th><i class="fas fa-cogs"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Filas se agregarán dinámicamente con JS desde los datos del HTML -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
     </div>
 
-    <div id="forgotPasswordModal" class="modal-overlay">
-        <div class="modal-content">
+    <!-- Formulario para agregar/editar proveedor -->
+    <div id="proveedor-form" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
-                <h3>Recuperar Contraseña</h3>
-                <span class="close-button" onclick="closeForgotPasswordModal()">&times;</span>
+                <h2 class="modal-title" id="form-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Agregar Proveedor
+                </h2>
+                <button type="button" onclick="closeForm()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="modal-body">
-                <p>Ingresa tu cédula o correo electrónico para enviarte las instrucciones de recuperación.</p>
-                <div class="form-group">
-                    <label for="recoveryInput">Cédula o Email</label>
-                    <input type="text" id="recoveryInput" class="form-control" placeholder="Tu cédula o correo electrónico" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" onclick="closeForgotPasswordModal()">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="sendRecoveryInstructions()">Enviar Instrucciones</button>
+            
+            <div style="padding: 20px;">
+                <form>
+                    <input type="hidden" id="proveedor-id">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label" for="name">
+                                <i class="fas fa-building" style="margin-right: 5px; color: #485a1a;"></i>
+                                Nombre del Proveedor
+                            </label>
+                            <input type="text" id="name" class="form-control" required placeholder="Ej: Distribuidora Central">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="phone">
+                                <i class="fas fa-phone" style="margin-right: 5px; color: #485a1a;"></i>
+                                Teléfono
+                            </label>
+                            <input type="tel" id="phone" class="form-control" required placeholder="555-1234">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="email">
+                                <i class="fas fa-envelope" style="margin-right: 5px; color: #485a1a;"></i>
+                                Email
+                            </label>
+                            <input type="email" id="email" class="form-control" required placeholder="contacto@proveedor.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="status">
+                                <i class="fas fa-info-circle" style="margin-right: 5px; color: #485a1a;"></i>
+                                Estado
+                            </label>
+                            <select id="status" class="form-control" required>
+                                <option value="Activo">✅ Activo</option>
+                                <option value="Inactivo">⏸️ Inactivo</option>
+                                <option value="Suspendido">❌ Suspendido</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="address">
+                                <i class="fas fa-map-marker-alt" style="margin-right: 5px; color: #485a1a;"></i>
+                                Dirección Completa
+                            </label>
+                            <input type="text" id="address" class="form-control" required placeholder="Calle Principal 123, Ciudad">
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="totalPurchases">
+                                <i class="fas fa-colon-sign" style="margin-right: 5px; color: #485a1a;"></i>
+                                Total de Compras (CRC)
+                            </label>
+                            <input type="number" id="totalPurchases" class="form-control" min="0" step="0.01" required placeholder="0.00">
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 30px; padding-top: 20px;">
+                        <button type="button" class="btn btn-save" onclick="saveProveedor()">
+                            <i class="fas fa-save" style="margin-right: 5px;"></i>
+                            Guardar Proveedor
+                        </button>
+                        <button type="button" class="btn" onclick="closeForm()" style="background: #6c757d; color: white;">
+                            <i class="fas fa-times" style="margin-right: 5px;"></i>
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <script>
+        // Clave para localStorage
+        const STORAGE_KEY = 'proveedores_data';
+
+        // Datos iniciales definidos en el HTML - estos son los datos principales
+        const datosIniciales = [
+                    {
+                        name: 'Distribuidora Central',
+                        phone: '555-1234',
+                        email: 'contacto@central.com',
+                        address: 'Calle Principal 123, Ciudad',
+                        totalPurchases: 12500.00,
+                        status: 'Activo',
+                        insumos: ['Carne de Res', 'Cebolla', 'Tomate']
+                    },
+                    {
+                        name: 'Alimentos del Norte',
+                        phone: '555-5678',
+                        email: 'ventas@norte.com',
+                        address: 'Avenida Norte 456, Pueblo',
+                        totalPurchases: 8200.00,
+                        status: 'Activo',
+                        insumos: ['Tortillas', 'Queso', 'Salsa', 'Chile']
+                    },
+                    {
+                        name: 'Suministros Express',
+                        phone: '555-9012',
+                        email: 'info@express.com',
+                        address: 'Boulevard Express 789, Villa',
+                        totalPurchases: 5900.00,
+                        status: 'Inactivo',
+                        insumos: ['Aguacate', 'Limón', 'Cilantro']
+                    },
+                    {
+                        name: 'Carnes Premium S.A.',
+                        phone: '555-2468',
+                        email: 'pedidos@carnespremium.com',
+                        address: 'Mercado Central Local 15-17, Centro',
+                        totalPurchases: 18750.50,
+                        status: 'Activo',
+                        insumos: ['Carne de Cerdo', 'Costillas BBQ', 'Chorizo', 'Tocino']
+                    },
+                    {
+                        name: 'Verduras Frescas del Valle',
+                        phone: '555-3691',
+                        email: 'info@verduraselvalle.mx',
+                        address: 'Carretera al Valle Km 8.5, Zona Rural',
+                        totalPurchases: 6800.25,
+                        status: 'Activo',
+                        insumos: ['Lechuga', 'Zanahoria', 'Brócoli', 'Espinacas', 'Apio']
+                    },
+                    {
+                        name: 'Lácteos La Hacienda',
+                        phone: '555-7410',
+                        email: 'ventas@lacteoslahacienda.com',
+                        address: 'Zona Industrial Bloque C, Nave 22',
+                        totalPurchases: 9450.75,
+                        status: 'Activo',
+                        insumos: ['Leche', 'Yogurt', 'Crema', 'Mantequilla', 'Queso Manchego']
+                    },
+                    {
+                        name: 'Panadería Artesanal Don Miguel',
+                        phone: '555-8520',
+                        email: 'donmiguel@panaderia.mx',
+                        address: 'Colonia Centro, Calle Morelos 45',
+                        totalPurchases: 4200.00,
+                        status: 'Suspendido',
+                        insumos: ['Pan Integral', 'Bolillos', 'Pan de Hamburguesa', 'Croissants']
+                    },
+                    {
+                        name: 'Mariscos del Pacífico',
+                        phone: '555-9630',
+                        email: 'frescos@mariscospacifico.com',
+                        address: 'Puerto Comercial, Muelle 7',
+                        totalPurchases: 15800.90,
+                        status: 'Activo',
+                        insumos: ['Camarones', 'Pescado Blanco', 'Pulpo', 'Mejillones', 'Langostinos']
+                    },
+                    {
+                        name: 'Especias y Condimentos del Mundo',
+                        phone: '555-1472',
+                        email: 'contacto@especiasmundo.com',
+                        address: 'Plaza Comercial Norte, Local 88',
+                        totalPurchases: 3650.40,
+                        status: 'Activo',
+                        insumos: ['Comino', 'Paprika', 'Orégano', 'Tomillo', 'Pimienta Negra', 'Curry']
+                    },
+                    {
+                        name: 'Bebidas y Refrescos Metropolitanos',
+                        phone: '555-2583',
+                        email: 'distribucion@bebidasmtro.mx',
+                        address: 'Polígono Industrial, Calle 15 Norte #102',
+                        totalPurchases: 7320.60,
+                        status: 'Activo',
+                        insumos: ['Coca Cola', 'Agua Mineral', 'Jugos Naturales', 'Cerveza Artesanal']
+                    },
+                    {
+                        name: 'Frutas Tropicales del Sur',
+                        phone: '555-3694',
+                        email: 'ventas@frutastropicales.com',
+                        address: 'Mercado de Mayoreo, Pasillo D-12',
+                        totalPurchases: 5100.30,
+                        status: 'Inactivo',
+                        insumos: ['Mango', 'Piña', 'Papaya', 'Maracuyá', 'Guayaba']
+                    },
+                    {
+                        name: 'Aceites y Vinagres Gourmet',
+                        phone: '555-4815',
+                        email: 'gourmet@aceites.premium',
+                        address: 'Distrito Gastronómico, Edificio Culinario Piso 3',
+                        totalPurchases: 4850.75,
+                        status: 'Activo',
+                        insumos: ['Aceite de Oliva Extra', 'Vinagre Balsámico', 'Aceite de Coco', 'Vinagre de Vino']
+                    },
+                    {
+                        name: 'Pasta Fresca Italiana',
+                        phone: '555-5926',
+                        email: 'nonna@pastaitaliana.mx',
+                        address: 'Little Italy, Via Roma 234',
+                        totalPurchases: 6700.85,
+                        status: 'Activo',
+                        insumos: ['Spaghetti', 'Fettuccine', 'Ravioles', 'Lasagna', 'Gnocchi']
+                    },
+                    {
+                        name: 'Embutidos y Charcutería Europea',
+                        phone: '555-6037',
+                        email: 'delicatessen@europa.deli',
+                        address: 'Centro Histórico, Palacio del Jamón Local 5',
+                        totalPurchases: 8960.20,
+                        status: 'Activo',
+                        insumos: ['Jamón Serrano', 'Salami', 'Prosciutto', 'Mortadela', 'Pastrami']
+                    },
+                    {
+                        name: 'Congelados Árticos',
+                        phone: '555-7148',
+                        email: 'frozen@articosfood.com',
+                        address: 'Zona Frigorífica, Almacén 44',
+                        totalPurchases: 11200.45,
+                        status: 'Suspendido',
+                        insumos: ['Vegetales Congelados', 'Frutas Congeladas', 'Helados Premium', 'Pescado Congelado']
+                    }
+                ];
+
+        // Función para cargar datos - SIEMPRE usa los datos del HTML como base
+        function loadData() {
+            console.log('Cargando datos del HTML - Total proveedores:', datosIniciales.length);
+            
+            // OPCIÓN 1: Usar solo los datos del HTML (ignora localStorage)
+            // return [...datosIniciales];
+            
+            // OPCIÓN 2: Combinar datos del HTML con modificaciones del localStorage
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    const parsedData = JSON.parse(stored);
+                    // Solo usar localStorage si tiene la misma cantidad o más proveedores que el HTML
+                    if (Array.isArray(parsedData) && parsedData.length >= datosIniciales.length) {
+                        console.log('Usando datos del localStorage:', parsedData.length, 'proveedores');
+                        return parsedData;
+                    } else {
+                        console.log('localStorage tiene menos datos que el HTML, usando datos del HTML');
+                    }
+                } catch (e) {
+                    console.warn('Error al cargar datos del localStorage, usando datos del HTML');
+                }
+            }
+            
+            // Usar los datos del HTML y guardarlos en localStorage
+            console.log('Inicializando con datos del HTML:', datosIniciales.length, 'proveedores');
+            saveData(datosIniciales);
+            return [...datosIniciales];
+        }
+
+        // Función para cargar datos del HTML forzadamente
+        function cargarDatosHTML() {
+            console.log('Forzando carga de datos del HTML...');
+            console.log('Verificando datos iniciales:', datosIniciales);
+            
+            // Verificar que cada proveedor tenga insumos
+            datosIniciales.forEach((proveedor, index) => {
+                console.log(`Proveedor ${index + 1} (${proveedor.name}):`, proveedor.insumos);
+            });
+            
+            localStorage.removeItem(STORAGE_KEY); // Limpiar localStorage
+            proveedores = [...datosIniciales]; // Usar datos del HTML
+            saveData(proveedores); // Guardar en localStorage
+            
+            console.log('Proveedores cargados:', proveedores.length);
+            renderTable();
+            updateStats();
+            showNotification(`✅ Cargados ${datosIniciales.length} proveedores desde el archivo HTML`, 'success');
+        }
+
+        // Función para resetear datos a los valores iniciales del HTML
+        function resetearDatos() {
+            if (confirm('¿Estás seguro de que deseas resetear todos los datos a los valores iniciales?\n\nEsto eliminará todos los cambios realizados.')) {
+                cargarDatosHTML(); // Usar la nueva función
+            }
+        }
+
+        // Función para guardar datos en localStorage
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        // Cargar datos iniciales desde el HTML
+        console.log('=== INICIANDO CARGA DE DATOS ===');
+        console.log('Datos definidos en HTML:', datosIniciales.length);
+        let proveedores = loadData();
+        console.log('Proveedores cargados finalmente:', proveedores.length);
+        console.log('===================================');
+
+        // Función para mostrar notificaciones
+        function showNotification(message, type = 'info') {
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 9999;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+                max-width: 350px;
+            `;
+
+            // Definir colores según el tipo
+            switch(type) {
+                case 'success':
+                    notification.style.background = '#27ae60';
+                    notification.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 8px;"></i>${message}`;
+                    break;
+                case 'error':
+                    notification.style.background = '#e74c3c';
+                    notification.innerHTML = `<i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i>${message}`;
+                    break;
+                case 'warning':
+                    notification.style.background = '#ff9900';
+                    notification.innerHTML = `<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>${message}`;
+                    break;
+                default:
+                    notification.style.background = '#485a1a';
+                    notification.innerHTML = `<i class="fas fa-info-circle" style="margin-right: 8px;"></i>${message}`;
+            }
+
+            document.body.appendChild(notification);
+
+            // Animar entrada
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Auto eliminar después de 4 segundos
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+
+            // Permitir cerrar haciendo clic
+            notification.addEventListener('click', () => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            });
+        }
+
+        // Función para actualizar estadísticas
+        function updateStats() {
+            const totalProveedores = proveedores.length;
+            const proveedoresActivos = proveedores.filter(p => p.status === 'Activo').length;
+            const totalCompras = proveedores.reduce((sum, p) => sum + p.totalPurchases, 0);
+
+            document.getElementById('total-proveedores').textContent = totalProveedores;
+            document.getElementById('proveedores-activos').textContent = proveedoresActivos;
+            document.getElementById('total-compras').textContent = `₡${totalCompras.toFixed(2)}`;
+        }
+
+        // Función para renderizar la tabla de proveedores con columna de insumos
+        function renderTable() {
+            const tbody = document.querySelector('#proveedores-table tbody');
+            tbody.innerHTML = '';
+            
+            if (proveedores.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="8" style="text-align: center; padding: 40px; color: #6c757d; font-style: italic;">
+                        <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                        No hay proveedores registrados aún
+                    </td>
+                `;
+                tbody.appendChild(emptyRow);
+                return;
+            }
+            
+            proveedores.forEach((proveedor, index) => {
+                // Debug: verificar que el proveedor tenga insumos
+                console.log(`Proveedor ${proveedor.name}:`, proveedor.insumos);
+                
+                // Obtener nombres de insumos como string separado por comas
+                let insumosNombres = 'Sin insumos asignados';
+                if (proveedor.insumos && Array.isArray(proveedor.insumos) && proveedor.insumos.length > 0) {
+                    insumosNombres = proveedor.insumos.join(', ');
+                }
+                
+                // Determinar clase y emoji para el estado
+                let statusBadge = '';
+                if (proveedor.status === 'Activo') {
+                    statusBadge = '<span class="badge badge-success">✅ Activo</span>';
+                } else if (proveedor.status === 'Inactivo') {
+                    statusBadge = '<span class="badge badge-warning">⏸️ Inactivo</span>';
+                } else {
+                    statusBadge = '<span class="badge badge-danger">❌ Suspendido</span>';
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${proveedor.name}</strong></td>
+                    <td><i class="fas fa-phone" style="color: #485a1a; margin-right: 5px;"></i>${proveedor.phone}</td>
+                    <td><i class="fas fa-envelope" style="color: #485a1a; margin-right: 5px;"></i>${proveedor.email}</td>
+                    <td><i class="fas fa-map-marker-alt" style="color: #485a1a; margin-right: 5px;"></i>${proveedor.address}</td>
+                    <td><strong style="color: #ff9900;">₡${proveedor.totalPurchases.toFixed(2)}</strong></td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <div style="max-width: 200px;">
+                            <small style="color: #485a1a; font-weight: 500;">
+                                <i class="fas fa-boxes" style="margin-right: 5px; color: #ff9900;"></i>
+                                ${insumosNombres}
+                            </small>
+                        </div>
+                    </td>
+                    <td class="baction">
+                        <button class="btn-edit btn-success" onclick="editProveedor(${index})" title="Editar proveedor">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-edit btn-danger" onclick="deleteProveedor(${index})" title="Eliminar proveedor" style="margin-left: 5px;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Actualizar estadísticas cada vez que se renderiza la tabla
+            updateStats();
+            
+            // Actualizar contador de info
+            document.getElementById('info-total').textContent = proveedores.length;
+        }
+
+        // Función para abrir el formulario
+        function openForm() {
+            // Limpiar formulario
+            document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle"></i> Agregar Proveedor';
+            document.getElementById('proveedor-id').value = '';
+            document.getElementById('name').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('totalPurchases').value = '0.00';
+            document.getElementById('status').value = 'Activo';
+            
+            // Remover clases de error si existen
+            const inputs = document.querySelectorAll('#proveedor-form input, #proveedor-form select');
+            inputs.forEach(input => {
+                input.style.borderColor = '#ddd';
+            });
+            
+            document.getElementById('proveedor-form').style.display = 'flex';
+            
+            // Focus en el primer campo
+            setTimeout(() => {
+                document.getElementById('name').focus();
+            }, 100);
+        }
+
+        // Función para cerrar el formulario
+        function closeForm() {
+            // Animación de cierre suave
+            const modal = document.getElementById('proveedor-form');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                modal.style.opacity = '1';
+            }, 200);
+        }
+
+        // Función para guardar o actualizar proveedor
+        function saveProveedor() {
+            const id = document.getElementById('proveedor-id').value;
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const totalPurchases = parseFloat(document.getElementById('totalPurchases').value);
+            const status = document.getElementById('status').value;
+
+            // Validaciones mejoradas
+            if (!name || !phone || !email || !address || isNaN(totalPurchases) || totalPurchases < 0) {
+                showNotification('Por favor, completa todos los campos correctamente.', 'error');
+                return;
+            }
+
+            // Validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showNotification('Por favor, ingresa un email válido.', 'error');
+                return;
+            }
+
+            const proveedorData = { 
+                name, 
+                phone, 
+                email: email.toLowerCase(), 
+                address, 
+                totalPurchases, 
+                status, 
+                insumos: [] 
+            };
+
+            if (id === '') {
+                // Agregar nuevo proveedor
+                proveedores.push(proveedorData);
+                showNotification(`Proveedor "${name}" agregado exitosamente.`, 'success');
+            } else {
+                // Editar proveedor existente, preservar insumos
+                const existingProveedor = proveedores[parseInt(id)];
+                if (existingProveedor) {
+                    proveedorData.insumos = existingProveedor.insumos || [];
+                    proveedores[parseInt(id)] = proveedorData;
+                    showNotification(`Proveedor "${name}" actualizado exitosamente.`, 'success');
+                }
+            }
+
+            saveData(proveedores);
+            renderTable();
+            updateStats();
+            closeForm();
+        }
+
+        // Función para editar proveedor
+        function editProveedor(index) {
+            const proveedor = proveedores[index];
+            if (!proveedor) {
+                showNotification('Error: Proveedor no encontrado.', 'error');
+                return;
+            }
+
+            // Configurar formulario para edición
+            document.getElementById('form-title').innerHTML = '<i class="fas fa-edit"></i> Editar Proveedor';
+            document.getElementById('proveedor-id').value = index;
+            document.getElementById('name').value = proveedor.name || '';
+            document.getElementById('phone').value = proveedor.phone || '';
+            document.getElementById('email').value = proveedor.email || '';
+            document.getElementById('address').value = proveedor.address || '';
+            document.getElementById('totalPurchases').value = proveedor.totalPurchases || 0;
+            document.getElementById('status').value = proveedor.status || 'Activo';
+            
+            // Remover clases de error si existen
+            const inputs = document.querySelectorAll('#proveedor-form input, #proveedor-form select');
+            inputs.forEach(input => {
+                input.style.borderColor = '#ddd';
+            });
+            
+            document.getElementById('proveedor-form').style.display = 'flex';
+            
+            // Focus en el primer campo
+            setTimeout(() => {
+                document.getElementById('name').focus();
+                document.getElementById('name').select();
+            }, 100);
+        }
+
+        // Función para eliminar proveedor
+        function deleteProveedor(index) {
+            const proveedor = proveedores[index];
+            if (!proveedor) {
+                showNotification('Error: Proveedor no encontrado.', 'error');
+                return;
+            }
+
+            const confirmMessage = `¿Estás seguro de que deseas eliminar al proveedor "${proveedor.name}"?\n\nEsta acción también eliminará:\n- ${proveedor.insumos?.length || 0} insumo(s) asociado(s)\n- Historial de compras por ₡${proveedor.totalPurchases.toFixed(2)}\n\nEsta acción no se puede deshacer.`;
+            
+            if (confirm(confirmMessage)) {
+                // Animación visual de eliminación
+                const row = document.querySelector(`#proveedores-table tbody tr:nth-child(${index + 1})`);
+                if (row) {
+                    row.style.background = '#ffebee';
+                    row.style.transition = 'all 0.3s ease';
+                    row.style.transform = 'scale(0.95)';
+                    row.style.opacity = '0.5';
+                    
+                    setTimeout(() => {
+                        proveedores.splice(index, 1);
+                        saveData(proveedores);
+                        renderTable();
+                        updateStats();
+                        showNotification(`Proveedor "${proveedor.name}" eliminado exitosamente.`, 'success');
+                    }, 300);
+                } else {
+                    // Fallback si no se encuentra la fila
+                    proveedores.splice(index, 1);
+                    saveData(proveedores);
+                    renderTable();
+                    updateStats();
+                    showNotification(`Proveedor "${proveedor.name}" eliminado exitosamente.`, 'success');
+                }
+            }
+        }
+
+        // Manejar teclas globales
+        document.addEventListener('keydown', function(event) {
+            // Cerrar modal con ESC
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('proveedor-form');
+                if (modal.style.display === 'flex') {
+                    closeForm();
+                }
+            }
+            
+            // Guardar con Ctrl+S
+            if (event.ctrlKey && event.key === 's') {
+                event.preventDefault();
+                const modal = document.getElementById('proveedor-form');
+                if (modal.style.display === 'flex') {
+                    saveProveedor();
+                }
+            }
+        });
+
+        // Manejar envío de formulario con Enter
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('#proveedor-form form');
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    saveProveedor();
+                });
+            }
+        });
+
+        // Inicializar la aplicación
+        function inicializarApp() {
+            console.log('Inicializando aplicación...');
+            console.log('Datos iniciales disponibles:', datosIniciales.length);
+            console.log('Proveedores cargados:', proveedores.length);
+            
+            // Si hay menos proveedores cargados que en el HTML, forzar recarga
+            if (proveedores.length < datosIniciales.length) {
+                console.log('Forzando carga de datos del HTML porque hay menos proveedores cargados');
+                cargarDatosHTML();
+                return;
+            }
+            
+            renderTable();
+            updateStats();
+            const totalProveedores = proveedores.length;
+            showNotification(`✅ Sistema cargado: ${totalProveedores} proveedores disponibles`, 'success');
+        }
+
+        document.addEventListener('DOMContentLoaded', inicializarApp);
+        
+        // Inicializar inmediatamente si el DOM ya está cargado
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', inicializarApp);
+        } else {
+            inicializarApp();
+        }
+    </script>
 </body>
 </html>
+
+
+
