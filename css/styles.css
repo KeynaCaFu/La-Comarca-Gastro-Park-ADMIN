@@ -424,6 +424,139 @@
         .btn-salida:hover {
             background-color: #a81c2a;
         }
+        
+        /* Action buttons with colors from the image */
+        .btn-action {
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 0 2px;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            min-width: 35px;
+            height: 35px;
+        }
+        
+        /* Green edit button */
+        .btn-edit-green {
+            background-color: #6c7a3e;
+        }
+        
+        .btn-edit-green:hover {
+            background-color: #5a6635;
+            transform: translateY(-1px);
+        }
+        
+        /* Orange delete button */
+        .btn-delete-orange {
+            background-color: #d87307;
+        }
+        
+        .btn-delete-orange:hover {
+            background-color: #b8630a;
+            transform: translateY(-1px);
+        }
+        
+        /* Blue details button */
+        .btn-details-blue {
+            background-color: #fdfdfd;
+            color: black;
+        }
+        
+        .btn-details-blue:hover {
+            background-color: #cbccce;
+            transform: translateY(-1px);
+        }
+        
+        /* Search and clear button styles */
+        .btn-search {
+            background-color: #d87307;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-search:hover {
+            background-color: #b8630a;
+            transform: translateY(-1px);
+        }
+        
+        .btn-clear {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-clear:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
+        
+        /* Pagination styles */
+        .pagination-container {
+            border-top: 1px solid #eee;
+            background: #f8f9fa;
+            border-radius: 0 0 8px 8px;
+            margin-top: 0 !important;
+        }
+        
+        .btn-pagination {
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-pagination:hover:not(:disabled) {
+            background-color: #485a1a;
+            color: white;
+            border-color: #485a1a;
+            transform: translateY(-1px);
+        }
+        
+        .btn-pagination:disabled {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .btn-pagination.active {
+            background-color: #485a1a;
+            color: white;
+            border-color: #485a1a;
+            font-weight: bold;
+        }
+        
+        .pagination-numbers .btn-pagination {
+            min-width: 35px;
+            height: 35px;
+            padding: 6px 10px;
+        }
+        
+        .pagination-info {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
 
         /* Tabs */
         .tabs {
